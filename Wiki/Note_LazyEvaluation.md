@@ -1,0 +1,3 @@
+### Note: Lazy evaluation is not practical
+
+Under the right circumstances, we would like to be able to simplify expressions without fully evaluating them. For instance, `0*f(x,y,z) ⇒ 0`, where `f` is some complicated function. Unfortunately, this is not practical when we consider that the function call may be undefined, which would make the result undefined rather than zero. For purposes of codegen it might be worth checking if undefined behavior is impossible, in which case we could move on to more valid ways parts of the expression could be ignored. In general though, it probably makes sense to fully evaluate expressions.
