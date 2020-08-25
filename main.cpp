@@ -1,5 +1,3 @@
-#include <QApplication>
-
 #include "chelan.h"
 using namespace AST;
 
@@ -9,9 +7,7 @@ int main(int, char**){
     Node* p0 = Divide(RealVariable('x'), RealVariable('x'));
                //Divide(Pi(), Pi());
 
-    qDebug() << "Defined 0 exponent\n"
-                "Input:  0^π\n"
-                "Output: " << p0->toString() << "\n";
+    qDebug() << "Output: " << p0->toString() << "\n";
 
     p0->deleteChildren();
     delete p0;

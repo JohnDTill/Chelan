@@ -29,7 +29,7 @@ private:
     void flatten();
     void flatten(Multiplication* a, std::vector<Node*>& new_args);
     void collect();
-    void collect(std::vector<Node*>::iterator start, std::vector<Node*>::iterator end);
+    void collect(int start, int end);
     void setKey();
     virtual QString getKey(Precedence prec = PREC_NONE) const override;
 };
