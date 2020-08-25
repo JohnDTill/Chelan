@@ -7,7 +7,7 @@ int main(int, char**){
     Node* p0 = Divide(RealVariable('x'), RealVariable('x'));
                //Divide(Pi(), Pi());
 
-    qDebug() << "Output: " << p0->toString() << "\n";
+    qDebug() << "Output: " << p0->toMathBran() << "\n";
 
     p0->deleteChildren();
     delete p0;

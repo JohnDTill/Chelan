@@ -16,7 +16,7 @@ Node* RealVariable::evaluate(){
     return nullptr;
 }
 
-QString RealVariable::toString(Precedence) const{
+QString RealVariable::toMathBran(Precedence) const{
     return name;
 }
 

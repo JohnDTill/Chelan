@@ -50,12 +50,12 @@ Node* ConditionalValue::evaluate(){
     return nullptr;
 }
 
-QString ConditionalValue::toString(Node::Precedence) const{
-    QString str = "{" + values.front()->toString();
+QString ConditionalValue::toMathBran(Node::Precedence) const{
+    QString str = "⁜c⏴" + values.front()->toMathBran();
     for(std::vector<Node*>::size_type i = 0; i < conditions.size(); i++){
-        str += " if " + conditions[i]->toString() + ", " + values[i+1]->toString();
+        str += "⏵⏴" + conditions[i]->toMathBran() + "⏵⏴" + values[i+1]->toMathBran();
     }
-    str += " else";
+    str += "⏵⏴else⏵";
 
     return str;
 }

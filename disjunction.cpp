@@ -116,7 +116,7 @@ Node* Disjunction::evaluate(){
     return nullptr;
 }
 
-QString Disjunction::toString(Node::Precedence prec) const{
+QString Disjunction::toMathBran(Node::Precedence prec) const{
     QString str = key;
     if(prec > PREC_DISJUNCTION) str.prepend('(').append(')');
 
@@ -143,9 +143,9 @@ void Disjunction::insertOrDiscard(Node* n){
 }
 
 void Disjunction::setKey(){
-    key = args[0]->toString(PREC_DISJUNCTION);
+    key = args[0]->toMathBran(PREC_DISJUNCTION);
     for(std::vector<Node*>::size_type i = 1; i < args.size(); i++)
-        key += " ∨ " + args[i]->toString(PREC_DISJUNCTION);
+        key += " ∨ " + args[i]->toMathBran(PREC_DISJUNCTION);
 }
 
 bool Disjunction::compare(const Node* a, const Node* b){

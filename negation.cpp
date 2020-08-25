@@ -56,8 +56,8 @@ Node* Negation::evaluate(){
     return nullptr;
 }
 
-QString Negation::toString(Node::Precedence prec) const{
-    QString str = "¬" + n->toString(PREC_NEGATION);
+QString Negation::toMathBran(Node::Precedence prec) const{
+    QString str = "¬" + n->toMathBran(PREC_NEGATION);
     if(prec > PREC_NEGATION) str.prepend('(').append(')');
 
     return str;

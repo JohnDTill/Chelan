@@ -46,7 +46,7 @@ Node* Power::evaluate(){
 
         if(undef->type == BOOLEAN){
             if(static_cast<Boolean*>(undef)->value){
-                QString str= toString();
+                QString str= toMathBran();
                 delete lhs;
 
                 return new Undefined("Division by zero: " + str);
@@ -79,13 +79,13 @@ Node* Power::evaluate(){
     return nullptr;
 }
 
-QString Power::toString(Node::Precedence) const{
-    return lhs->toString(PREC_POWER) + '^' + rhs->toString(PREC_POWER);
+QString Power::toMathBran(Node::Precedence) const{
+    return lhs->toMathBran(PREC_POWER) + "⁜^⏴" + rhs->toMathBran(PREC_NONE) + "⏵";
 }
 
 QString Power::getKey(Node::Precedence prec) const{
-    if(prec == PREC_MULTIPLICATION) return lhs->toString();
-    else return toString();
+    if(prec == PREC_MULTIPLICATION) return lhs->toMathBran();
+    else return toMathBran();
 }
 
 }

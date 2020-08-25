@@ -38,8 +38,8 @@ Node* Equality::evaluate(){
     return nullptr;
 }
 
-QString Equality::toString(Node::Precedence prec) const{
-    QString str = n->toString(PREC_EQUALITY) + " = 0";
+QString Equality::toMathBran(Node::Precedence prec) const{
+    QString str = n->toMathBran(PREC_EQUALITY) + " = 0";
     if(prec > PREC_EQUALITY) str.prepend('(').append(')');
 
     return str;

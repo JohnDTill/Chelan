@@ -34,7 +34,7 @@ public:
     static void deleteRecursive(Node* n);
     static Node* remove(std::vector<Node*>& search, const Node* pattern, Precedence prec = PREC_NONE);
     static Node* remove(std::vector<Node*>& search, const Node* pattern, const std::vector<Node*>::iterator& end, Precedence prec = PREC_NONE);
-    virtual QString toString(Precedence prec = PREC_NONE) const = 0;
+    virtual QString toMathBran(Precedence prec = PREC_NONE) const = 0;
     virtual QString getKey(Precedence = PREC_NONE) const;
 
 protected:

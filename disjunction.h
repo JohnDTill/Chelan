@@ -18,7 +18,7 @@ public:
     virtual Node* clone() const override;
     virtual void deleteChildren() override;
     virtual Node* evaluate() override;
-    virtual QString toString(Precedence prec = PREC_NONE) const override;
+    virtual QString toMathBran(Precedence prec = PREC_NONE) const override;
 
 private:
     void flatten(Disjunction* d);

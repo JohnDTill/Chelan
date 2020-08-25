@@ -15,7 +15,7 @@ public:
     RealVariable(const ID& name);
     virtual Node* clone() const override;
     virtual Node* evaluate() override;
-    virtual QString toString(Precedence = PREC_NONE) const override;
+    virtual QString toMathBran(Precedence = PREC_NONE) const override;
 };
 
 }

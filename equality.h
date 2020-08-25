@@ -15,7 +15,7 @@ public:
     static Node* EqualsZero(Node* n);
     virtual Node* clone() const override;
     virtual Node* evaluate() override;
-    virtual QString toString(Precedence prec = PREC_NONE) const override;
+    virtual QString toMathBran(Precedence prec = PREC_NONE) const override;
 };
 
 }

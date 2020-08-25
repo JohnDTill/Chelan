@@ -14,7 +14,7 @@ Node* Undefined::evaluate(){
     return nullptr;
 }
 
-QString Undefined::toString(Node::Precedence) const{
+QString Undefined::toMathBran(Node::Precedence) const{
     return "undefined";
 }
 

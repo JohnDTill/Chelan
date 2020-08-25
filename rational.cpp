@@ -22,7 +22,7 @@ Node* Rational::evaluate(){
     return nullptr;
 }
 
-QString Rational::toString(Precedence) const{
+QString Rational::toMathBran(Precedence) const{
     return QString::fromStdString(value.get_str());
 }
 

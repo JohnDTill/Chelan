@@ -14,7 +14,7 @@ Node* Boolean::evaluate(){
     return nullptr;
 }
 
-QString Boolean::toString(Node::Precedence) const{
+QString Boolean::toMathBran(Node::Precedence) const{
     return value ? "1" : "0";
 }
 

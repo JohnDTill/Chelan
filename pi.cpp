@@ -13,7 +13,7 @@ Node* Pi::evaluate(){
     return nullptr;
 }
 
-QString Pi::toString(Precedence) const{
+QString Pi::toMathBran(Precedence) const{
     return "π";
 }
 

@@ -59,7 +59,7 @@ Node* Addition::evaluate(){
     return nullptr;
 }
 
-QString Addition::toString(Precedence prec) const{
+QString Addition::toMathBran(Precedence prec) const{
     QString str = key;
     if(prec > PREC_ADDITION) str.prepend('(').append(')');
 
@@ -147,9 +147,9 @@ void Addition::setKey(){
     std::sort(args.begin(), args.end(), compare<PREC_ADDITION>);
 
     if(constant!=0) key = QString::fromStdString(constant.get_str()) + " + ";
-    key += args[0]->toString(PREC_ADDITION);
+    key += args[0]->toMathBran(PREC_ADDITION);
     for(std::vector<Node*>::size_type i = 1; i < args.size(); i++)
-        key += " + " + args[i]->toString(PREC_ADDITION);
+        key += " + " + args[i]->toMathBran(PREC_ADDITION);
 }
 
 }

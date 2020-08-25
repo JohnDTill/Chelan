@@ -139,7 +139,7 @@ Node* Conjunction::evaluate(){
     return nullptr;
 }
 
-QString Conjunction::toString(Node::Precedence prec) const{
+QString Conjunction::toMathBran(Node::Precedence prec) const{
     QString str = key;
     if(prec > PREC_CONJUNCTION) str.prepend('(').append(')');
 
@@ -166,9 +166,9 @@ void Conjunction::insertOrDiscard(Node* n){
 }
 
 void Conjunction::setKey(){
-    key = args[0]->toString(PREC_CONJUNCTION);
+    key = args[0]->toMathBran(PREC_CONJUNCTION);
     for(std::vector<Node*>::size_type i = 1; i < args.size(); i++)
-        key += " ∧ " + args[i]->toString(PREC_CONJUNCTION);
+        key += " ∧ " + args[i]->toMathBran(PREC_CONJUNCTION);
 }
 
 bool Conjunction::compare(const Node* a, const Node* b){

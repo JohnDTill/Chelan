@@ -55,7 +55,7 @@ Node* Node::remove(std::vector<Node*>& search, const Node* pattern, const std::v
 }
 
 QString Node::getKey(Precedence) const{
-    return toString();
+    return toMathBran();
 }
 
 Node* Node::searchForUndefined(const std::vector<Node*>& args){

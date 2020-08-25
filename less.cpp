@@ -38,8 +38,8 @@ Node* Less::evaluate(){
     return nullptr;
 }
 
-QString Less::toString(Node::Precedence prec) const{
-    QString str = n->toString(PREC_LESS) + " < 0";
+QString Less::toMathBran(Node::Precedence prec) const{
+    QString str = n->toMathBran(PREC_LESS) + " < 0";
     if(prec > PREC_LESS) str.prepend('(').append(')');
 
     return str;
