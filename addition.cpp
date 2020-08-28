@@ -114,7 +114,7 @@ void Addition::collect(){
         }
     }
 
-    if(pattern_end - i > 0) collect(i, pattern_end);
+    if(pattern_end - i > 1) collect(0, pattern_end);
 }
 
 void Addition::collect(int start, int end){

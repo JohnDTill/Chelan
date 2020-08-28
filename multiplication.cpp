@@ -118,7 +118,7 @@ void Multiplication::collect(){
         }
     }
 
-    if(pattern_end - i > 0) collect(i, pattern_end);
+    if(pattern_end - i > 1) collect(0, pattern_end);
 }
 
 void Multiplication::collect(int start, int end){

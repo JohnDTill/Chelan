@@ -4,8 +4,9 @@ using namespace AST;
 // The root node has ownership and any nodes removed from the expression are freed
 
 int main(int, char**){
-    Node* p0 = Divide(RealVariable("x"), RealVariable("x"));
+    Node* p0 = //Divide(RealVariable("x"), RealVariable("x"));
                //Divide(Pi(), Pi());
+               Add(Pi(), Pi());
 
     qDebug() << "Output: " << p0->toMathBran() << "\n";
 
