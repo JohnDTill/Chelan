@@ -11,38 +11,38 @@ SOURCES += \
         main.cpp \
         node.cpp \
         addition.cpp \
-    rational.cpp \
-    realvariable.cpp \
-    pi.cpp \
-    multiplication.cpp \
-    power.cpp \
-    disjunction.cpp \
-    conjunction.cpp \
-    negation.cpp \
-    boolean.cpp \
-    undefined.cpp \
-    equality.cpp \
-    less.cpp \
-    conditionalvalue.cpp
+        rational.cpp \
+        realvariable.cpp \
+        pi.cpp \
+        multiplication.cpp \
+        power.cpp \
+        disjunction.cpp \
+        conjunction.cpp \
+        negation.cpp \
+        boolean.cpp \
+        undefined.cpp \
+        equality.cpp \
+        less.cpp \
+        conditionalvalue.cpp
 
 HEADERS += \
         node.h \
         addition.h \
-    rational.h \
-    realvariable.h \
-    nodetype.h \
-    pi.h \
-    chelan.h \
-    multiplication.h \
-    power.h \
-    disjunction.h \
-    conjunction.h \
-    negation.h \
-    boolean.h \
-    undefined.h \
-    equality.h \
-    less.h \
-    conditionalvalue.h
+        rational.h \
+        realvariable.h \
+        nodetype.h \
+        pi.h \
+        chelan.h \
+        multiplication.h \
+        power.h \
+        disjunction.h \
+        conjunction.h \
+        negation.h \
+        boolean.h \
+        undefined.h \
+        equality.h \
+        less.h \
+        conditionalvalue.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

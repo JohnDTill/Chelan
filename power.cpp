@@ -74,6 +74,11 @@ Node* Power::evaluate(){
         //DO THIS:
         // complete the calculation
         // need some metric for when the result is too large
+
+        mpq_class lv = static_cast<class Rational*>(lhs)->value;
+        mpq_class rv = static_cast<class Rational*>(rhs)->value;
+
+        if(rv == -1) return new class Rational(1/lv);
     }
 
     return nullptr;

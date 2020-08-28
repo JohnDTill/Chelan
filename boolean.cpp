@@ -15,7 +15,7 @@ Node* Boolean::evaluate(){
 }
 
 QString Boolean::toMathBran(Node::Precedence) const{
-    return value ? "1" : "0";
+    return value ? "true" : "false";
 }
 
 }

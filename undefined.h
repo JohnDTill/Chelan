@@ -6,7 +6,7 @@
 namespace AST{
 
 class Undefined : public Node{
-private:
+public:
     const QString msg;
 
 public:

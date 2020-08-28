@@ -5,7 +5,7 @@
 
 namespace AST{
 
-typedef QChar ID;
+typedef QString ID;
 
 class RealVariable : public Node{
 public:
