@@ -64,7 +64,7 @@ Node* Multiplication::evaluate(){
 
 QString Multiplication::toMathBran(Precedence prec) const{
     QString str = key;
-    if(constant!=1) str.prepend(QString::fromStdString(constant.get_str()) + '*');
+    if(constant!=1) str.prepend(QString::fromStdString(constant.get_str()));
     if(prec > PREC_MULTIPLICATION) str.prepend('(').append(')');
 
     return str;
@@ -174,7 +174,7 @@ void Multiplication::setKey(){
     std::sort(args.begin(), args.end(), compare<PREC_MULTIPLICATION>);
     key = args[0]->toMathBran(PREC_ADDITION);
     for(std::vector<Node*>::size_type i = 1; i < args.size(); i++)
-        key += "*" + args[i]->toMathBran(PREC_ADDITION);
+        key += ' ' + args[i]->toMathBran(PREC_ADDITION);
 }
 
 QString Multiplication::getKey(Node::Precedence prec) const{
