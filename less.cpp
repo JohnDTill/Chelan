@@ -2,13 +2,13 @@
 
 #include "chelan.h"
 
-namespace AST{
+namespace Chelan{
 
-Less::Less(Node* n)
-    : Node(LESS),
+Less::Less(Expr* n)
+    : Expr(LESS),
       n(n) {}
 
-Node* Less::IsLess(Node* lhs, Node* rhs){
+Expr* Less::IsLess(Expr* lhs, Expr* rhs){
     if(lhs->getKey() == rhs->getKey()) return False();
 
     switch(lhs->type + rhs->type * num_types){
@@ -17,28 +17,28 @@ Node* Less::IsLess(Node* lhs, Node* rhs){
                         static_cast<class Rational*>(lhs)->value < static_cast<class Rational*>(rhs)->value
                         );
         default:
-            return Node::evaluateAndFree(new class Less( Subtract(lhs,rhs) ));
+            return Expr::evaluateAndFree(new class Less( Subtract(lhs,rhs) ));
     }
 }
 
-Node* Less::IsLessThanZero(Node* n){
+Expr* Less::IsLessThanZero(Expr* n){
     switch(n->type){
         case PI: return False();
         case RATIONAL: return new Boolean(static_cast<class Rational*>(n)->value < 0);
         default:
-            return Node::evaluateAndFree(new class Less(n));
+            return Expr::evaluateAndFree(new class Less(n));
     }
 }
 
-Node* Less::clone() const{
+Expr* Less::clone() const{
     return new Less(n->clone());
 }
 
-Node* Less::evaluate(){
+Expr* Less::evaluate(){
     return nullptr;
 }
 
-QString Less::toMathBran(Node::Precedence prec) const{
+QString Less::toMathBran(Expr::Precedence prec) const{
     QString str = n->toMathBran(PREC_LESS) + " < 0";
     if(prec > PREC_LESS) str.prepend('(').append(')');
 

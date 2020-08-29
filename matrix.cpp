@@ -2,27 +2,27 @@
 
 #include "chelan.h"
 
-namespace AST{
+namespace Chelan{
 
-Matrix::Matrix(int rows, int cols, std::vector<Node*> children)
-    : Node(MATRIX),
+Matrix::Matrix(int rows, int cols, std::vector<Expr*> children)
+    : Expr(MATRIX_ENUMERATION),
       rows(rows),
       cols(cols),
       args(children){}
 
-Node* Matrix::clone() const{
-    std::vector<Node*> cloned_args;
-    for(Node* n : args) cloned_args.push_back(n->clone());
+Expr* Matrix::clone() const{
+    std::vector<Expr*> cloned_args;
+    for(Expr* n : args) cloned_args.push_back(n->clone());
     return new Matrix(rows, cols, cloned_args);
 }
 
-Node* Matrix::evaluate(){
+Expr* Matrix::evaluate(){
     return nullptr;
 }
 
-QString Matrix::toMathBran(Node::Precedence) const{
+QString Matrix::toMathBran(Expr::Precedence) const{
     QString str = "⁜⊞⏴" + QString::number(rows) + "⏵⏴" + QString::number(cols) + "⏵";
-    for(Node* n : args) str += "⏴" + n->toMathBran() + "⏵";
+    for(Expr* n : args) str += "⏴" + n->toMathBran() + "⏵";
     return str;
 }
 

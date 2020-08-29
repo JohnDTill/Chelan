@@ -1,20 +1,20 @@
 #ifndef NEGATION_H
 #define NEGATION_H
 
-#include "node.h"
+#include "expr.h"
 
-namespace AST{
+namespace Chelan{
 
-class Negation : public Node{
+class Negation : public Expr{
 public:
-    Node* n;
+    Expr* n;
 
 public:
-    Negation(Node* n);
-    static Node* Not(Node* n);
-    virtual Node* clone() const override;
+    Negation(Expr* n);
+    static Expr* Not(Expr* n);
+    virtual Expr* clone() const override;
     virtual void deleteChildren() override;
-    virtual Node* evaluate() override;
+    virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence prec = PREC_NONE) const override;
 };
 

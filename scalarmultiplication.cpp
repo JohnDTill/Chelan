@@ -1,47 +1,47 @@
-#include "multiplication.h"
+#include "scalarmultiplication.h"
 
 #include "chelan.h"
 
-namespace AST{
+namespace Chelan{
 
-Multiplication::Multiplication(const std::vector<Node*>& args)
-    : Node(MULTIPLICATION),
+ScalarMultiplication::ScalarMultiplication(const std::vector<Expr*>& args)
+    : Expr(SCALAR_MULTIPLICATION),
       args(args) {}
 
-Node* Multiplication::Multiply(Node* lhs, Node* rhs){
-    return Node::evaluateAndFree(new Multiplication({lhs, rhs}));
+Expr* ScalarMultiplication::Multiply(Expr* lhs, Expr* rhs){
+    return Expr::evaluateAndFree(new ScalarMultiplication({lhs, rhs}));
 }
 
-Node* Multiplication::Multiply(mpq_class lhs, Node* rhs){
-    Multiplication* m = new Multiplication({rhs});
+Expr* ScalarMultiplication::Multiply(mpq_class lhs, Expr* rhs){
+    ScalarMultiplication* m = new ScalarMultiplication({rhs});
     m->constant = lhs;
 
-    return Node::evaluateAndFree(m);
+    return Expr::evaluateAndFree(m);
 }
 
-Node* Multiplication::Multiply(const std::vector<Node*>& args){
-    return Node::evaluateAndFree(new Multiplication(args));
+Expr* ScalarMultiplication::Multiply(const std::vector<Expr*>& args){
+    return Expr::evaluateAndFree(new ScalarMultiplication(args));
 }
 
-Node* Multiplication::Divide(Node* lhs, Node* rhs){
+Expr* ScalarMultiplication::Divide(Expr* lhs, Expr* rhs){
     return Multiply(lhs, Raise(rhs, -1));
 }
 
-Node* Multiplication::clone() const{
-    Multiplication* cl = new Multiplication(cloneArgs(args));
+Expr* ScalarMultiplication::clone() const{
+    ScalarMultiplication* cl = new ScalarMultiplication(cloneArgs(args));
     cl->key = key;
     return cl;
 }
 
-void Multiplication::deleteChildren(){
-    for(Node* n : args){
+void ScalarMultiplication::deleteChildren(){
+    for(Expr* n : args){
         n->deleteChildren();
         delete n;
     }
 }
 
-Node* Multiplication::evaluate(){
-    if(Node* n = searchForUndefined(args)) return n;
+Expr* ScalarMultiplication::evaluate(){
+    if(Expr* n = searchForUndefined(args)) return n;
 
     foldConstants();
     flatten();
@@ -65,7 +65,7 @@ Node* Multiplication::evaluate(){
     return nullptr;
 }
 
-QString Multiplication::toMathBran(Precedence prec) const{
+QString ScalarMultiplication::toMathBran(Precedence prec) const{
     QString str = key;
     if(constant!=1){
         if(constant==-1) str.prepend('-');
@@ -78,7 +78,7 @@ QString Multiplication::toMathBran(Precedence prec) const{
     return str;
 }
 
-void Multiplication::foldConstants(){
+void ScalarMultiplication::foldConstants(){
     for(int i = args.size()-1; i >= 0; i--){
         if(args[i]->type == RATIONAL){
             constant *= static_cast<class Rational*>(args[i])->value;
@@ -88,27 +88,27 @@ void Multiplication::foldConstants(){
     }
 }
 
-void Multiplication::flatten(){
+void ScalarMultiplication::flatten(){
     if(args.empty()) return;
 
-    std::vector<Node*> new_args;
+    std::vector<Expr*> new_args;
     for(int i = args.size()-1; i >= 0; i--){
-        if(args[i]->type == MULTIPLICATION){
-            flatten(static_cast<Multiplication*>(args[i]), new_args);
+        if(args[i]->type == SCALAR_MULTIPLICATION){
+            flatten(static_cast<ScalarMultiplication*>(args[i]), new_args);
             delete args[i];
             args.erase(args.begin()+i);
         }
     }
 
-    for(Node* n : new_args) args.push_back(n);
+    for(Expr* n : new_args) args.push_back(n);
 }
 
-void Multiplication::flatten(Multiplication* a, std::vector<Node*>& new_args){
+void ScalarMultiplication::flatten(ScalarMultiplication* a, std::vector<Expr*>& new_args){
     constant *= a->constant;
-    for(Node* n : a->args) new_args.push_back(n);
+    for(Expr* n : a->args) new_args.push_back(n);
 }
 
-void Multiplication::collect(){
+void ScalarMultiplication::collect(){
     if(args.size() < 2) return;
 
     std::sort(args.begin(), args.end(), compare<PREC_MULTIPLICATION>);
@@ -129,34 +129,43 @@ void Multiplication::collect(){
     if(pattern_end - i > 1) collect(0, pattern_end);
 }
 
-void Multiplication::collect(int start, int end){
-    std::vector<Node*> factors;
-    std::vector<Node*> factors_positive;
-    Node* n = args[start]->clone();
-    if(n->type == POWER){
-        Power* p = static_cast<Power*>(n);
+void ScalarMultiplication::collect(int start, int end){
+    std::vector<Expr*> factors;
+    std::vector<Expr*> factors_positive;
+    Expr* n = args[start]->clone();
+    if(n->type == SCALAR_POWER){
+        ScalarPower* p = static_cast<ScalarPower*>(n);
         deleteRecursive(p->rhs);
         n = p->lhs;
         delete p;
     }
+    if(n->type == SCALAR_MULTIPLICATION){
+        static_cast<ScalarMultiplication*>(n)->constant = 1;
+    }
 
     for(int i = end; i >= start; i--){
-        if(args[i]->type == POWER){
-            Power* p = static_cast<Power*>(args[i]);
+        if(args[i]->type == SCALAR_POWER){
+            ScalarPower* p = static_cast<ScalarPower*>(args[i]);
             factors.push_back(p->rhs);
+            if(p->lhs->type == SCALAR_MULTIPLICATION){
+                n = Multiply(static_cast<ScalarMultiplication*>(p->lhs)->constant, n);
+            }
             deleteRecursive(p->lhs);
             delete p;
         }else{
             factors.push_back(Rational(1));
+            if(args[i]->type == SCALAR_MULTIPLICATION){
+                n = Multiply(static_cast<ScalarMultiplication*>(args[i])->constant, n);
+            }
             deleteRecursive(args[i]);
         }
     }
     args.erase(args.begin()+start+1, args.begin()+end+1);
 
-    Node* zero_base = EqualsZero(n->clone());
+    Expr* zero_base = EqualsZero(n->clone());
 
-    for(Node* n : factors){
-        Node* exponent_is_positive =
+    for(Expr* n : factors){
+        Expr* exponent_is_positive =
             Not(
                 Or(
                     IsLessThanZero(n->clone()),
@@ -166,11 +175,11 @@ void Multiplication::collect(int start, int end){
         factors_positive.push_back( exponent_is_positive );
     }
 
-    Node* factored_exponent = Raise(n, Add(factors));
-    Node* positive_exponents = And(factors_positive);
-    Node* is_defined = Or(Not(zero_base), positive_exponents);
+    Expr* factored_exponent = Raise(n, Add(factors));
+    Expr* positive_exponents = And(factors_positive);
+    Expr* is_defined = Or(Not(zero_base), positive_exponents);
 
-    Node* cv = Ternary(
+    Expr* cv = Ternary(
                    is_defined,
                    factored_exponent,
                    new Undefined("Divide by 0")
@@ -178,15 +187,15 @@ void Multiplication::collect(int start, int end){
     args[start] = cv;
 }
 
-void Multiplication::setKey(){
+void ScalarMultiplication::setKey(){
     std::sort(args.begin(), args.end(), compare<PREC_MULTIPLICATION>);
     key = args[0]->toMathBran(PREC_ADDITION);
-    for(std::vector<Node*>::size_type i = 1; i < args.size(); i++)
+    for(std::vector<Expr*>::size_type i = 1; i < args.size(); i++)
         key += ' ' + args[i]->toMathBran(PREC_ADDITION);
 }
 
-QString Multiplication::getKey(Node::Precedence prec) const{
-    return (prec == PREC_ADDITION) ? key : toMathBran();
+QString ScalarMultiplication::getKey(Expr::Precedence prec) const{
+    return (prec == PREC_ADDITION || prec == PREC_MULTIPLICATION) ? key : toMathBran();
 }
 
 }

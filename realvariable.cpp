@@ -1,18 +1,18 @@
 #include "realvariable.h"
 
-namespace AST{
+namespace Chelan{
 
 RealVariable::RealVariable(const ID& name)
-    : Node(REALVARIABLE),
+    : Expr(REALVARIABLE),
       name(name) {
 
 }
 
-Node* RealVariable::clone() const{
+Expr* RealVariable::clone() const{
     return new RealVariable(name);
 }
 
-Node* RealVariable::evaluate(){
+Expr* RealVariable::evaluate(){
     return nullptr;
 }
 

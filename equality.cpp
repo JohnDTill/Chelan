@@ -2,13 +2,13 @@
 
 #include "chelan.h"
 
-namespace AST{
+namespace Chelan{
 
-Equality::Equality(Node* n)
-    : Node(EQUALITY),
+Equality::Equality(Expr* n)
+    : Expr(EQUALITY),
       n(n) {}
 
-Node* Equality::Equals(Node* lhs, Node* rhs){
+Expr* Equality::Equals(Expr* lhs, Expr* rhs){
     if(lhs->getKey() == rhs->getKey()) return True();
 
     switch(lhs->type + rhs->type * num_types){
@@ -17,28 +17,28 @@ Node* Equality::Equals(Node* lhs, Node* rhs){
         case RATIONAL + PI*num_types:
             return False();
         default:
-            return Node::evaluateAndFree(new Equality( Subtract(lhs,rhs) ));
+            return Expr::evaluateAndFree(new Equality( Subtract(lhs,rhs) ));
     }
 }
 
-Node* Equality::EqualsZero(Node* n){
+Expr* Equality::EqualsZero(Expr* n){
     switch(n->type){
         case PI: return False();
         case RATIONAL: return new Boolean(static_cast<class Rational*>(n)->value == 0);
         default:
-            return Node::evaluateAndFree(new Equality(n));
+            return Expr::evaluateAndFree(new Equality(n));
     }
 }
 
-Node* Equality::clone() const{
+Expr* Equality::clone() const{
     return new Equality(n->clone());
 }
 
-Node* Equality::evaluate(){
+Expr* Equality::evaluate(){
     return nullptr;
 }
 
-QString Equality::toMathBran(Node::Precedence prec) const{
+QString Equality::toMathBran(Expr::Precedence prec) const{
     QString str = n->toMathBran(PREC_EQUALITY) + " = 0";
     if(prec > PREC_EQUALITY) str.prepend('(').append(')');
 

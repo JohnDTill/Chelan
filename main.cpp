@@ -1,10 +1,10 @@
 #include "chelan.h"
-using namespace AST;
+using namespace Chelan;
 
 // The root node has ownership and any nodes removed from the expression are freed
 
 int main(int, char**){
-    Node* p0 = //Divide(RealVariable("x"), RealVariable("x"));
+    Expr* p0 = //Divide(RealVariable("x"), RealVariable("x"));
                //Divide(Pi(), Pi());
                Add(Pi(), Pi());
 

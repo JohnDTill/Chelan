@@ -1,54 +1,54 @@
-#include "addition.h"
+#include "scalaraddition.h"
 
 #include "chelan.h"
 
-namespace AST{
+namespace Chelan{
 
-Addition::Addition(const std::vector<Node*>& args)
-    : Node(ADDITION),
+ScalarAddition::ScalarAddition(const std::vector<Expr*>& args)
+    : Expr(SCALAR_ADDITION),
       args(args) {}
 
-Node* Addition::Add(Node* lhs, Node* rhs){
-    return Node::evaluateAndFree(new Addition({lhs, rhs}));
+Expr* ScalarAddition::Add(Expr* lhs, Expr* rhs){
+    return Expr::evaluateAndFree(new ScalarAddition({lhs, rhs}));
 }
 
-Node* Addition::Add(Node* lhs, mpq_class rhs){
-    Addition* a = new Addition({lhs});
+Expr* ScalarAddition::Add(Expr* lhs, mpq_class rhs){
+    ScalarAddition* a = new ScalarAddition({lhs});
     a->constant = rhs;
 
-    return Node::evaluateAndFree(a);
+    return Expr::evaluateAndFree(a);
 }
 
-Node* Addition::Add(mpq_class lhs, Node* rhs){
-    Addition* a = new Addition({rhs});
+Expr* ScalarAddition::Add(mpq_class lhs, Expr* rhs){
+    ScalarAddition* a = new ScalarAddition({rhs});
     a->constant = lhs;
 
-    return Node::evaluateAndFree(a);
+    return Expr::evaluateAndFree(a);
 }
 
-Node* Addition::Add(const std::vector<Node*>& args){
-    return Node::evaluateAndFree(new Addition(args));
+Expr* ScalarAddition::Add(const std::vector<Expr*>& args){
+    return Expr::evaluateAndFree(new ScalarAddition(args));
 }
 
-Node* Addition::Subtract(Node* lhs, Node* rhs){
+Expr* ScalarAddition::Subtract(Expr* lhs, Expr* rhs){
     return Add(lhs, Multiply(-1, rhs));
 }
 
-Node* Addition::clone() const{
-    Addition* cl = new Addition(cloneArgs(args));
+Expr* ScalarAddition::clone() const{
+    ScalarAddition* cl = new ScalarAddition(cloneArgs(args));
     cl->key = key;
     return cl;
 }
 
-void Addition::deleteChildren(){
-    for(Node* n : args){
+void ScalarAddition::deleteChildren(){
+    for(Expr* n : args){
         n->deleteChildren();
         delete n;
     }
 }
 
-Node* Addition::evaluate(){
-    if(Node* n = searchForUndefined(args)) return n;
+Expr* ScalarAddition::evaluate(){
+    if(Expr* n = searchForUndefined(args)) return n;
 
     foldConstants();
     flatten();
@@ -62,14 +62,14 @@ Node* Addition::evaluate(){
     return nullptr;
 }
 
-QString Addition::toMathBran(Precedence prec) const{
+QString ScalarAddition::toMathBran(Precedence prec) const{
     QString str = key;
     if(prec > PREC_ADDITION) str.prepend('(').append(')');
 
     return str;
 }
 
-void Addition::foldConstants(){
+void ScalarAddition::foldConstants(){
     for(int i = args.size()-1; i >= 0; i--){
         if(args[i]->type == RATIONAL){
             constant += static_cast<class Rational*>(args[i])->value;
@@ -79,27 +79,27 @@ void Addition::foldConstants(){
     }
 }
 
-void Addition::flatten(){
+void ScalarAddition::flatten(){
     if(args.empty()) return;
 
-    std::vector<Node*> new_args;
+    std::vector<Expr*> new_args;
     for(int i = args.size()-1; i >= 0; i--){
-        if(args[i]->type == ADDITION){
-            flatten(static_cast<Addition*>(args[i]), new_args);
+        if(args[i]->type == SCALAR_ADDITION){
+            flatten(static_cast<ScalarAddition*>(args[i]), new_args);
             delete args[i];
             args.erase(args.begin()+i);
         }
     }
 
-    for(Node* n : new_args) args.push_back(n);
+    for(Expr* n : new_args) args.push_back(n);
 }
 
-void Addition::flatten(Addition* a, std::vector<Node*>& new_args){
+void ScalarAddition::flatten(ScalarAddition* a, std::vector<Expr*>& new_args){
     constant += a->constant;
-    for(Node* n : a->args) new_args.push_back(n);
+    for(Expr* n : a->args) new_args.push_back(n);
 }
 
-void Addition::collect(){
+void ScalarAddition::collect(){
     if(args.size() < 2) return;
 
     std::sort(args.begin(), args.end(), compare<PREC_ADDITION>);
@@ -120,23 +120,23 @@ void Addition::collect(){
     if(pattern_end - i > 1) collect(0, pattern_end);
 }
 
-void Addition::collect(int start, int end){
+void ScalarAddition::collect(int start, int end){
     mpq_class factor = 0;
-    Node* n = args[start]->clone();
-    if(n->type == MULTIPLICATION)
-        static_cast<Multiplication*>(n)->constant = 1;
+    Expr* n = args[start]->clone();
+    if(n->type == SCALAR_MULTIPLICATION)
+        static_cast<ScalarMultiplication*>(n)->constant = 1;
 
 
     for(int i = end; i >= start; i--){
-        if(args[i]->type == MULTIPLICATION){
-            factor += static_cast<Multiplication*>(args[i])->constant;
+        if(args[i]->type == SCALAR_MULTIPLICATION){
+            factor += static_cast<ScalarMultiplication*>(args[i])->constant;
         }else{
             factor++;
         }
         deleteRecursive(args[i]);
     }
 
-    Node* factored = Multiply(factor, n);
+    Expr* factored = Multiply(factor, n);
     if(factored->type != RATIONAL){
         args[start] = factored;
         args.erase(args.begin()+start+1, args.begin()+end+1);
@@ -146,13 +146,13 @@ void Addition::collect(int start, int end){
     }
 }
 
-void Addition::setKey(){
+void ScalarAddition::setKey(){
     std::sort(args.begin(), args.end(), compare<PREC_ADDITION>);
 
     if(constant!=0) key = QString::fromStdString(constant.get_str()) + " + ";
     else key = "";
     key += args[0]->toMathBran(PREC_ADDITION);
-    for(std::vector<Node*>::size_type i = 1; i < args.size(); i++)
+    for(std::vector<Expr*>::size_type i = 1; i < args.size(); i++)
         key += " + " + args[i]->toMathBran(PREC_ADDITION);
 }
 

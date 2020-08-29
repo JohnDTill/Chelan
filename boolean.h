@@ -1,18 +1,18 @@
 #ifndef BOOLEAN_H
 #define BOOLEAN_H
 
-#include "node.h"
+#include "expr.h"
 
-namespace AST{
+namespace Chelan{
 
-class Boolean : public Node{
+class Boolean : public Expr{
 public:
     const bool value;
 
 public:
     Boolean(const bool& value);
-    virtual Node* clone() const override;
-    virtual Node* evaluate() override;
+    virtual Expr* clone() const override;
+    virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;
 };
 

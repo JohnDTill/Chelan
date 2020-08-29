@@ -1,20 +1,20 @@
 #include "boolean.h"
 
-namespace AST{
+namespace Chelan{
 
 Boolean::Boolean(const bool& value)
-    : Node(BOOLEAN),
+    : Expr(BOOLEAN),
       value(value) {}
 
-Node* Boolean::clone() const{
+Expr* Boolean::clone() const{
     return new Boolean(value);
 }
 
-Node* Boolean::evaluate(){
+Expr* Boolean::evaluate(){
     return nullptr;
 }
 
-QString Boolean::toMathBran(Node::Precedence) const{
+QString Boolean::toMathBran(Expr::Precedence) const{
     return value ? "true" : "false";
 }
 

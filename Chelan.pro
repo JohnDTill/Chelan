@@ -3,53 +3,71 @@ QT += core
 TARGET = Chelan
 TEMPLATE = app
 
+INCLUDEPATH += ../Neb/include \
+
 DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
 SOURCES += \
+        compiler.cpp \
+        expr.cpp \
+        interpreter.cpp \
         main.cpp \
         matrix.cpp \
-        node.cpp \
-        addition.cpp \
         rational.cpp \
         realvariable.cpp \
         pi.cpp \
-        multiplication.cpp \
-        power.cpp \
         disjunction.cpp \
         conjunction.cpp \
         negation.cpp \
         boolean.cpp \
+        scalaraddition.cpp \
+        scalarmultiplication.cpp \
+        scalarpower.cpp \
+        stmt.cpp \
         undefined.cpp \
         equality.cpp \
         less.cpp \
-        conditionalvalue.cpp
+        conditionalvalue.cpp \
+        untypedaddition.cpp
 
 HEADERS += \
+        compiler.h \
+        expr.h \
+        interpreter.h \
         matrix.h \
-        node.h \
-        addition.h \
         rational.h \
         realvariable.h \
         nodetype.h \
         pi.h \
         chelan.h \
-        multiplication.h \
-        power.h \
         disjunction.h \
         conjunction.h \
         negation.h \
         boolean.h \
+        scalaraddition.h \
+        scalarmultiplication.h \
+        scalarpower.h \
+        stmt.h \
         undefined.h \
         equality.h \
         less.h \
-        conditionalvalue.h
+        conditionalvalue.h \
+        untypedaddition.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+LIBS += -L$$PWD/../Neb/lib/ -lNeb
+
+INCLUDEPATH += $$PWD/../Neb
+DEPENDPATH += $$PWD/../Neb
+
+win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../Neb/lib/Neb.lib
+else:win32-g++: PRE_TARGETDEPS += $$PWD/../Neb/lib/libNeb.a
 
 # copies the given files to the destination directory
 defineTest(copyToDestDir) {

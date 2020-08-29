@@ -2,48 +2,48 @@
 
 #include "chelan.h"
 
-namespace AST{
+namespace Chelan{
 
-Negation::Negation(Node* n)
-    : Node(NEGATION),
+Negation::Negation(Expr* n)
+    : Expr(NEGATION),
       n(n) {}
 
-Node* Negation::Not(Node* n){
+Expr* Negation::Not(Expr* n){
     switch(n->type){
         case UNDEFINED: return n;
         case BOOLEAN:{
-            Node* inverse = new Boolean(!static_cast<Boolean*>(n)->value);
+            Expr* inverse = new Boolean(!static_cast<Boolean*>(n)->value);
             delete n;
             return inverse;
         }
         case NEGATION:{ //¬¬A ⇒ A (disjunctive normal form, double negation)
-            Node* child = static_cast<Negation*>(n)->n;
+            Expr* child = static_cast<Negation*>(n)->n;
             delete n;
 
             return child;
         }
         case CONJUNCTION:{ //¬(A ∧ B) ⇒ ¬A ∨ ¬B  (disjunctive normal form, De Morgan)
-            std::vector<Node*> negations;
-            for(Node* a : static_cast<Conjunction*>(n)->args)
+            std::vector<Expr*> negations;
+            for(Expr* a : static_cast<Conjunction*>(n)->args)
                 negations.push_back(Not(a));
             delete n;
 
             return Or(negations);
         }
         case DISJUNCTION:{ //¬(A ∨ B) ⇔ ¬A ∧ ¬B  (disjunctive normal form, De Morgan))
-            std::vector<Node*> negations;
-            for(Node* a : static_cast<Disjunction*>(n)->args)
+            std::vector<Expr*> negations;
+            for(Expr* a : static_cast<Disjunction*>(n)->args)
                 negations.push_back(Not(a));
             delete n;
 
             return And(negations);
         }
         default:
-            return Node::evaluateAndFree(new Negation(n));
+            return Expr::evaluateAndFree(new Negation(n));
     }
 }
 
-Node* Negation::clone() const{
+Expr* Negation::clone() const{
     return new Negation(n);
 }
 
@@ -52,11 +52,11 @@ void Negation::deleteChildren(){
     delete n;
 }
 
-Node* Negation::evaluate(){
+Expr* Negation::evaluate(){
     return nullptr;
 }
 
-QString Negation::toMathBran(Node::Precedence prec) const{
+QString Negation::toMathBran(Expr::Precedence prec) const{
     QString str = "¬" + n->toMathBran(PREC_NEGATION);
     if(prec > PREC_NEGATION) str.prepend('(').append(')');
 

@@ -1,46 +1,46 @@
 #include "conditionalvalue.h"
 
-namespace AST{
+namespace Chelan{
 
 ConditionalValue::ConditionalValue()
-    : Node(CONDITIONALVALUE) {
+    : Expr(CONDITIONALVALUE) {
 
 }
 
-ConditionalValue::ConditionalValue(Node* condition, Node* value_true, Node* value_false)
-    : Node(CONDITIONALVALUE) {
+ConditionalValue::ConditionalValue(Expr* condition, Expr* value_true, Expr* value_false)
+    : Expr(CONDITIONALVALUE) {
     conditions.push_back(condition);
     values.push_back(value_true);
     values.push_back(value_false);
 }
 
-Node* ConditionalValue::Ternary(Node* condition, Node* value_true, Node* value_false){
-    return Node::evaluateAndFree( new ConditionalValue(condition, value_true, value_false) );
+Expr* ConditionalValue::Ternary(Expr* condition, Expr* value_true, Expr* value_false){
+    return Expr::evaluateAndFree( new ConditionalValue(condition, value_true, value_false) );
 }
 
-Node* ConditionalValue::clone() const{
+Expr* ConditionalValue::clone() const{
     ConditionalValue* c = new ConditionalValue();
-    for(Node* n : values) c->values.push_back(n->clone());
-    for(Node* n : conditions) c->conditions.push_back(n->clone());
+    for(Expr* n : values) c->values.push_back(n->clone());
+    for(Expr* n : conditions) c->conditions.push_back(n->clone());
 
     return c;
 }
 
 void ConditionalValue::deleteChildren(){
-    for(Node* n : values){
+    for(Expr* n : values){
         n->deleteChildren();
         delete n;
     }
-    for(Node* n : conditions){
+    for(Expr* n : conditions){
         n->deleteChildren();
         delete n;
     }
 }
 
-Node* ConditionalValue::evaluate(){
-    for(std::vector<Node*>::size_type i = 0; i < conditions.size(); i++){
+Expr* ConditionalValue::evaluate(){
+    for(std::vector<Expr*>::size_type i = 0; i < conditions.size(); i++){
         if(isTrue(conditions[i])){
-            Node* n = values[i]->clone();
+            Expr* n = values[i]->clone();
             deleteChildren();
 
             return n;
@@ -50,9 +50,9 @@ Node* ConditionalValue::evaluate(){
     return nullptr;
 }
 
-QString ConditionalValue::toMathBran(Node::Precedence) const{
+QString ConditionalValue::toMathBran(Expr::Precedence) const{
     QString str = "⁜c⏴" + values.front()->toMathBran();
-    for(std::vector<Node*>::size_type i = 0; i < conditions.size(); i++){
+    for(std::vector<Expr*>::size_type i = 0; i < conditions.size(); i++){
         str += "⏵⏴" + conditions[i]->toMathBran() + "⏵⏴" + values[i+1]->toMathBran();
     }
     str += "⏵⏴else⏵";

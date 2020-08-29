@@ -1,30 +1,30 @@
 #ifndef CONJUNCTION_H
 #define CONJUNCTION_H
 
-#include "node.h"
+#include "expr.h"
 
-namespace AST{
+namespace Chelan{
 
-class Conjunction : public Node{
+class Conjunction : public Expr{
 public:
-    std::vector<Node*> args;
+    std::vector<Expr*> args;
     QString key;
 
 public:
     Conjunction();
-    static Node* And(Node* lhs, Node* rhs);
-    static Node* And(const std::vector<Node*>& args);
-    void processNewArg(Node* n);
-    virtual Node* clone() const override;
+    static Expr* And(Expr* lhs, Expr* rhs);
+    static Expr* And(const std::vector<Expr*>& args);
+    void processNewArg(Expr* n);
+    virtual Expr* clone() const override;
     virtual void deleteChildren() override;
-    virtual Node* evaluate() override;
+    virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence prec = PREC_NONE) const override;
 
 private:
     void flatten(Conjunction* c);
-    void insertOrDiscard(Node* n);
+    void insertOrDiscard(Expr* n);
     void setKey();
-    static bool compare(const Node* a, const Node* b);
+    static bool compare(const Expr* a, const Expr* b);
 };
 
 }

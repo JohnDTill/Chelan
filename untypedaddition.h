@@ -1,18 +1,16 @@
-#ifndef RATIONAL_H
-#define RATIONAL_H
+#ifndef UNTYPEDADDITION_H
+#define UNTYPEDADDITION_H
 
 #include "expr.h"
-#include <gmpxx.h>
 
 namespace Chelan{
 
-class Rational : public Expr{
+class UntypedAddition : public Expr{
 public:
-    const mpq_class value;
+    std::vector<Expr*> args;
 
 public:
-    Rational(const mpq_class& value);
-    Rational(const QString& value);
+    UntypedAddition(const std::vector<Expr*>& args);
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;
@@ -20,4 +18,4 @@ public:
 
 }
 
-#endif // RATIONAL_H
+#endif // UNTYPEDADDITION_H

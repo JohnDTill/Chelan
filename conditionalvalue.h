@@ -1,22 +1,22 @@
 #ifndef CONDITIONALVALUE_H
 #define CONDITIONALVALUE_H
 
-#include "node.h"
+#include "expr.h"
 
-namespace AST{
+namespace Chelan{
 
-class ConditionalValue : public Node{
+class ConditionalValue : public Expr{
 private:
-    std::vector<Node*> values;
-    std::vector<Node*> conditions;
+    std::vector<Expr*> values;
+    std::vector<Expr*> conditions;
 
 public:
     ConditionalValue();
-    ConditionalValue(Node* condition, Node* value_true, Node* value_false);
-    static Node* Ternary(Node* condition, Node* value_true, Node* value_false);
-    virtual Node* clone() const override;
+    ConditionalValue(Expr* condition, Expr* value_true, Expr* value_false);
+    static Expr* Ternary(Expr* condition, Expr* value_true, Expr* value_false);
+    virtual Expr* clone() const override;
     virtual void deleteChildren() override;
-    virtual Node* evaluate() override;
+    virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;
 };
 

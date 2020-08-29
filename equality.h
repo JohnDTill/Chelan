@@ -1,20 +1,20 @@
 #ifndef EQUALS_H
 #define EQUALS_H
 
-#include "node.h"
+#include "expr.h"
 
-namespace AST{
+namespace Chelan{
 
-class Equality : public Node{
+class Equality : public Expr{
 private:
-    Node* n;
+    Expr* n;
 
 public:
-    Equality(Node* n);
-    static Node* Equals(Node* lhs, Node* rhs);
-    static Node* EqualsZero(Node* n);
-    virtual Node* clone() const override;
-    virtual Node* evaluate() override;
+    Equality(Expr* n);
+    static Expr* Equals(Expr* lhs, Expr* rhs);
+    static Expr* EqualsZero(Expr* n);
+    virtual Expr* clone() const override;
+    virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence prec = PREC_NONE) const override;
 };
 

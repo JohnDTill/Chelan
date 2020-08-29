@@ -1,18 +1,18 @@
 #ifndef UNDEFINED_H
 #define UNDEFINED_H
 
-#include "node.h"
+#include "expr.h"
 
-namespace AST{
+namespace Chelan{
 
-class Undefined : public Node{
+class Undefined : public Expr{
 public:
     const QString msg;
 
 public:
     Undefined(const QString& msg);
-    virtual Node* clone() const override;
-    virtual Node* evaluate() override;
+    virtual Expr* clone() const override;
+    virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;
 };
 

@@ -1,15 +1,15 @@
 #include "pi.h"
 
-namespace AST{
+namespace Chelan{
 
 Pi::Pi()
-    : Node(PI) {}
+    : Expr(PI) {}
 
-Node* Pi::clone() const{
+Expr* Pi::clone() const{
     return new Pi();
 }
 
-Node* Pi::evaluate(){
+Expr* Pi::evaluate(){
     return nullptr;
 }
 

@@ -2,12 +2,12 @@
 
 #include "chelan.h"
 
-namespace AST{
+namespace Chelan{
 
 Disjunction::Disjunction()
-    : Node(DISJUNCTION) {}
+    : Expr(DISJUNCTION) {}
 
-Node* Disjunction::Or(Node* lhs, Node* rhs){
+Expr* Disjunction::Or(Expr* lhs, Expr* rhs){
     if(lhs->type == UNDEFINED){
         rhs->deleteChildren();
         delete rhs;
@@ -42,14 +42,14 @@ Node* Disjunction::Or(Node* lhs, Node* rhs){
         n->processNewArg(lhs);
         n->processNewArg(rhs);
 
-        return Node::evaluateAndFree(n);
+        return Expr::evaluateAndFree(n);
     }
 }
 
-Node* Disjunction::Or(const std::vector<Node*>& args){
-    for(Node* n : args){
+Expr* Disjunction::Or(const std::vector<Expr*>& args){
+    for(Expr* n : args){
         if(n->type == UNDEFINED){
-            for(Node* m : args){
+            for(Expr* m : args){
                 if(n!=m){
                     m->deleteChildren();
                     delete m;
@@ -60,9 +60,9 @@ Node* Disjunction::Or(const std::vector<Node*>& args){
         }
     }
 
-    for(Node* n : args){
+    for(Expr* n : args){
         if(n->type == BOOLEAN && static_cast<Boolean*>(n)->value == true){
-            for(Node* m : args){
+            for(Expr* m : args){
                 if(n!=m){
                     m->deleteChildren();
                     delete m;
@@ -74,12 +74,12 @@ Node* Disjunction::Or(const std::vector<Node*>& args){
     }
 
     Disjunction* a = new Disjunction();
-    for(Node* n : args) a->processNewArg(n);
+    for(Expr* n : args) a->processNewArg(n);
 
-    return Node::evaluateAndFree(a);
+    return Expr::evaluateAndFree(a);
 }
 
-void Disjunction::processNewArg(Node* n){
+void Disjunction::processNewArg(Expr* n){
     if(n->type == BOOLEAN){
         //Q_ASSERT(static_cast<Boolean*>(n)->value == false);
         delete n;
@@ -90,23 +90,23 @@ void Disjunction::processNewArg(Node* n){
     }
 }
 
-Node* Disjunction::clone() const{
+Expr* Disjunction::clone() const{
     Disjunction* n = new Disjunction();
     n->args.resize(args.size());
-    for(std::vector<Node*>::size_type i = 0; i < args.size(); i++)
+    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
         n->args[i] = args[i]->clone();
 
     return n;
 }
 
 void Disjunction::deleteChildren(){
-    for(Node* n : args){
+    for(Expr* n : args){
         n->deleteChildren();
         delete n;
     }
 }
 
-Node* Disjunction::evaluate(){
+Expr* Disjunction::evaluate(){
     if(args.size() == 0) return new Boolean(false); //Only false values were inserted
     if(args.size() == 1) return *args.begin();
 
@@ -116,7 +116,7 @@ Node* Disjunction::evaluate(){
     return nullptr;
 }
 
-QString Disjunction::toMathBran(Node::Precedence prec) const{
+QString Disjunction::toMathBran(Expr::Precedence prec) const{
     QString str = key;
     if(prec > PREC_DISJUNCTION) str.prepend('(').append(')');
 
@@ -124,13 +124,13 @@ QString Disjunction::toMathBran(Node::Precedence prec) const{
 }
 
 void Disjunction::flatten(Disjunction* d){
-    for(Node* n : d->args) insertOrDiscard(n);
+    for(Expr* n : d->args) insertOrDiscard(n);
     delete d;
 }
 
-void Disjunction::insertOrDiscard(Node* n){
+void Disjunction::insertOrDiscard(Expr* n){
     QString key = n->getKey();
-    for(Node* a : args){
+    for(Expr* a : args){
         if(a->getKey() == key){
             n->deleteChildren();
             delete n;
@@ -144,11 +144,11 @@ void Disjunction::insertOrDiscard(Node* n){
 
 void Disjunction::setKey(){
     key = args[0]->toMathBran(PREC_DISJUNCTION);
-    for(std::vector<Node*>::size_type i = 1; i < args.size(); i++)
+    for(std::vector<Expr*>::size_type i = 1; i < args.size(); i++)
         key += " ∨ " + args[i]->toMathBran(PREC_DISJUNCTION);
 }
 
-bool Disjunction::compare(const Node* a, const Node* b){
+bool Disjunction::compare(const Expr* a, const Expr* b){
     return a->getKey() < b->getKey();
 }
 

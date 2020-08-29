@@ -3,7 +3,7 @@
 
 #include <QDebug>
 
-#include "addition.h"
+#include "scalaraddition.h"
 #include "boolean.h"
 #include "conditionalvalue.h"
 #include "conjunction.h"
@@ -11,43 +11,43 @@
 #include "equality.h"
 #include "less.h"
 #include "matrix.h"
-#include "multiplication.h"
+#include "scalarmultiplication.h"
 #include "negation.h"
 #include "pi.h"
-#include "power.h"
+#include "scalarpower.h"
 #include "rational.h"
 #include "realvariable.h"
 #include "undefined.h"
 
-namespace AST{
+namespace Chelan{
 
-inline Node* Add(Node* lhs, Node* rhs){ return Addition::Add(lhs, rhs); }
-inline Node* Add(Node* lhs, mpq_class rhs){ return Addition::Add(lhs, rhs); }
-inline Node* Add(mpq_class lhs, Node* rhs){ return Addition::Add(lhs, rhs); }
-inline Node* Add(const std::vector<Node*>& args){ return Addition::Add(args); }
-inline Node* And(Node* lhs, Node* rhs){ return Conjunction::And(lhs, rhs); }
-inline Node* And(const std::vector<Node*>& args){ return Conjunction::And(args); }
-inline Node* Divide(Node* lhs, Node* rhs){ return Multiplication::Divide(lhs, rhs); }
-inline Node* Equals(Node* lhs, Node* rhs){ return Equality::Equals(lhs, rhs); }
-inline Node* EqualsZero(Node* n){ return Equality::EqualsZero(n); }
-inline Node* False(){ return new Boolean(false); }
-inline Node* IsLess(Node* lhs, Node* rhs){ return Less::IsLess(lhs, rhs); }
-inline Node* IsLessThanZero(Node* n){ return Less::IsLessThanZero(n); }
-inline Node* Multiply(Node* lhs, Node* rhs){ return Multiplication::Multiply(lhs, rhs); }
-inline Node* Multiply(mpq_class lhs, Node* rhs){ return Multiplication::Multiply(lhs, rhs); }
-inline Node* Multiply(const std::vector<Node*>& args){ return Multiplication::Multiply(args); }
-inline Node* Not(Node* n){ return Negation::Not(n); }
-inline Node* Or(Node* lhs, Node* rhs){ return Disjunction::Or(lhs, rhs); }
-inline Node* Or(const std::vector<Node*>& args){ return Disjunction::Or(args); }
-inline Node* Pi(){ return new class Pi(); }
-inline Node* Raise(Node* lhs, Node* rhs){ return Power::Raise(lhs, rhs); }
-inline Node* Raise(Node* lhs, mpq_class rhs){ return Power::Raise(lhs, rhs); }
-inline Node* Rational(const mpq_class& value){ return new class Rational(value); }
-inline Node* Rational(const QString& value){ return new class Rational(value); }
-inline Node* RealVariable(const ID& name){ return new class RealVariable(name); }
-inline Node* Subtract(Node* lhs, Node* rhs){ return Addition::Subtract(lhs, rhs); }
-inline Node* Ternary(Node* condition, Node* value_true, Node* value_false){ return ConditionalValue::Ternary(condition, value_true, value_false); }
-inline Node* True(){ return new Boolean(true); }
+inline Expr* Add(Expr* lhs, Expr* rhs){ return ScalarAddition::Add(lhs, rhs); }
+inline Expr* Add(Expr* lhs, mpq_class rhs){ return ScalarAddition::Add(lhs, rhs); }
+inline Expr* Add(mpq_class lhs, Expr* rhs){ return ScalarAddition::Add(lhs, rhs); }
+inline Expr* Add(const std::vector<Expr*>& args){ return ScalarAddition::Add(args); }
+inline Expr* And(Expr* lhs, Expr* rhs){ return Conjunction::And(lhs, rhs); }
+inline Expr* And(const std::vector<Expr*>& args){ return Conjunction::And(args); }
+inline Expr* Divide(Expr* lhs, Expr* rhs){ return ScalarMultiplication::Divide(lhs, rhs); }
+inline Expr* Equals(Expr* lhs, Expr* rhs){ return Equality::Equals(lhs, rhs); }
+inline Expr* EqualsZero(Expr* n){ return Equality::EqualsZero(n); }
+inline Expr* False(){ return new Boolean(false); }
+inline Expr* IsLess(Expr* lhs, Expr* rhs){ return Less::IsLess(lhs, rhs); }
+inline Expr* IsLessThanZero(Expr* n){ return Less::IsLessThanZero(n); }
+inline Expr* Multiply(Expr* lhs, Expr* rhs){ return ScalarMultiplication::Multiply(lhs, rhs); }
+inline Expr* Multiply(mpq_class lhs, Expr* rhs){ return ScalarMultiplication::Multiply(lhs, rhs); }
+inline Expr* Multiply(const std::vector<Expr*>& args){ return ScalarMultiplication::Multiply(args); }
+inline Expr* Not(Expr* n){ return Negation::Not(n); }
+inline Expr* Or(Expr* lhs, Expr* rhs){ return Disjunction::Or(lhs, rhs); }
+inline Expr* Or(const std::vector<Expr*>& args){ return Disjunction::Or(args); }
+inline Expr* Pi(){ return new class Pi(); }
+inline Expr* Raise(Expr* lhs, Expr* rhs){ return ScalarPower::Raise(lhs, rhs); }
+inline Expr* Raise(Expr* lhs, mpq_class rhs){ return ScalarPower::Raise(lhs, rhs); }
+inline Expr* Rational(const mpq_class& value){ return new class Rational(value); }
+inline Expr* Rational(const QString& value){ return new class Rational(value); }
+inline Expr* RealVariable(const ID& name){ return new class RealVariable(name); }
+inline Expr* Subtract(Expr* lhs, Expr* rhs){ return ScalarAddition::Subtract(lhs, rhs); }
+inline Expr* Ternary(Expr* condition, Expr* value_true, Expr* value_false){ return ConditionalValue::Ternary(condition, value_true, value_false); }
+inline Expr* True(){ return new Boolean(true); }
 
 }
 

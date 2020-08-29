@@ -1,16 +1,16 @@
-#include "power.h"
+#include "scalarpower.h"
 
 #include "chelan.h"
 
-namespace AST{
+namespace Chelan{
 
-Power::Power(Node* lhs, Node* rhs)
-    : Node(POWER){
+ScalarPower::ScalarPower(Expr* lhs, Expr* rhs)
+    : Expr(SCALAR_POWER){
     this->lhs = lhs;
     this->rhs = rhs;
 }
 
-Node* Power::Raise(Node* lhs, Node* rhs){
+Expr* ScalarPower::Raise(Expr* lhs, Expr* rhs){
     if(lhs->type == UNDEFINED){
         deleteRecursive(rhs);
         return lhs;
@@ -18,31 +18,31 @@ Node* Power::Raise(Node* lhs, Node* rhs){
         deleteRecursive(lhs);
         return rhs;
     }else{
-        return Node::evaluateAndFree(new Power(lhs, rhs));
+        return Expr::evaluateAndFree(new ScalarPower(lhs, rhs));
     }
 }
 
-Node* Power::Raise(Node* lhs, mpq_class rhs){
+Expr* ScalarPower::Raise(Expr* lhs, mpq_class rhs){
     if(lhs->type == UNDEFINED){
         return lhs;
     }else{
-        return Node::evaluateAndFree(new Power(lhs, Rational(rhs)));
+        return Expr::evaluateAndFree(new ScalarPower(lhs, Rational(rhs)));
     }
 }
 
-Node* Power::clone() const{
-    return new Power(lhs->clone(), rhs->clone());
+Expr* ScalarPower::clone() const{
+    return new ScalarPower(lhs->clone(), rhs->clone());
 }
 
-void Power::deleteChildren(){
+void ScalarPower::deleteChildren(){
     deleteRecursive(lhs);
     deleteRecursive(rhs);
 }
 
-Node* Power::evaluate(){
+Expr* ScalarPower::evaluate(){
     const QString lhs_key = lhs->getKey();
     if(lhs_key == "0"){
-        Node* undef = Or(IsLessThanZero(rhs->clone()), EqualsZero(rhs));
+        Expr* undef = Or(IsLessThanZero(rhs->clone()), EqualsZero(rhs));
 
         if(undef->type == BOOLEAN){
             if(static_cast<Boolean*>(undef)->value){
@@ -84,12 +84,12 @@ Node* Power::evaluate(){
     return nullptr;
 }
 
-QString Power::toMathBran(Node::Precedence) const{
+QString ScalarPower::toMathBran(Expr::Precedence) const{
     return lhs->toMathBran(PREC_POWER) + "⁜^⏴" + rhs->toMathBran(PREC_NONE) + "⏵";
 }
 
-QString Power::getKey(Node::Precedence prec) const{
-    if(prec == PREC_MULTIPLICATION) return lhs->toMathBran();
+QString ScalarPower::getKey(Expr::Precedence prec) const{
+    if(prec == PREC_MULTIPLICATION) return lhs->getKey(PREC_MULTIPLICATION);
     else return toMathBran();
 }
 

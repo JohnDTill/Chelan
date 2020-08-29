@@ -1,30 +1,30 @@
 #ifndef DISJUNCTION_H
 #define DISJUNCTION_H
 
-#include "node.h"
+#include "expr.h"
 
-namespace AST{
+namespace Chelan{
 
-class Disjunction : public Node{
+class Disjunction : public Expr{
 public:
-    std::vector<Node*> args;
+    std::vector<Expr*> args;
     QString key;
 
 public:
     Disjunction();
-    static Node* Or(Node* lhs, Node* rhs);
-    static Node* Or(const std::vector<Node*>& args);
-    void processNewArg(Node* n);
-    virtual Node* clone() const override;
+    static Expr* Or(Expr* lhs, Expr* rhs);
+    static Expr* Or(const std::vector<Expr*>& args);
+    void processNewArg(Expr* n);
+    virtual Expr* clone() const override;
     virtual void deleteChildren() override;
-    virtual Node* evaluate() override;
+    virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence prec = PREC_NONE) const override;
 
 private:
     void flatten(Disjunction* d);
-    void insertOrDiscard(Node* n);
+    void insertOrDiscard(Expr* n);
     void setKey();
-    static bool compare(const Node* a, const Node* b);
+    static bool compare(const Expr* a, const Expr* b);
 };
 
 }

@@ -1,20 +1,20 @@
 #include "undefined.h"
 
-namespace AST{
+namespace Chelan{
 
 Undefined::Undefined(const QString& msg)
-    : Node(UNDEFINED),
+    : Expr(UNDEFINED),
       msg(msg) {}
 
-Node* Undefined::clone() const{
+Expr* Undefined::clone() const{
     return new Undefined(msg);
 }
 
-Node* Undefined::evaluate(){
+Expr* Undefined::evaluate(){
     return nullptr;
 }
 
-QString Undefined::toMathBran(Node::Precedence) const{
+QString Undefined::toMathBran(Expr::Precedence) const{
     return "undefined";
 }
 

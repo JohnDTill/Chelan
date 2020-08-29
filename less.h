@@ -1,20 +1,20 @@
 #ifndef LESS_H
 #define LESS_H
 
-#include "node.h"
+#include "expr.h"
 
-namespace AST{
+namespace Chelan{
 
-class Less : public Node{
+class Less : public Expr{
 private:
-    Node* n;
+    Expr* n;
 
 public:
-    Less(Node* n);
-    static Node* IsLess(Node* lhs, Node* rhs);
-    static Node* IsLessThanZero(Node* n);
-    virtual Node* clone() const override;
-    virtual Node* evaluate() override;
+    Less(Expr* n);
+    static Expr* IsLess(Expr* lhs, Expr* rhs);
+    static Expr* IsLessThanZero(Expr* n);
+    virtual Expr* clone() const override;
+    virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence prec = PREC_NONE) const override;
 };
 

@@ -1,24 +1,24 @@
 #include "rational.h"
 
-namespace AST{
+namespace Chelan{
 
 Rational::Rational(const mpq_class& value)
-    : Node(RATIONAL),
+    : Expr(RATIONAL),
       value(value) {
 
 }
 
 Rational::Rational(const QString& value)
-    : Node(RATIONAL),
+    : Expr(RATIONAL),
       value(value.toStdString()) {
 
 }
 
-Node* Rational::clone() const{
+Expr* Rational::clone() const{
     return new Rational(value);
 }
 
-Node* Rational::evaluate(){
+Expr* Rational::evaluate(){
     return nullptr;
 }
 

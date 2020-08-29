@@ -1,21 +1,21 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#include "node.h"
+#include "expr.h"
 
-namespace AST{
+namespace Chelan{
 
-class Matrix : public Node{
+class Matrix : public Expr{
 public:
     const int rows;
     const int cols;
-    std::vector<Node*> args;
+    std::vector<Expr*> args;
     QString key;
 
 public:
-    Matrix(int rows, int cols, std::vector<Node*> children);
-    virtual Node* clone() const override;
-    virtual Node* evaluate() override;
+    Matrix(int rows, int cols, std::vector<Expr*> children);
+    virtual Expr* clone() const override;
+    virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;
 };
 
