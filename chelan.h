@@ -10,6 +10,7 @@
 #include "disjunction.h"
 #include "equality.h"
 #include "less.h"
+#include "matrix.h"
 #include "multiplication.h"
 #include "negation.h"
 #include "pi.h"

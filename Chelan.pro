@@ -9,6 +9,7 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
+        matrix.cpp \
         node.cpp \
         addition.cpp \
         rational.cpp \
@@ -26,6 +27,7 @@ SOURCES += \
         conditionalvalue.cpp
 
 HEADERS += \
+        matrix.h \
         node.h \
         addition.h \
         rational.h \

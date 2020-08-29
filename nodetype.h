@@ -13,6 +13,7 @@ enum NodeType{
     DISJUNCTION,
     EQUALITY,
     LESS,
+    MATRIX,
     MULTIPLICATION,
     NEGATION,
     PI,

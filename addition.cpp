@@ -19,7 +19,7 @@ Node* Addition::Add(Node* lhs, mpq_class rhs){
     return Node::evaluateAndFree(a);
 }
 
-Node*Addition::Add(mpq_class lhs, Node* rhs){
+Node* Addition::Add(mpq_class lhs, Node* rhs){
     Addition* a = new Addition({rhs});
     a->constant = lhs;
 
@@ -35,7 +35,9 @@ Node* Addition::Subtract(Node* lhs, Node* rhs){
 }
 
 Node* Addition::clone() const{
-    return new Addition(cloneArgs(args));
+    Addition* cl = new Addition(cloneArgs(args));
+    cl->key = key;
+    return cl;
 }
 
 void Addition::deleteChildren(){
@@ -47,6 +49,7 @@ void Addition::deleteChildren(){
 
 Node* Addition::evaluate(){
     if(Node* n = searchForUndefined(args)) return n;
+
     foldConstants();
     flatten();
     collect();
@@ -147,6 +150,7 @@ void Addition::setKey(){
     std::sort(args.begin(), args.end(), compare<PREC_ADDITION>);
 
     if(constant!=0) key = QString::fromStdString(constant.get_str()) + " + ";
+    else key = "";
     key += args[0]->toMathBran(PREC_ADDITION);
     for(std::vector<Node*>::size_type i = 1; i < args.size(); i++)
         key += " + " + args[i]->toMathBran(PREC_ADDITION);

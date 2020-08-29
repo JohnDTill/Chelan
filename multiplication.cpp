@@ -28,7 +28,9 @@ Node* Multiplication::Divide(Node* lhs, Node* rhs){
 }
 
 Node* Multiplication::clone() const{
-    return new Multiplication(cloneArgs(args));
+    Multiplication* cl = new Multiplication(cloneArgs(args));
+    cl->key = key;
+    return cl;
 }
 
 void Multiplication::deleteChildren(){
@@ -40,6 +42,7 @@ void Multiplication::deleteChildren(){
 
 Node* Multiplication::evaluate(){
     if(Node* n = searchForUndefined(args)) return n;
+
     foldConstants();
     flatten();
     collect();
@@ -64,7 +67,12 @@ Node* Multiplication::evaluate(){
 
 QString Multiplication::toMathBran(Precedence prec) const{
     QString str = key;
-    if(constant!=1) str.prepend(QString::fromStdString(constant.get_str()));
+    if(constant!=1){
+        if(constant==-1) str.prepend('-');
+        else if(constant.get_den()==1) str.prepend(QString::fromStdString(constant.get_str()));
+        else str.prepend("⁜f⏴" + QString::fromStdString(constant.get_num().get_str()) + "⏵⏴"
+                         + QString::fromStdString(constant.get_den().get_str()) + "⏵");
+    }
     if(prec > PREC_MULTIPLICATION) str.prepend('(').append(')');
 
     return str;
@@ -85,7 +93,7 @@ void Multiplication::flatten(){
 
     std::vector<Node*> new_args;
     for(int i = args.size()-1; i >= 0; i--){
-        if(args[i]->type == ADDITION){
+        if(args[i]->type == MULTIPLICATION){
             flatten(static_cast<Multiplication*>(args[i]), new_args);
             delete args[i];
             args.erase(args.begin()+i);
