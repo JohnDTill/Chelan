@@ -17,7 +17,7 @@ enum ExprType{
     UNDEFINED,
 
     //Boolean types
-    BOOLEAN,
+    BOOLEAN_VALUE,
     CONJUNCTION,
     DISJUNCTION,
     EQUALITY,
@@ -25,7 +25,9 @@ enum ExprType{
     NEGATION,
 
     //Matrix types
+    MATRIX_ADDITION,
     MATRIX_ENUMERATION,
+    MATRIX_NUMERIC,
 
     //Set types
     SET_ENUMERATION,
@@ -35,6 +37,14 @@ enum ExprType{
 
     //Misc
     READ,
+};
+
+enum ValueType{
+    SCALAR,
+    BOOLEAN,
+    MATRIX,
+    SET,
+    UNTYPED,
 };
 
 constexpr uint8_t num_types = UNDEFINED + 1;

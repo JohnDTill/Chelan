@@ -28,7 +28,7 @@ QString Rational::toMathBran(Precedence prec) const{
     return str;
 }
 
-void Rational::visitChildren(Interpreter* interpreter){
+void Rational::visitChildren(Interpreter*){
     //DO NOTHING
 }
 

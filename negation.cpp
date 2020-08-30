@@ -11,7 +11,7 @@ Negation::Negation(Expr* n)
 Expr* Negation::Not(Expr* n){
     switch(n->type){
         case UNDEFINED: return n;
-        case BOOLEAN:{
+        case BOOLEAN_VALUE:{
             Expr* inverse = new Boolean(!static_cast<Boolean*>(n)->value);
             delete n;
             return inverse;

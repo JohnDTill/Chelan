@@ -2,13 +2,13 @@
 
 namespace Chelan {
 
-Read::Read(std::vector<Expr*>::size_type slot)
-    : Expr(READ), slot(slot) {
+Read::Read(std::vector<Expr*>::size_type slot, ValueType value_type)
+    : Expr(READ), slot(slot), value_type(value_type) {
 
 }
 
 Expr* Read::clone() const{
-    return new Read(slot);
+    return new Read(slot, value_type);
 }
 
 Expr* Read::evaluate(){
@@ -18,7 +18,7 @@ Expr* Read::evaluate(){
 
 QString Read::toMathBran(Expr::Precedence) const{
     //This highlights a gap in my philosophy- calling a read an expression is a bit of an abuse
-    return "⁜r" + QString::number(slot);
+    return "⚠r" + QString::number(slot);
 }
 
 void Read::visitChildren(Interpreter* interpreter){

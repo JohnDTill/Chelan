@@ -48,9 +48,16 @@ void ScalarAddition::deleteChildren(){
 }
 
 Expr* ScalarAddition::evaluate(){
+    //Fast path//
+    foldConstants();
+    if(args.size()==0){
+        constant.canonicalize();
+        return new Rational(constant);
+    }
+
+    //Symbolic//
     if(Expr* n = searchForUndefined(args)) return n;
 
-    foldConstants();
     flatten();
     collect();
 
@@ -70,7 +77,8 @@ QString ScalarAddition::toMathBran(Precedence prec) const{
 }
 
 void ScalarAddition::visitChildren(Interpreter* interpreter){
-    for(Expr* expr : args) expr = interpreter->evaluate(expr);
+    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
+        args[i] = interpreter->evaluate(args[i]);
 }
 
 void ScalarAddition::foldConstants(){

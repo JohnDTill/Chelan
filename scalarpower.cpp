@@ -44,7 +44,7 @@ Expr* ScalarPower::evaluate(){
     if(lhs_key == "0"){
         Expr* undef = Disjunction::Or(Less::IsLessThanZero(rhs->clone()), Equality::EqualsZero(rhs));
 
-        if(undef->type == BOOLEAN){
+        if(undef->type == BOOLEAN_VALUE){
             if(static_cast<Boolean*>(undef)->value){
                 QString str= toMathBran();
                 delete lhs;

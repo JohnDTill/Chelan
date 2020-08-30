@@ -1,19 +1,19 @@
-#ifndef MATRIX_H
-#define MATRIX_H
+#ifndef MATRIXNUMERIC_H
+#define MATRIXNUMERIC_H
 
 #include "expr.h"
 
 namespace Chelan{
 
-class Matrix : public Expr{
+class MatrixNumeric : public Expr{
 public:
-    const int rows;
-    const int cols;
+    const std::vector<Expr*>::size_type rows;
+    const std::vector<Expr*>::size_type cols;
     std::vector<Expr*> args;
     QString key;
 
 public:
-    Matrix(int rows, int cols, std::vector<Expr*> children);
+    MatrixNumeric(int rows, int cols, const std::vector<Expr*>& args);
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;
@@ -22,4 +22,4 @@ public:
 
 }
 
-#endif // MATRIX_H
+#endif // MATRIXNUMERIC_H

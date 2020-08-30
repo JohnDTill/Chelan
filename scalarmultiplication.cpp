@@ -41,9 +41,16 @@ void ScalarMultiplication::deleteChildren(){
 }
 
 Expr* ScalarMultiplication::evaluate(){
+    //Fast path//
+    foldConstants();
+    if(args.size()==0){
+        constant.canonicalize();
+        return new Rational(constant);
+    }
+
+    //Symbolic//
     if(Expr* n = searchForUndefined(args)) return n;
 
-    foldConstants();
     flatten();
     collect();
 
@@ -79,7 +86,8 @@ QString ScalarMultiplication::toMathBran(Precedence prec) const{
 }
 
 void ScalarMultiplication::visitChildren(Interpreter* interpreter){
-    for(Expr* expr : args) expr = interpreter->evaluate(expr);
+    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
+        args[i] = interpreter->evaluate(args[i]);
 }
 
 void ScalarMultiplication::foldConstants(){
@@ -120,7 +128,7 @@ void ScalarMultiplication::collect(){
     int pattern_end = args.size() - 1;
     QString search_key = args.back()->getKey(PREC_MULTIPLICATION);
     int i;
-    for(int i = pattern_end; i >= 0; i--){
+    for(i = pattern_end; i >= 0; i--){
         QString target_key = args[i]->getKey(PREC_MULTIPLICATION);
 
         if(target_key != search_key){

@@ -2,9 +2,10 @@
 
 namespace Chelan{
 
-Undefined::Undefined(const QString& msg)
+Undefined::Undefined(const QString& msg, bool type_error)
     : Expr(UNDEFINED),
-      msg(msg) {}
+      msg(msg),
+      type_error(type_error) {}
 
 Expr* Undefined::clone() const{
     return new Undefined(msg);

@@ -9,7 +9,7 @@ Compiler::Compiler(std::vector<Neb::Node*>& parse_forest)
     : parse_forest(parse_forest){
     //Add predefined variables
     scopes.push_back(SymTable());
-    scopes[0]["π"] = std::make_pair(0, true);
+    scopes[0]["π"] = std::make_tuple(0, true, SCALAR);
     stack_slot = 1;
 
     //Add global scope
@@ -37,7 +37,11 @@ Stmt* Compiler::compileStmt(Neb::Node* parse_tree){
 
 Expr* Compiler::compileExpr(Neb::Node* parse_tree){    
     switch(parse_tree->type){
-        case Neb::ADDITION: return new UntypedAddition(compileExprs(parse_tree->children));
+        case Neb::ADDITION:{
+            Expr* e = Expr::evaluateAndFree(new UntypedAddition(compileExprs(parse_tree->children)));
+            if(e->type == UNDEFINED) err_msg += static_cast<Undefined*>(e)->msg;
+            return e;
+        }
         case Neb::DIVIDE: return ScalarMultiplication::Divide(compileExpr(parse_tree->children[0]), compileExpr(parse_tree->children[1]));
         case Neb::FALSE: return new Boolean(false);
         case Neb::FRACTION: return ScalarMultiplication::Divide(compileExpr(parse_tree->children[0]), compileExpr(parse_tree->children[1]));
@@ -87,7 +91,7 @@ Expr* Compiler::compileExpr(Neb::Node* parse_tree){
 
         default:
             err_msg += "ERROR: unrecognized Neb::Node expr";
-            return nullptr;
+            return new Undefined("");
     }
 }
 
@@ -114,7 +118,7 @@ Stmt* Compiler::assign(Neb::Node* stmt){
         return nullptr;
     }
 
-    scopes.back()[id] = std::make_pair(stack_slot++, true);
+    scopes.back()[id] = std::make_tuple(stack_slot++, true, rhs->valueType());
 
     return new ImmutableAssign(rhs);
 }
@@ -126,8 +130,8 @@ Expr* Compiler::matrix(Neb::Node* expr){
     Q_ASSERT(expr->children.size() == 2+rows*cols);
     std::vector<Chelan::Expr*> children(rows*cols);
     for(uint i = 0; i < rows*cols; i++)
-        children.push_back(compileExpr(expr->children[2+i]));
-    return new Chelan::Matrix(rows,cols,children);
+        children[i] = (compileExpr(expr->children[2+i]));
+    return new Chelan::MatrixEnumeration(rows,cols,children);
 }
 
 Expr* Compiler::number(Neb::Node* expr){
@@ -141,8 +145,10 @@ Expr* Compiler::number(Neb::Node* expr){
         Q_ASSERT(split.size() == 2);
         mpz_class num((split[0] + split[1]).toStdString());
         mpz_class den('1' + std::string(split[1].size(), '0'));
+        mpq_class val(num,den);
+        val.canonicalize();
 
-        return new Rational(mpq_class(num,den));
+        return new Rational(val);
     }
 }
 
@@ -152,7 +158,9 @@ Expr* Compiler::read(Neb::Node* expr){
     for(ScopeChain::reverse_iterator i = scopes.rbegin(); i != scopes.rend(); i++){
         auto lookup = i->constFind(expr->data);
         if(lookup != i->constEnd()){
-            return new Read(lookup.value().first);
+            std::vector<Expr*>::size_type slot = std::get<0>(lookup.value());
+            ValueType vt = std::get<2>(lookup.value());
+            return new Read(slot, vt);
         }
     }
 

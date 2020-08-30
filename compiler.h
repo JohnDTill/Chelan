@@ -4,9 +4,8 @@
 #include <QMap>
 #include <vector>
 
-namespace Neb{
-    class Node;
-}
+#include "neb_node.h"
+#include "expr.h"
 
 namespace Chelan {
 
@@ -20,7 +19,7 @@ public:
 
 private:
     std::vector<Neb::Node*> parse_forest;
-    typedef std::pair<std::vector<void*>::size_type,bool> SymTableInfo;
+    typedef std::tuple<std::vector<void*>::size_type, bool, ValueType> SymTableInfo;
     typedef QMap<QString, SymTableInfo> SymTable;
     typedef std::vector<SymTable> ScopeChain;
     ScopeChain scopes; //Maps id to stack slot

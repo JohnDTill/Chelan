@@ -8,8 +8,10 @@ namespace Chelan {
 class Read : public Expr{
 public:
     const std::vector<Expr*>::size_type slot;
+    const ValueType value_type;
+
 public:
-    Read(std::vector<Expr*>::size_type slot);
+    Read(std::vector<Expr*>::size_type slot, ValueType value_type);
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;

@@ -8,9 +8,10 @@ namespace Chelan{
 class Undefined : public Expr{
 public:
     const QString msg;
+    const bool type_error;
 
 public:
-    Undefined(const QString& msg);
+    Undefined(const QString& msg, bool type_error = false);
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;

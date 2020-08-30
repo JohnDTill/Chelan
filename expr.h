@@ -38,7 +38,7 @@ public:
     static Expr* remove(std::vector<Expr*>& search, const Expr* pattern, const std::vector<Expr*>::iterator& end, Precedence prec = PREC_NONE);
     virtual QString toMathBran(Precedence prec = PREC_NONE) const = 0;
     virtual QString getKey(Precedence = PREC_NONE) const;
-    bool isScalar() const;
+    ValueType valueType() const;
     virtual void visitChildren(Interpreter* interpreter) = 0;
 
 protected:
@@ -49,6 +49,14 @@ protected:
     static std::vector<Expr*> cloneArgs(const std::vector<Expr*> args);
     static bool isFalse(Expr* n);
     static bool isTrue(Expr* n);
+};
+
+const QString value_names[5] = {
+    "SCALAR",
+    "BOOLEAN",
+    "MATRIX",
+    "SET",
+    "UNTYPED"
 };
 
 }

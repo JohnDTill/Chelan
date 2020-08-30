@@ -58,8 +58,13 @@ QString Expr::getKey(Precedence) const{
     return toMathBran();
 }
 
-bool Expr::isScalar() const{
-    return type <= UNDEFINED;
+ValueType Expr::valueType() const{
+    if(type <= UNDEFINED) return SCALAR;
+    else if(type <= NEGATION) return BOOLEAN;
+    else if(type <= MATRIX_ENUMERATION) return MATRIX;
+    else if(type <= SET_ENUMERATION) return SET;
+    else if(type <= UNTYPED_ADDITION) return UNTYPED;
+    else return static_cast<const Read*>(this)->value_type;
 }
 
 Expr* Expr::searchForUndefined(const std::vector<Expr*>& args){
@@ -85,11 +90,11 @@ std::vector<Expr*> Expr::cloneArgs(const std::vector<Expr*> args){
 }
 
 bool Expr::isFalse(Expr* n){
-    return n->type == BOOLEAN && static_cast<Boolean*>(n)->value == false;
+    return n->type == BOOLEAN_VALUE && static_cast<Boolean*>(n)->value == false;
 }
 
 bool Expr::isTrue(Expr* n){
-    return n->type == BOOLEAN && static_cast<Boolean*>(n)->value == true;
+    return n->type == BOOLEAN_VALUE && static_cast<Boolean*>(n)->value == true;
 }
 
 }

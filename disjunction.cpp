@@ -18,7 +18,7 @@ Expr* Disjunction::Or(Expr* lhs, Expr* rhs){
         delete lhs;
 
         return rhs;
-    }else if(lhs->type == BOOLEAN){
+    }else if(lhs->type == BOOLEAN_VALUE){
         if(static_cast<Boolean*>(lhs)->value == true){
             rhs->deleteChildren();
             delete rhs;
@@ -28,7 +28,7 @@ Expr* Disjunction::Or(Expr* lhs, Expr* rhs){
             delete lhs;
             return rhs;
         }
-    }else if(rhs->type == BOOLEAN){
+    }else if(rhs->type == BOOLEAN_VALUE){
         if(static_cast<Boolean*>(rhs)->value == true){
             lhs->deleteChildren();
             delete lhs;
@@ -61,7 +61,7 @@ Expr* Disjunction::Or(const std::vector<Expr*>& args){
     }
 
     for(Expr* n : args){
-        if(n->type == BOOLEAN && static_cast<Boolean*>(n)->value == true){
+        if(n->type == BOOLEAN_VALUE && static_cast<Boolean*>(n)->value == true){
             for(Expr* m : args){
                 if(n!=m){
                     m->deleteChildren();
@@ -80,7 +80,7 @@ Expr* Disjunction::Or(const std::vector<Expr*>& args){
 }
 
 void Disjunction::processNewArg(Expr* n){
-    if(n->type == BOOLEAN){
+    if(n->type == BOOLEAN_VALUE){
         //Q_ASSERT(static_cast<Boolean*>(n)->value == false);
         delete n;
     }else if(n->type == DISJUNCTION){
@@ -124,7 +124,8 @@ QString Disjunction::toMathBran(Expr::Precedence prec) const{
 }
 
 void Disjunction::visitChildren(Interpreter* interpreter){
-    for(Expr* expr : args) expr = interpreter->evaluate(expr);
+    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
+        args[i] = interpreter->evaluate(args[i]);
 }
 
 void Disjunction::flatten(Disjunction* d){

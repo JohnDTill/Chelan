@@ -1,8 +1,16 @@
 #TODO
 # Erase static methods
-# Get rid of interpreter visitor
+# Get rid of interpreter visitor:
+#   Nodes don't have enough control, e.g. throw error for badly sized matrix operation
+#   So the interpreter needs to be monolithic?
+#   Probably implement interpreter methods in various files.
 # Figure out typing rules
+#   Need type checking
 # Add control flow
+# Better debugging - print to DOT
+# Make library instead of including source files
+# Figure out matrix support
+# Support sets
 
 QT += core
 
@@ -21,7 +29,9 @@ SOURCES += \
         immutableassign.cpp \
         interpreter.cpp \
         main.cpp \
-        matrix.cpp \
+        matrixaddition.cpp \
+        matrixenumeration.cpp \
+        matrixnumeric.cpp \
         print.cpp \
         rational.cpp \
         read.cpp \
@@ -47,7 +57,9 @@ HEADERS += \
         exprtype.h \
         immutableassign.h \
         interpreter.h \
-        matrix.h \
+        matrixaddition.h \
+        matrixenumeration.h \
+        matrixnumeric.h \
         print.h \
         rational.h \
         read.h \

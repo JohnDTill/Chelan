@@ -3,7 +3,7 @@
 namespace Chelan{
 
 Boolean::Boolean(const bool& value)
-    : Expr(BOOLEAN),
+    : Expr(BOOLEAN_VALUE),
       value(value) {}
 
 Expr* Boolean::clone() const{

@@ -18,7 +18,7 @@ Expr* Conjunction::And(Expr* lhs, Expr* rhs){
         delete lhs;
 
         return rhs;
-    }else if(lhs->type == BOOLEAN){
+    }else if(lhs->type == BOOLEAN_VALUE){
         if(static_cast<Boolean*>(lhs)->value == false){
             rhs->deleteChildren();
             delete rhs;
@@ -28,7 +28,7 @@ Expr* Conjunction::And(Expr* lhs, Expr* rhs){
             delete lhs;
             return rhs;
         }
-    }else if(rhs->type == BOOLEAN){
+    }else if(rhs->type == BOOLEAN_VALUE){
         if(static_cast<Boolean*>(rhs)->value == false){
             lhs->deleteChildren();
             delete lhs;
@@ -61,7 +61,7 @@ Expr* Conjunction::And(const std::vector<Expr*>& args){
     }
 
     for(Expr* n : args){
-        if(n->type == BOOLEAN && static_cast<Boolean*>(n)->value == false){
+        if(n->type == BOOLEAN_VALUE && static_cast<Boolean*>(n)->value == false){
             for(Expr* m : args){
                 if(n!=m){
                     m->deleteChildren();
@@ -80,7 +80,7 @@ Expr* Conjunction::And(const std::vector<Expr*>& args){
 }
 
 void Conjunction::processNewArg(Expr* n){
-    if(n->type == BOOLEAN){
+    if(n->type == BOOLEAN_VALUE){
         Q_ASSERT(static_cast<Boolean*>(n)->value);
         delete n;
     }else if(n->type == CONJUNCTION){
@@ -147,7 +147,8 @@ QString Conjunction::toMathBran(Expr::Precedence prec) const{
 }
 
 void Conjunction::visitChildren(Interpreter* interpreter){
-    for(Expr* expr : args) expr = interpreter->evaluate(expr);
+    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
+        args[i] = interpreter->evaluate(args[i]);
 }
 
 void Conjunction::flatten(Conjunction* c){
