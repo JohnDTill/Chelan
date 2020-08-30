@@ -1,18 +1,15 @@
-#ifndef RATIONAL_H
-#define RATIONAL_H
+#ifndef READVARIABLE_H
+#define READVARIABLE_H
 
 #include "expr.h"
-#include <gmpxx.h>
 
-namespace Chelan{
+namespace Chelan {
 
-class Rational : public Expr{
+class Read : public Expr{
 public:
-    const mpq_class value;
-
+    const std::vector<Expr*>::size_type slot;
 public:
-    Rational(const mpq_class& value);
-    Rational(const QString& value);
+    Read(std::vector<Expr*>::size_type slot);
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;
@@ -21,4 +18,4 @@ public:
 
 }
 
-#endif // RATIONAL_H
+#endif // READVARIABLE_H

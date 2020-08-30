@@ -18,6 +18,10 @@ QString output;
 public:
     Interpreter(std::vector<Stmt*> stmts);
     QString interpret();
+    Expr* evaluate(Expr* expr);
+
+private:
+    bool interpret(Stmt* stmt);
 };
 
 }

@@ -1,15 +1,17 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "nodetype.h"
+#include "exprtype.h"
 #include <QString>
 #include <vector>
 
 namespace Chelan{
 
+class Interpreter;
+
 class Expr{
 public:
-    const NodeType type;
+    const ExprType type;
 
 protected:
     enum Precedence{
@@ -25,7 +27,7 @@ protected:
     };
 
 public:
-    Expr(const NodeType& type);
+    Expr(const ExprType& type);
     virtual ~Expr();
     virtual Expr* clone() const = 0;
     virtual void deleteChildren(){}
@@ -37,6 +39,7 @@ public:
     virtual QString toMathBran(Precedence prec = PREC_NONE) const = 0;
     virtual QString getKey(Precedence = PREC_NONE) const;
     bool isScalar() const;
+    virtual void visitChildren(Interpreter* interpreter) = 0;
 
 protected:
     static Expr* searchForUndefined(const std::vector<Expr*>& args);

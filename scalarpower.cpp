@@ -26,7 +26,7 @@ Expr* ScalarPower::Raise(Expr* lhs, mpq_class rhs){
     if(lhs->type == UNDEFINED){
         return lhs;
     }else{
-        return Expr::evaluateAndFree(new ScalarPower(lhs, Rational(rhs)));
+        return Expr::evaluateAndFree(ScalarPower::Raise(lhs, new Rational(rhs)));
     }
 }
 
@@ -42,7 +42,7 @@ void ScalarPower::deleteChildren(){
 Expr* ScalarPower::evaluate(){
     const QString lhs_key = lhs->getKey();
     if(lhs_key == "0"){
-        Expr* undef = Or(IsLessThanZero(rhs->clone()), EqualsZero(rhs));
+        Expr* undef = Disjunction::Or(Less::IsLessThanZero(rhs->clone()), Equality::EqualsZero(rhs));
 
         if(undef->type == BOOLEAN){
             if(static_cast<Boolean*>(undef)->value){
@@ -61,7 +61,7 @@ Expr* ScalarPower::evaluate(){
     const QString rhs_key = rhs->getKey();
     if(rhs_key == "0"){
         deleteChildren();
-        return Rational(1);
+        return new Rational(1);
     }else if(rhs_key == "1"){
         delete rhs;
         return lhs;
@@ -86,6 +86,11 @@ Expr* ScalarPower::evaluate(){
 
 QString ScalarPower::toMathBran(Expr::Precedence) const{
     return lhs->toMathBran(PREC_POWER) + "⁜^⏴" + rhs->toMathBran(PREC_NONE) + "⏵";
+}
+
+void ScalarPower::visitChildren(Interpreter* interpreter){
+    lhs = interpreter->evaluate(lhs);
+    rhs = interpreter->evaluate(rhs);
 }
 
 QString ScalarPower::getKey(Expr::Precedence prec) const{

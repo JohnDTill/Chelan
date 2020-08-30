@@ -1,5 +1,7 @@
 #include "conditionalvalue.h"
 
+#include "chelan.h"
+
 namespace Chelan{
 
 ConditionalValue::ConditionalValue()
@@ -58,6 +60,11 @@ QString ConditionalValue::toMathBran(Expr::Precedence) const{
     str += "⏵⏴else⏵";
 
     return str;
+}
+
+void ConditionalValue::visitChildren(Interpreter* interpreter){
+    for(Expr* expr : values) expr = interpreter->evaluate(expr);
+    for(Expr* expr : conditions) expr = interpreter->evaluate(expr);
 }
 
 }

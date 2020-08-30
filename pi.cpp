@@ -17,4 +17,8 @@ QString Pi::toMathBran(Precedence) const{
     return "π";
 }
 
+void Pi::visitChildren(Interpreter* interpreter){
+    //DO NOTHING
+}
+
 }

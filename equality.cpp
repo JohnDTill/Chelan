@@ -9,21 +9,21 @@ Equality::Equality(Expr* n)
       n(n) {}
 
 Expr* Equality::Equals(Expr* lhs, Expr* rhs){
-    if(lhs->getKey() == rhs->getKey()) return True();
+    if(lhs->getKey() == rhs->getKey()) return new Boolean(true);
 
     switch(lhs->type + rhs->type * num_types){
         case RATIONAL + RATIONAL*num_types:
         case PI + RATIONAL*num_types:
         case RATIONAL + PI*num_types:
-            return False();
+            return new Boolean(false);
         default:
-            return Expr::evaluateAndFree(new Equality( Subtract(lhs,rhs) ));
+            return Expr::evaluateAndFree(new Equality( ScalarAddition::Subtract(lhs,rhs) ));
     }
 }
 
 Expr* Equality::EqualsZero(Expr* n){
     switch(n->type){
-        case PI: return False();
+        case PI: return new Boolean(false);
         case RATIONAL: return new Boolean(static_cast<class Rational*>(n)->value == 0);
         default:
             return Expr::evaluateAndFree(new Equality(n));
@@ -43,6 +43,10 @@ QString Equality::toMathBran(Expr::Precedence prec) const{
     if(prec > PREC_EQUALITY) str.prepend('(').append(')');
 
     return str;
+}
+
+void Equality::visitChildren(Interpreter* interpreter){
+    n = interpreter->evaluate(n);
 }
 
 }

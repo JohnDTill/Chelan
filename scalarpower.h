@@ -19,6 +19,7 @@ public:
     virtual void deleteChildren() override;
     virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;
+    virtual void visitChildren(Interpreter* interpreter) override;
 
 private:
     virtual QString getKey(Precedence prec = PREC_NONE) const override;

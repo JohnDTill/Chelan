@@ -18,4 +18,8 @@ QString Undefined::toMathBran(Expr::Precedence) const{
     return "undefined";
 }
 
+void Undefined::visitChildren(Interpreter*){
+    //DO NOTHING
+}
+
 }

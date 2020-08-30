@@ -1,3 +1,9 @@
+#TODO
+# Erase static methods
+# Get rid of interpreter visitor
+# Figure out typing rules
+# Add control flow
+
 QT += core
 
 TARGET = Chelan
@@ -12,10 +18,13 @@ CONFIG += c++11
 SOURCES += \
         compiler.cpp \
         expr.cpp \
+        immutableassign.cpp \
         interpreter.cpp \
         main.cpp \
         matrix.cpp \
+        print.cpp \
         rational.cpp \
+        read.cpp \
         realvariable.cpp \
         pi.cpp \
         disjunction.cpp \
@@ -35,11 +44,14 @@ SOURCES += \
 HEADERS += \
         compiler.h \
         expr.h \
+        exprtype.h \
+        immutableassign.h \
         interpreter.h \
         matrix.h \
+        print.h \
         rational.h \
+        read.h \
         realvariable.h \
-        nodetype.h \
         pi.h \
         chelan.h \
         disjunction.h \
@@ -50,6 +62,7 @@ HEADERS += \
         scalarmultiplication.h \
         scalarpower.h \
         stmt.h \
+        stmttype.h \
         undefined.h \
         equality.h \
         less.h \

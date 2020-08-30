@@ -132,7 +132,7 @@ Expr* Conjunction::evaluate(){
                 //This will work recursively for multiple disjunctions
             }
 
-            return Or(new_disjunction_args);
+            return Disjunction::Or(new_disjunction_args);
         }
     }
 
@@ -144,6 +144,10 @@ QString Conjunction::toMathBran(Expr::Precedence prec) const{
     if(prec > PREC_CONJUNCTION) str.prepend('(').append(')');
 
     return str;
+}
+
+void Conjunction::visitChildren(Interpreter* interpreter){
+    for(Expr* expr : args) expr = interpreter->evaluate(expr);
 }
 
 void Conjunction::flatten(Conjunction* c){

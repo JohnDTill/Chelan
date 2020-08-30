@@ -123,6 +123,10 @@ QString Disjunction::toMathBran(Expr::Precedence prec) const{
     return str;
 }
 
+void Disjunction::visitChildren(Interpreter* interpreter){
+    for(Expr* expr : args) expr = interpreter->evaluate(expr);
+}
+
 void Disjunction::flatten(Disjunction* d){
     for(Expr* n : d->args) insertOrDiscard(n);
     delete d;

@@ -26,4 +26,8 @@ QString Matrix::toMathBran(Expr::Precedence) const{
     return str;
 }
 
+void Matrix::visitChildren(Interpreter* interpreter){
+    for(Expr* expr : args) expr = interpreter->evaluate(expr);
+}
+
 }

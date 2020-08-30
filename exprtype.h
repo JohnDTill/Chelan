@@ -1,11 +1,11 @@
-#ifndef NODETYPE_H
-#define NODETYPE_H
+#ifndef EXPRTYPE_H
+#define EXPRTYPE_H
 
 #include <stdint.h>
 
 namespace Chelan{
 
-enum NodeType{
+enum ExprType{
     //Scalar types
     SCALAR_ADDITION,
     CONDITIONALVALUE,
@@ -32,10 +32,13 @@ enum NodeType{
 
     //Untyped types
     UNTYPED_ADDITION,
+
+    //Misc
+    READ,
 };
 
 constexpr uint8_t num_types = UNDEFINED + 1;
 
 }
 
-#endif // NODETYPE_H
+#endif // EXPRTYPE_H

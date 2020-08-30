@@ -18,4 +18,8 @@ QString Boolean::toMathBran(Expr::Precedence) const{
     return value ? "true" : "false";
 }
 
+void Boolean::visitChildren(Interpreter*){
+    //DO NOTHING
+}
+
 }

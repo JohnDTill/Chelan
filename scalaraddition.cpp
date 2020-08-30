@@ -31,7 +31,7 @@ Expr* ScalarAddition::Add(const std::vector<Expr*>& args){
 }
 
 Expr* ScalarAddition::Subtract(Expr* lhs, Expr* rhs){
-    return Add(lhs, Multiply(-1, rhs));
+    return Add(lhs, ScalarMultiplication::Multiply(-1, rhs));
 }
 
 Expr* ScalarAddition::clone() const{
@@ -55,7 +55,7 @@ Expr* ScalarAddition::evaluate(){
     collect();
 
     constant.canonicalize();
-    if(args.size()==0) return Rational(constant);
+    if(args.size()==0) return new Rational(constant);
     else if(args.size()==1 && constant==0) return *args.begin();
 
     setKey();
@@ -67,6 +67,10 @@ QString ScalarAddition::toMathBran(Precedence prec) const{
     if(prec > PREC_ADDITION) str.prepend('(').append(')');
 
     return str;
+}
+
+void ScalarAddition::visitChildren(Interpreter* interpreter){
+    for(Expr* expr : args) expr = interpreter->evaluate(expr);
 }
 
 void ScalarAddition::foldConstants(){
@@ -136,7 +140,7 @@ void ScalarAddition::collect(int start, int end){
         deleteRecursive(args[i]);
     }
 
-    Expr* factored = Multiply(factor, n);
+    Expr* factored = ScalarMultiplication::Multiply(factor, n);
     if(factored->type != RATIONAL){
         args[start] = factored;
         args.erase(args.begin()+start+1, args.begin()+end+1);

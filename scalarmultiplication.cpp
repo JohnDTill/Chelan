@@ -24,7 +24,7 @@ Expr* ScalarMultiplication::Multiply(const std::vector<Expr*>& args){
 }
 
 Expr* ScalarMultiplication::Divide(Expr* lhs, Expr* rhs){
-    return Multiply(lhs, Raise(rhs, -1));
+    return Multiply(lhs, ScalarPower::Raise(rhs, -1));
 }
 
 Expr* ScalarMultiplication::clone() const{
@@ -50,12 +50,12 @@ Expr* ScalarMultiplication::evaluate(){
     constant.canonicalize();
 
     if(args.size()==0){
-        return Rational(constant);
+        return new Rational(constant);
     }else if(constant == 0){
         //DO THIS: 0*x => 0 only if x is defined
         //if(IsDefined(args))...
         deleteChildren();
-        return Rational(constant);
+        return new Rational(constant);
     }else if(args.size()==1 && constant==1){
         return *args.begin();
     }
@@ -76,6 +76,10 @@ QString ScalarMultiplication::toMathBran(Precedence prec) const{
     if(prec > PREC_MULTIPLICATION) str.prepend('(').append(')');
 
     return str;
+}
+
+void ScalarMultiplication::visitChildren(Interpreter* interpreter){
+    for(Expr* expr : args) expr = interpreter->evaluate(expr);
 }
 
 void ScalarMultiplication::foldConstants(){
@@ -153,7 +157,7 @@ void ScalarMultiplication::collect(int start, int end){
             deleteRecursive(p->lhs);
             delete p;
         }else{
-            factors.push_back(Rational(1));
+            factors.push_back(new Rational(1));
             if(args[i]->type == SCALAR_MULTIPLICATION){
                 n = Multiply(static_cast<ScalarMultiplication*>(args[i])->constant, n);
             }
@@ -162,24 +166,24 @@ void ScalarMultiplication::collect(int start, int end){
     }
     args.erase(args.begin()+start+1, args.begin()+end+1);
 
-    Expr* zero_base = EqualsZero(n->clone());
+    Expr* zero_base = Equality::EqualsZero(n->clone());
 
     for(Expr* n : factors){
         Expr* exponent_is_positive =
-            Not(
-                Or(
-                    IsLessThanZero(n->clone()),
-                    EqualsZero(n->clone())
+            Negation::Not(
+                Disjunction::Or(
+                    Less::IsLessThanZero(n->clone()),
+                    Equality::EqualsZero(n->clone())
                 )
             );
         factors_positive.push_back( exponent_is_positive );
     }
 
-    Expr* factored_exponent = Raise(n, Add(factors));
-    Expr* positive_exponents = And(factors_positive);
-    Expr* is_defined = Or(Not(zero_base), positive_exponents);
+    Expr* factored_exponent = ScalarPower::Raise(n, ScalarAddition::Add(factors));
+    Expr* positive_exponents = Conjunction::And(factors_positive);
+    Expr* is_defined = Disjunction::Or(Negation::Not(zero_base), positive_exponents);
 
-    Expr* cv = Ternary(
+    Expr* cv = ConditionalValue::Ternary(
                    is_defined,
                    factored_exponent,
                    new Undefined("Divide by 0")

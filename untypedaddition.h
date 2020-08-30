@@ -14,6 +14,7 @@ public:
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;
+    virtual void visitChildren(Interpreter* interpreter) override;
 };
 
 }

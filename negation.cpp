@@ -28,7 +28,7 @@ Expr* Negation::Not(Expr* n){
                 negations.push_back(Not(a));
             delete n;
 
-            return Or(negations);
+            return Disjunction::Or(negations);
         }
         case DISJUNCTION:{ //¬(A ∨ B) ⇔ ¬A ∧ ¬B  (disjunctive normal form, De Morgan))
             std::vector<Expr*> negations;
@@ -36,7 +36,7 @@ Expr* Negation::Not(Expr* n){
                 negations.push_back(Not(a));
             delete n;
 
-            return And(negations);
+            return Conjunction::And(negations);
         }
         default:
             return Expr::evaluateAndFree(new Negation(n));
@@ -61,6 +61,10 @@ QString Negation::toMathBran(Expr::Precedence prec) const{
     if(prec > PREC_NEGATION) str.prepend('(').append(')');
 
     return str;
+}
+
+void Negation::visitChildren(Interpreter* interpreter){
+    n = interpreter->evaluate(n);
 }
 
 }

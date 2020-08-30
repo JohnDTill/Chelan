@@ -20,4 +20,8 @@ QString RealVariable::toMathBran(Precedence) const{
     return name;
 }
 
+void RealVariable::visitChildren(Interpreter*){
+    //DO NOTHING
+}
+
 }

@@ -1,6 +1,10 @@
 #include "stmt.h"
 
-Stmt::Stmt()
-{
+namespace Chelan {
+
+Stmt::Stmt(const Chelan::StmtType& type)
+    : type(type){
+
+}
 
 }

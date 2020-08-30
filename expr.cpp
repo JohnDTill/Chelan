@@ -4,7 +4,7 @@
 
 namespace Chelan{
 
-Expr::Expr(const NodeType& type)
+Expr::Expr(const ExprType& type)
     : type(type) {
 
 }
