@@ -3,12 +3,14 @@
 
 #include <QDebug>
 
+#include "block.h"
 #include "boolean.h"
 #include "compiler.h"
 #include "conditionalvalue.h"
 #include "conjunction.h"
 #include "disjunction.h"
 #include "equality.h"
+#include "ifstmt.h"
 #include "immutableassign.h"
 #include "interpreter.h"
 #include "less.h"

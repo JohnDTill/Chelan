@@ -14,6 +14,7 @@ class Interpreter{
 std::vector<Stmt*> stmts;
 std::vector<Expr*> stack;
 QString output;
+QString err_msg;
 
 public:
     Interpreter(std::vector<Stmt*> stmts);

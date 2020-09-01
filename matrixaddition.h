@@ -6,7 +6,7 @@
 namespace Chelan {
 
 class MatrixAddition : public Expr{
-private:
+public:
     std::vector<Expr*> args;
 
 public:
@@ -15,9 +15,6 @@ public:
     virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;
     virtual void visitChildren(Interpreter*interpreter) override;
-
-private:
-    void foldConstants();
 };
 
 }

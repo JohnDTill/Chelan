@@ -27,10 +27,12 @@ bool Compiler::compileAll(){
 
 Stmt* Compiler::compileStmt(Neb::Node* parse_tree){
     switch (parse_tree->type) {
+        case Neb::BLOCK: return block(parse_tree);
         case Neb::EQUAL: return assign(parse_tree);
+        case Neb::IF: return ifStmt(parse_tree);
         case Neb::PRINT: return new Print(compileExpr(parse_tree->children[0]));
         default:
-            err_msg += "ERROR: unrecognized Neb::Node stmt";
+            err_msg += "COMPILE ERROR: unrecognized Neb::Node stmt";
             return nullptr;
     }
 }
@@ -38,9 +40,13 @@ Stmt* Compiler::compileStmt(Neb::Node* parse_tree){
 Expr* Compiler::compileExpr(Neb::Node* parse_tree){    
     switch(parse_tree->type){
         case Neb::ADDITION:{
-            Expr* e = Expr::evaluateAndFree(new UntypedAddition(compileExprs(parse_tree->children)));
-            if(e->type == UNDEFINED) err_msg += static_cast<Undefined*>(e)->msg;
-            return e;
+            UntypedAddition* a = new UntypedAddition(compileExprs(parse_tree->children));
+            if(Expr* e = a->evaluate(err_msg)){
+                delete a;
+                return e;
+            }else{
+                return a;
+            }
         }
         case Neb::DIVIDE: return ScalarMultiplication::Divide(compileExpr(parse_tree->children[0]), compileExpr(parse_tree->children[1]));
         case Neb::FALSE: return new Boolean(false);
@@ -106,7 +112,7 @@ Stmt* Compiler::assign(Neb::Node* stmt){
     Q_ASSERT(stmt->type == Neb::EQUAL);
 
     if(stmt->children.size() != 2){
-        err_msg += "ERROR: assignment statement can have only one '=' symbol\n";
+        err_msg += "COMPILE ERROR: assignment statement can have only one '=' symbol\n";
         return nullptr;
     }
     Neb::Node* lhs = stmt->children[0];
@@ -114,13 +120,35 @@ Stmt* Compiler::assign(Neb::Node* stmt){
 
     QString id = lhs->data;
     if(scopes.back().contains(id)){
-        err_msg += "ERROR: variable \"" + id + "\" has already been defined";
+        err_msg += "COMPILE ERROR: variable \"" + id + "\" has already been defined";
         return nullptr;
     }
 
     scopes.back()[id] = std::make_tuple(stack_slot++, true, rhs->valueType());
 
     return new ImmutableAssign(rhs);
+}
+
+Stmt* Compiler::ifStmt(Neb::Node* stmt){
+    Q_ASSERT(stmt->type == Neb::IF);
+    Q_ASSERT(stmt->children.size() >= 2);
+
+    Expr* condition = compileExpr(stmt->children[0]);
+    Stmt* body = compileStmt(stmt->children[1]);
+
+    if(stmt->children.size() == 2) return new IfStmt(condition, body, nullptr);
+    Stmt* body_false = compileStmt(stmt->children[2]);
+
+    return new IfStmt(condition, body, body_false);
+}
+
+Stmt* Compiler::block(Neb::Node* stmt){
+    if(stmt->children.size() == 1) return compileStmt(stmt->children[0]);
+
+    std::vector<Stmt*> stmts;
+    for(Neb::Node* c : stmt->children) stmts.push_back(compileStmt(c));
+
+    return new Block(stmts);
 }
 
 Expr* Compiler::matrix(Neb::Node* expr){
@@ -164,7 +192,7 @@ Expr* Compiler::read(Neb::Node* expr){
         }
     }
 
-    err_msg += "ERROR: variable \"" + expr->data + "\" is not defined";
+    err_msg += "COMPILE ERROR: variable \"" + expr->data + "\" is not defined";
     return nullptr;
 }
 

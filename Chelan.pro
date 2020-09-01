@@ -1,12 +1,17 @@
 #TODO
 # Erase static methods
+#   Don't evaluate on construction
 # Get rid of interpreter visitor:
 #   Nodes don't have enough control, e.g. throw error for badly sized matrix operation
 #   So the interpreter needs to be monolithic?
+#   No it's not monolithic. You attempt type deductions in the compiler,
+#   then have to redo them in the interpreter if they fail, so that code has to be shared.
 #   Probably implement interpreter methods in various files.
 # Figure out typing rules
 #   Need type checking
 # Add control flow
+#   With S-expressions... this is madness.
+#   While loops depend on mutability
 # Better debugging - print to DOT
 # Make library instead of including source files
 # Figure out matrix support
@@ -24,8 +29,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        block.cpp \
         compiler.cpp \
         expr.cpp \
+        ifstmt.cpp \
         immutableassign.cpp \
         interpreter.cpp \
         main.cpp \
@@ -52,9 +59,11 @@ SOURCES += \
         untypedaddition.cpp
 
 HEADERS += \
+        block.h \
         compiler.h \
         expr.h \
         exprtype.h \
+        ifstmt.h \
         immutableassign.h \
         interpreter.h \
         matrixaddition.h \

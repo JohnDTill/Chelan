@@ -4,6 +4,8 @@
 namespace Chelan{
 
 enum StmtType{
+    BLOCK,
+    IF,
     IMMUTABLE_ASSIGN,
     PRINT,
 };

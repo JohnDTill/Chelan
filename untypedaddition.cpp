@@ -14,29 +14,8 @@ Expr* UntypedAddition::clone() const{
 }
 
 Expr* UntypedAddition::evaluate(){
-    ValueType candidate = args.front()->valueType();
-    if(candidate == UNTYPED) return nullptr;
-    bool deduction_failed = false;
-
-    for(std::vector<Expr*>::size_type i = 1; i < args.size(); i++){
-        ValueType vt = args[i]->valueType();
-        if(vt == UNTYPED) deduction_failed = true;
-        else if(vt != candidate){
-            return new Undefined("ERROR: Cannot add type " + value_names[vt]
-                                 + " with type " + value_names[candidate],
-                                 true);
-        }
-    }
-
-    if(deduction_failed) return nullptr;
-
-    switch(candidate){
-        case SCALAR: return new ScalarAddition(args);
-        case MATRIX: return new MatrixAddition(args);
-        default: return new Undefined("ERROR: Type " +
-                                      value_names[candidate] + " cannot be added",
-                                      true);
-    }
+    //MOVED
+    return nullptr;
 }
 
 QString UntypedAddition::toMathBran(Expr::Precedence) const{
@@ -50,6 +29,31 @@ QString UntypedAddition::toMathBran(Expr::Precedence) const{
 void UntypedAddition::visitChildren(Interpreter* interpreter){
     for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
         args[i] = interpreter->evaluate(args[i]);
+}
+
+Expr* UntypedAddition::evaluate(QString& err_msg){
+    ValueType candidate = args.front()->valueType();
+    bool deduction_failed = (candidate == UNTYPED);
+
+    for(std::vector<Expr*>::size_type i = 1; i < args.size(); i++){
+        ValueType vt = args[i]->valueType();
+        if(vt == UNTYPED) deduction_failed = true;
+        else if(vt != candidate && candidate != UNTYPED){
+            err_msg += "TYPE ERROR: Cannot add type " + value_names[vt]
+                    + " with type " + value_names[candidate] + '\n';
+            return new Undefined("", true);
+        }else candidate = vt;
+    }
+
+    if(deduction_failed) return nullptr;
+
+    switch(candidate){
+        case SCALAR: return new ScalarAddition(args);
+        case MATRIX: return new MatrixAddition(args);
+        default:
+            err_msg += "TYPE ERROR: Type " + value_names[candidate] + " cannot be added\n";
+            return new Undefined("", true);
+    }
 }
 
 }

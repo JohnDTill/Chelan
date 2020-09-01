@@ -34,6 +34,8 @@ private:
     Expr* compileExpr(Neb::Node* parse_tree);
     std::vector<Expr*> compileExprs(std::vector<Neb::Node*>& parse_forest);
     Stmt* assign(Neb::Node* stmt);
+    Stmt* ifStmt(Neb::Node* stmt);
+    Stmt* block(Neb::Node* stmt);
     Expr* matrix(Neb::Node* expr);
     Expr* number(Neb::Node* expr);
     Expr* read(Neb::Node* expr);

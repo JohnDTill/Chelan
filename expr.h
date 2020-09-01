@@ -40,6 +40,8 @@ public:
     virtual QString getKey(Precedence = PREC_NONE) const;
     ValueType valueType() const;
     virtual void visitChildren(Interpreter* interpreter) = 0;
+    static bool isFalse(Expr* n);
+    static bool isTrue(Expr* n);
 
 protected:
     static Expr* searchForUndefined(const std::vector<Expr*>& args);
@@ -47,8 +49,6 @@ protected:
         return a->getKey(prec) < b->getKey(prec);
     }
     static std::vector<Expr*> cloneArgs(const std::vector<Expr*> args);
-    static bool isFalse(Expr* n);
-    static bool isTrue(Expr* n);
 };
 
 const QString value_names[5] = {

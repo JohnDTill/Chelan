@@ -61,7 +61,7 @@ QString Expr::getKey(Precedence) const{
 ValueType Expr::valueType() const{
     if(type <= UNDEFINED) return SCALAR;
     else if(type <= NEGATION) return BOOLEAN;
-    else if(type <= MATRIX_ENUMERATION) return MATRIX;
+    else if(type <= MATRIX_NUMERIC) return MATRIX;
     else if(type <= SET_ENUMERATION) return SET;
     else if(type <= UNTYPED_ADDITION) return UNTYPED;
     else return static_cast<const Read*>(this)->value_type;
