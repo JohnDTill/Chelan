@@ -63,7 +63,7 @@ ValueType Expr::valueType() const{
     else if(type <= NEGATION) return BOOLEAN;
     else if(type <= MATRIX_NUMERIC) return MATRIX;
     else if(type <= SET_ENUMERATION) return SET;
-    else if(type <= UNTYPED_MULTIPLICATION) return UNTYPED;
+    else if(type <= UNTYPED_POWER) return UNTYPED;
     else return static_cast<const Read*>(this)->value_type;
 }
 

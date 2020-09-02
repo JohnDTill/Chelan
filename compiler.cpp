@@ -54,6 +54,15 @@ Expr* Compiler::compileExpr(Neb::Node* parse_tree){
         case Neb::GROUP_PAREN: return compileExpr(parse_tree->children[0]);
         case Neb::GROUP_BRACKET: return compileExpr(parse_tree->children[0]);
         case Neb::IDENTIFIER: return read(parse_tree);
+        case Neb::IMPLICIT_MULTIPLY:{
+            UntypedImplicitMult* a = new UntypedImplicitMult(compileExprs(parse_tree->children));
+            if(Expr* e = a->evaluate(err_msg)){
+                delete a;
+                return e;
+            }else{
+                return a;
+            }
+        }
         case Neb::LOGICAL_NOT: return Negation::Not(compileExpr(parse_tree->children[0]));
         case Neb::LOGICAL_OR: return Disjunction::Or(compileExpr(parse_tree->children[0]), compileExpr(parse_tree->children[1]));
         case Neb::LOGICAL_AND: return Conjunction::And(compileExpr(parse_tree->children[0]), compileExpr(parse_tree->children[1]));
@@ -68,6 +77,15 @@ Expr* Compiler::compileExpr(Neb::Node* parse_tree){
         }
         case Neb::NUMBER: return number(parse_tree);
         case Neb::MATRIX: return matrix(parse_tree);
+        case Neb::POWER:{
+            UntypedPower* a = new UntypedPower(compileExpr(parse_tree->children[0]), compileExpr(parse_tree->children[1]));
+            if(Expr* e = a->evaluate(err_msg)){
+                delete a;
+                return e;
+            }else{
+                return a;
+            }
+        }
         case Neb::TRUE: return new Boolean(true);
 
         //FIX THESE
@@ -76,9 +94,6 @@ Expr* Compiler::compileExpr(Neb::Node* parse_tree){
             return Chelan::Subtract(convertToAst(n->children[0]), convertToAst(n->children[1]));
         case Neb::UNARY_MINUS:
             return Chelan::Multiply(-1, convertToAst(n->children[0]));
-        case Neb::MULTIPLICATION:
-        case Neb::IMPLICIT_MULTIPLY:
-            return Chelan::Multiply(convertToAst(n->children[0]), convertToAst(n->children[1]));
         case Neb::DOT:
             return Chelan::Multiply(convertToAst(n->children[0]), convertToAst(n->children[1]));
         case Neb::CROSS:
@@ -87,8 +102,6 @@ Expr* Compiler::compileExpr(Neb::Node* parse_tree){
         case Neb::FORWARDSLASH:
         case Neb::BACKSLASH:
             return Chelan::Divide(convertToAst(n->children[1]), convertToAst(n->children[0]));
-        case Neb::POWER:
-            return Chelan::Raise(convertToAst(n->children[0]), convertToAst(n->children[1]));
         case Neb::CASES:
             if(n->children.size()==4){
                 return Chelan::Ternary(convertToAst(n->children[1]),

@@ -120,7 +120,6 @@ Expr* Interpreter::evaluate(Expr* expr){
                 }
 
                 if(i > 0 && a->args[i]->type == MATRIX_NUMERIC && a->args[i-1]->type == MATRIX_NUMERIC){
-                    qDebug() << __LINE__;
                     MatrixNumeric* A = static_cast<MatrixNumeric*>(a->args[i-1]);
                     MatrixNumeric* B = static_cast<MatrixNumeric*>(a->args[i]);
 
@@ -156,7 +155,7 @@ Expr* Interpreter::evaluate(Expr* expr){
                 for(mpq_class& val : static_cast<MatrixNumeric*>(a->args[0])->args)
                     val *= scaling;
                 delete a->scaling;
-                return a->args[0];
+                return evaluate(a->args[0]);
             }
 
             //Symbolic//
@@ -183,9 +182,19 @@ Expr* Interpreter::evaluate(Expr* expr){
                 return expr;
             }
         }
+        case UNTYPED_POWER:{
+            expr->visitChildren(this);
+            if(Expr* e = static_cast<UntypedPower*>(expr)->evaluate(err_msg)){
+                delete expr;
+                return e;
+            }else{
+                return expr;
+            }
+        }
         default:
             expr->visitChildren(this);
-            return Expr::evaluateAndFree(expr);
+            while(Expr* e = expr->evaluate()) expr = e;
+            return expr;
     }
 }
 

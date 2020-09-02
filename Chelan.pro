@@ -58,7 +58,9 @@ SOURCES += \
         less.cpp \
         conditionalvalue.cpp \
         untypedaddition.cpp \
-        untypedmultiplication.cpp
+        untypedimplicitmult.cpp \
+        untypedmultiplication.cpp \
+        untypedpower.cpp
 
 HEADERS += \
         block.h \
@@ -92,7 +94,9 @@ HEADERS += \
         less.h \
         conditionalvalue.h \
         untypedaddition.h \
-        untypedmultiplication.h
+        untypedimplicitmult.h \
+        untypedmultiplication.h \
+        untypedpower.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

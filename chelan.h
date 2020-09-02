@@ -29,6 +29,8 @@
 #include "scalarpower.h"
 #include "undefined.h"
 #include "untypedaddition.h"
+#include "untypedimplicitmult.h"
 #include "untypedmultiplication.h"
+#include "untypedpower.h"
 
 #endif // CHELAN_H

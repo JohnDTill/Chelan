@@ -15,6 +15,8 @@ Expr* MatrixNumeric::clone() const{
 }
 
 Expr* MatrixNumeric::evaluate(){
+    if(rows == 1 && cols == 1) return new Rational(args[0]);
+
     return nullptr;
 }
 
