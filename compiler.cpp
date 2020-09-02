@@ -143,12 +143,17 @@ Stmt* Compiler::ifStmt(Neb::Node* stmt){
 }
 
 Stmt* Compiler::block(Neb::Node* stmt){
-    if(stmt->children.size() == 1) return compileStmt(stmt->children[0]);
+    std::vector<Expr*>::size_type old_slot = stack_slot;
+    scopes.push_back(SymTable());
 
     std::vector<Stmt*> stmts;
     for(Neb::Node* c : stmt->children) stmts.push_back(compileStmt(c));
 
-    return new Block(stmts);
+    scopes.pop_back();
+    std::vector<Expr*>::size_type scope_size = stack_slot - old_slot;
+    stack_slot = old_slot;
+
+    return new Block(stmts, scope_size);
 }
 
 Expr* Compiler::matrix(Neb::Node* expr){

@@ -12,7 +12,7 @@ public:
     std::vector<Expr*>::size_type stack_size;
 
 public:
-    Block(std::vector<Stmt*>& stmts);
+    Block(std::vector<Stmt*>& stmts, std::vector<Expr*>::size_type stack_size);
 };
 
 }

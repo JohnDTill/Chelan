@@ -21,10 +21,16 @@ QString Interpreter::interpret(){
 
 bool Interpreter::interpret(Stmt* stmt){
     switch (stmt->type) {
-        case BLOCK:
-            for(Stmt* st : static_cast<Block*>(stmt)->stmts)
+        case BLOCK:{
+            Block* b = static_cast<Block*>(stmt);
+            for(Stmt* st : b->stmts)
                 if(!interpret(st)) return false;
+            for(std::vector<Expr*>::size_type i = 0; i < b->stack_size; i++){
+                Expr::deleteRecursive(stack.back());
+                stack.pop_back();
+            }
             return true;
+        }
         case IF:{
             IfStmt* if_stmt = static_cast<IfStmt*>(stmt);
             Expr* condition = evaluate(if_stmt->condition->clone());
