@@ -10,7 +10,7 @@ UntypedAddition::UntypedAddition(const std::vector<Expr*>& args)
 }
 
 Expr* UntypedAddition::clone() const{
-    return new UntypedAddition(args);
+    return new UntypedAddition(cloneArgs(args));
 }
 
 Expr* UntypedAddition::evaluate(){

@@ -4,16 +4,14 @@
 
 namespace Chelan{
 
-MatrixNumeric::MatrixNumeric(int rows, int cols, const std::vector<Expr*>& args)
+MatrixNumeric::MatrixNumeric(int rows, int cols, const std::vector<mpq_class>& args)
     : Expr(MATRIX_NUMERIC),
       rows(rows),
       cols(cols),
       args(args){}
 
 Expr* MatrixNumeric::clone() const{
-    std::vector<Expr*> cloned_args;
-    for(Expr* n : args) cloned_args.push_back(n->clone());
-    return new MatrixNumeric(rows, cols, cloned_args);
+    return new MatrixNumeric(rows, cols, args);
 }
 
 Expr* MatrixNumeric::evaluate(){
@@ -22,13 +20,20 @@ Expr* MatrixNumeric::evaluate(){
 
 QString MatrixNumeric::toMathBran(Expr::Precedence) const{
     QString str = "⁜⊞⏴" + QString::number(rows) + "⏵⏴" + QString::number(cols) + "⏵";
-    for(Expr* n : args) str += "⏴" + n->toMathBran() + "⏵";
+    for(mpq_class n : args) str += "⏴" + QString::fromStdString(n.get_str()) + "⏵";
     return str;
 }
 
-void MatrixNumeric::visitChildren(Interpreter* interpreter){
-    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
-        args[i] = interpreter->evaluate(args[i]);
+void MatrixNumeric::visitChildren(Interpreter*){
+    //DO NOTHING
+}
+
+const mpq_class& MatrixNumeric::at(std::vector<mpq_class>::size_type row,
+                                   std::vector<mpq_class>::size_type col) const{
+    Q_ASSERT(col < cols);
+    Q_ASSERT(row < rows);
+
+    return args[col + cols*row];
 }
 
 }

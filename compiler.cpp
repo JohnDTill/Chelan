@@ -57,6 +57,15 @@ Expr* Compiler::compileExpr(Neb::Node* parse_tree){
         case Neb::LOGICAL_NOT: return Negation::Not(compileExpr(parse_tree->children[0]));
         case Neb::LOGICAL_OR: return Disjunction::Or(compileExpr(parse_tree->children[0]), compileExpr(parse_tree->children[1]));
         case Neb::LOGICAL_AND: return Conjunction::And(compileExpr(parse_tree->children[0]), compileExpr(parse_tree->children[1]));
+        case Neb::MULTIPLICATION:{
+            UntypedMultiplication* a = new UntypedMultiplication(compileExprs(parse_tree->children));
+            if(Expr* e = a->evaluate(err_msg)){
+                delete a;
+                return e;
+            }else{
+                return a;
+            }
+        }
         case Neb::NUMBER: return number(parse_tree);
         case Neb::MATRIX: return matrix(parse_tree);
         case Neb::TRUE: return new Boolean(true);

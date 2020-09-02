@@ -69,14 +69,9 @@ Expr* Interpreter::evaluate(Expr* expr){
             //Fold constants
             for(std::vector<Expr*>::size_type i = a->args.size()-1; i < a->args.size(); i--){
                 if(a->args[i]->type == MATRIX_NUMERIC){
-                    std::vector<Expr*>& es = static_cast<MatrixNumeric*>(a->args[i])->args;
-                    std::vector<Expr*>::size_type rows = static_cast<MatrixNumeric*>(a->args[i])->rows;
-                    std::vector<Expr*>::size_type cols = static_cast<MatrixNumeric*>(a->args[i])->cols;
-                    std::vector<mpq_class> vals(es.size());
-                    for(std::vector<Expr*>::size_type k = 0; k < vals.size(); k++){
-                        vals[k] = static_cast<Rational*>(es[k])->value;
-                        delete es[k];
-                    }
+                    std::vector<mpq_class> vals = static_cast<MatrixNumeric*>(a->args[i])->args;
+                    std::vector<mpq_class>::size_type rows = static_cast<MatrixNumeric*>(a->args[i])->rows;
+                    std::vector<mpq_class>::size_type cols = static_cast<MatrixNumeric*>(a->args[i])->cols;
                     delete a->args[i];
                     a->args.erase(a->args.begin()+i);
 
@@ -94,26 +89,75 @@ Expr* Interpreter::evaluate(Expr* expr){
                                 return new Undefined("", true);
                             }
 
-                            std::vector<Expr*>& es = static_cast<MatrixNumeric*>(a->args[j])->args;
-                            for(std::vector<Expr*>::size_type k = 0; k < vals.size(); k++){
-                                vals[k] += static_cast<Rational*>(es[k])->value;
-                                delete es[k];
-                            }
+                            std::vector<mpq_class>& es = static_cast<MatrixNumeric*>(a->args[j])->args;
+                            for(std::vector<Expr*>::size_type k = 0; k < vals.size(); k++)
+                                vals[k] += es[k];
                             delete a->args[j];
                             a->args.erase(a->args.begin()+j);
                         }
                     }
 
-                    std::vector<Expr*> ex(vals.size());
-                    for(std::vector<Expr*>::size_type k = 0; k < vals.size(); k++)
-                        ex[k] = new Rational(vals[k]);
-
-                    a->args.push_back(new MatrixNumeric(rows, cols, ex));
+                    a->args.push_back(new MatrixNumeric(rows, cols, vals));
 
                     break;
                 }
             }
             if(a->args.size()==1) return a->args[0];
+
+            //Symbolic//
+            return expr;
+        }
+        case MATRIX_MULTIPLICATION:{
+            expr->visitChildren(this);
+            MatrixMultiplication* a = static_cast<MatrixMultiplication*>(expr);
+
+            //Fast path//
+            //Fold constants
+            for(std::vector<Expr*>::size_type i = a->args.size()-1; i < a->args.size(); i--){
+                if(a->args[i]->valueType() == SCALAR){
+                    a->scaling = ScalarMultiplication::Multiply(a->scaling, a->args[i]);
+                    a->args.erase(a->args.begin() + i);
+                }
+
+                if(i > 0 && a->args[i]->type == MATRIX_NUMERIC && a->args[i-1]->type == MATRIX_NUMERIC){
+                    qDebug() << __LINE__;
+                    MatrixNumeric* A = static_cast<MatrixNumeric*>(a->args[i-1]);
+                    MatrixNumeric* B = static_cast<MatrixNumeric*>(a->args[i]);
+
+                    if(A->cols != B->rows){
+                        err_msg += "SIZE ERROR: Multiplied matrices of incompatible sizes "
+                                + QString::number(A->rows) + "×" + QString::number(A->cols)
+                                + " and "
+                                + QString::number(B->rows) + "×" + QString::number(B->cols)
+                                + "\n";
+                        return new Undefined("", true);
+                    }
+
+                    std::vector<mpq_class> vals(A->rows * B->cols);
+
+                    for(std::vector<mpq_class>::size_type i = 0; i < A->rows; i++){
+                        for(std::vector<mpq_class>::size_type j = 0; j < B->cols; j++){
+                            std::vector<mpq_class>::size_type index = i*B->cols + j;
+                            vals[index] = A->at(i,0)*B->at(0,j);
+                            for(std::vector<mpq_class>::size_type k = 1; k < A->cols; k++)
+                                vals[index] += A->at(i,k)*B->at(k,j);
+                        }
+                    }
+
+                    a->args[i-1] = new MatrixNumeric(A->rows, B->cols, vals);
+                    delete A;
+                    delete B;
+                    a->args.erase(a->args.begin() + i);
+                }
+            }
+
+            if(a->args.size()==1 && a->args[0]->type == MATRIX_NUMERIC && a->scaling->type == RATIONAL){
+                mpq_class scaling = static_cast<Rational*>(a->scaling)->value;
+                for(mpq_class& val : static_cast<MatrixNumeric*>(a->args[0])->args)
+                    val *= scaling;
+                delete a->scaling;
+                return a->args[0];
+            }
 
             //Symbolic//
             return expr;
@@ -124,6 +168,15 @@ Expr* Interpreter::evaluate(Expr* expr){
         case UNTYPED_ADDITION:{
             expr->visitChildren(this);
             if(Expr* e = static_cast<UntypedAddition*>(expr)->evaluate(err_msg)){
+                delete expr;
+                return e;
+            }else{
+                return expr;
+            }
+        }
+        case UNTYPED_MULTIPLICATION:{
+            expr->visitChildren(this);
+            if(Expr* e = static_cast<UntypedMultiplication*>(expr)->evaluate(err_msg)){
                 delete expr;
                 return e;
             }else{

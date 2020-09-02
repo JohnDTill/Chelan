@@ -27,6 +27,7 @@ enum ExprType{
     //Matrix types
     MATRIX_ADDITION,
     MATRIX_ENUMERATION,
+    MATRIX_MULTIPLICATION,
     MATRIX_NUMERIC,
 
     //Set types
@@ -34,6 +35,7 @@ enum ExprType{
 
     //Untyped types
     UNTYPED_ADDITION,
+    UNTYPED_MULTIPLICATION,
 
     //Misc
     READ,

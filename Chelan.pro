@@ -38,6 +38,7 @@ SOURCES += \
         main.cpp \
         matrixaddition.cpp \
         matrixenumeration.cpp \
+        matrixmultiplication.cpp \
         matrixnumeric.cpp \
         print.cpp \
         rational.cpp \
@@ -56,7 +57,8 @@ SOURCES += \
         equality.cpp \
         less.cpp \
         conditionalvalue.cpp \
-        untypedaddition.cpp
+        untypedaddition.cpp \
+        untypedmultiplication.cpp
 
 HEADERS += \
         block.h \
@@ -68,6 +70,7 @@ HEADERS += \
         interpreter.h \
         matrixaddition.h \
         matrixenumeration.h \
+        matrixmultiplication.h \
         matrixnumeric.h \
         print.h \
         rational.h \
@@ -88,7 +91,8 @@ HEADERS += \
         equality.h \
         less.h \
         conditionalvalue.h \
-        untypedaddition.h
+        untypedaddition.h \
+        untypedmultiplication.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

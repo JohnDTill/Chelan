@@ -19,14 +19,17 @@ Expr* MatrixEnumeration::clone() const{
 Expr* MatrixEnumeration::evaluate(){
     if(num_v == 1 && num_h == 1) return args[0];
 
-    bool numeric = true;
-    for(Expr* expr : args){
-        if(expr->type != RATIONAL){
-            numeric = false;
+    bool is_numeric = true;
+    std::vector<mpq_class> numeric_args(args.size());
+    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++){
+        if(args[i]->type != RATIONAL){
+            is_numeric = false;
             break;
+        }else{
+            numeric_args[i] = static_cast<Rational*>(args[i])->value;
         }
     }
-    if(numeric) return new MatrixNumeric(num_v, num_h, args);
+    if(is_numeric) return new MatrixNumeric(num_v, num_h, numeric_args);
 
     //DO THIS: CHECK FOR SIZE ERRORS
     //Want special rules for 0's and 1's: ⁜⊞⏴2⏵⏴2⏵⏴R⏵⏴p⏵⏴0⏵⏴1⏵ bold zero and size appropriately

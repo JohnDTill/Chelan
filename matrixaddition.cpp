@@ -10,7 +10,7 @@ MatrixAddition::MatrixAddition(const std::vector<Expr*>& args)
 }
 
 Expr* MatrixAddition::clone() const{
-    return new MatrixAddition(args);
+    return new MatrixAddition(cloneArgs(args));
 }
 
 Expr* MatrixAddition::evaluate(){

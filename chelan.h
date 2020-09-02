@@ -16,6 +16,7 @@
 #include "less.h"
 #include "matrixaddition.h"
 #include "matrixenumeration.h"
+#include "matrixmultiplication.h"
 #include "matrixnumeric.h"
 #include "negation.h"
 #include "pi.h"
@@ -28,5 +29,6 @@
 #include "scalarpower.h"
 #include "undefined.h"
 #include "untypedaddition.h"
+#include "untypedmultiplication.h"
 
 #endif // CHELAN_H
