@@ -60,12 +60,12 @@ QString ScalarAddition::toMathBran(Precedence prec) const{
 }
 
 void ScalarAddition::visitChildren(Interpreter* interpreter){
-    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
+    for(vInt i = 0; i < args.size(); i++)
         args[i] = interpreter->evaluate(args[i]);
 }
 
 void ScalarAddition::foldConstants(){
-    for(int i = args.size()-1; i >= 0; i--){
+    for(vInt i = args.size()-1; i < vInt_MAX; i--){
         if(args[i]->type == RATIONAL){
             constant += static_cast<class Rational*>(args[i])->value;
             delete args[i];
@@ -78,7 +78,7 @@ void ScalarAddition::flatten(){
     if(args.empty()) return;
 
     std::vector<Expr*> new_args;
-    for(int i = args.size()-1; i >= 0; i--){
+    for(vInt i = args.size()-1; i < vInt_MAX; i--){
         if(args[i]->type == SCALAR_ADDITION){
             flatten(static_cast<ScalarAddition*>(args[i]), new_args);
             delete args[i];
@@ -99,10 +99,10 @@ void ScalarAddition::collect(){
 
     std::sort(args.begin(), args.end(), compare<PREC_ADDITION>);
 
-    int pattern_end = args.size() - 1;
+    vInt pattern_end = args.size() - 1;
     QString search_key = args.back()->getKey(PREC_ADDITION);
-    int i;
-    for(i = pattern_end; i >= 0; i--){
+    vInt i;
+    for(i = pattern_end; i < vInt_MAX; i--){
         QString target_key = args[i]->getKey(PREC_ADDITION);
 
         if(target_key != search_key){
@@ -115,14 +115,14 @@ void ScalarAddition::collect(){
     if(pattern_end - i > 1) collect(0, pattern_end);
 }
 
-void ScalarAddition::collect(int start, int end){
+void ScalarAddition::collect(vInt start, vInt end){
     mpq_class factor = 0;
     Expr* n = args[start]->clone();
     if(n->type == SCALAR_MULTIPLICATION)
         static_cast<ScalarMultiplication*>(n)->constant = 1;
 
 
-    for(int i = end; i >= start; i--){
+    for(vInt i = end; i >= start && i < vInt_MAX; i--){
         if(args[i]->type == SCALAR_MULTIPLICATION){
             factor += static_cast<ScalarMultiplication*>(args[i])->constant;
         }else{

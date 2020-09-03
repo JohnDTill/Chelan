@@ -4,7 +4,7 @@
 
 namespace Chelan{
 
-MatrixEnumeration::MatrixEnumeration(int rows, int cols, const std::vector<Expr*>& args)
+MatrixEnumeration::MatrixEnumeration(vInt rows, vInt cols, const std::vector<Expr*>& args)
     : Expr(MATRIX_ENUMERATION),
       num_v(rows),
       num_h(cols),

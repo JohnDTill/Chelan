@@ -28,7 +28,7 @@ private:
     void flatten();
     void flatten(ScalarAddition* a, std::vector<Expr*>& new_args);
     void collect();
-    void collect(int start, int end);
+    void collect(vInt start, vInt end);
     void setKey();
 };
 

@@ -29,7 +29,7 @@ private:
     void flatten();
     void flatten(ScalarMultiplication* a, std::vector<Expr*>& new_args);
     void collect();
-    void collect(int start, int end);
+    void collect(vInt start, vInt end);
     void setKey();
     virtual QString getKey(Precedence prec = PREC_NONE) const override;
 };

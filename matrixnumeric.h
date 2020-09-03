@@ -8,13 +8,13 @@ namespace Chelan{
 
 class MatrixNumeric : public Expr{
 public:
-    const std::vector<mpq_class>::size_type rows;
-    const std::vector<mpq_class>::size_type cols;
+    const vInt rows;
+    const vInt cols;
     std::vector<mpq_class> args;
     QString key;
 
 public:
-    MatrixNumeric(int rows, int cols, const std::vector<mpq_class>& args);
+    MatrixNumeric(vInt rows, vInt cols, const std::vector<mpq_class>& args);
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;

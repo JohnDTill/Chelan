@@ -2,6 +2,7 @@
 #define STMT_H
 
 #include "stmttype.h"
+class QTextStream;
 
 namespace Chelan {
 
@@ -13,6 +14,7 @@ public:
 
 public:
     Stmt(const StmtType& type);
+    //virtual uint32_t writeDOT(QTextStream& out, uint64_t& curr) const = 0;
 };
 
 }

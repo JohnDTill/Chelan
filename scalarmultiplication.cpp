@@ -81,7 +81,7 @@ void ScalarMultiplication::visitChildren(Interpreter* interpreter){
 }
 
 void ScalarMultiplication::foldConstants(){
-    for(int i = args.size()-1; i >= 0; i--){
+    for(std::vector<Expr*>::size_type i = args.size()-1; i < args.size(); i--){
         if(args[i]->type == RATIONAL){
             constant *= static_cast<class Rational*>(args[i])->value;
             delete args[i];
@@ -94,7 +94,7 @@ void ScalarMultiplication::flatten(){
     if(args.empty()) return;
 
     std::vector<Expr*> new_args;
-    for(int i = args.size()-1; i >= 0; i--){
+    for(std::vector<Expr*>::size_type i = args.size()-1; i < args.size(); i--){
         if(args[i]->type == SCALAR_MULTIPLICATION){
             flatten(static_cast<ScalarMultiplication*>(args[i]), new_args);
             delete args[i];
@@ -115,10 +115,10 @@ void ScalarMultiplication::collect(){
 
     std::sort(args.begin(), args.end(), compare<PREC_MULTIPLICATION>);
 
-    int pattern_end = args.size() - 1;
+    std::vector<Expr*>::size_type pattern_end = args.size() - 1;
     QString search_key = args.back()->getKey(PREC_MULTIPLICATION);
-    int i;
-    for(i = pattern_end; i >= 0; i--){
+    std::vector<Expr*>::size_type i;
+    for(i = pattern_end; i < args.size(); i--){
         QString target_key = args[i]->getKey(PREC_MULTIPLICATION);
 
         if(target_key != search_key){
@@ -131,7 +131,7 @@ void ScalarMultiplication::collect(){
     if(pattern_end - i > 1) collect(0, pattern_end);
 }
 
-void ScalarMultiplication::collect(int start, int end){
+void ScalarMultiplication::collect(vInt start, vInt end){
     std::vector<Expr*> factors;
     std::vector<Expr*> factors_positive;
     Expr* n = args[start]->clone();

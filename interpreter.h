@@ -23,6 +23,10 @@ public:
 
 private:
     bool interpret(Stmt* stmt);
+    Expr* matrixAddition(Expr* expr);
+    Expr* matrixMultiplication(Expr* expr);
+    Expr* read(Expr* expr);
+    Expr* untypedAddition(Expr* expr);
 };
 
 }

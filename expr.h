@@ -4,6 +4,7 @@
 #include "exprtype.h"
 #include <QString>
 #include <vector>
+class QTextStream;
 
 namespace Chelan{
 
@@ -37,6 +38,7 @@ public:
     static Expr* remove(std::vector<Expr*>& search, const Expr* pattern, Precedence prec = PREC_NONE);
     static Expr* remove(std::vector<Expr*>& search, const Expr* pattern, const std::vector<Expr*>::iterator& end, Precedence prec = PREC_NONE);
     virtual QString toMathBran(Precedence prec = PREC_NONE) const = 0;
+    //virtual void writeMathBran(QTextStream& out) const = 0;
     virtual QString getKey(Precedence = PREC_NONE) const;
     ValueType valueType() const;
     virtual void visitChildren(Interpreter* interpreter) = 0;
@@ -58,6 +60,9 @@ const QString value_names[5] = {
     "SET",
     "UNTYPED"
 };
+
+typedef std::vector<Expr*>::size_type vInt;
+constexpr vInt vInt_MAX = std::numeric_limits<vInt>::max();
 
 }
 

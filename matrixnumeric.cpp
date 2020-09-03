@@ -4,7 +4,7 @@
 
 namespace Chelan{
 
-MatrixNumeric::MatrixNumeric(int rows, int cols, const std::vector<mpq_class>& args)
+MatrixNumeric::MatrixNumeric(vInt rows, vInt cols, const std::vector<mpq_class>& args)
     : Expr(MATRIX_NUMERIC),
       rows(rows),
       cols(cols),
