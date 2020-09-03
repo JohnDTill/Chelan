@@ -11,9 +11,7 @@ public:
     QString key;
 
 public:
-    Conjunction();
-    static Expr* And(Expr* lhs, Expr* rhs);
-    static Expr* And(const std::vector<Expr*>& args);
+    Conjunction(const std::vector<Expr*>& args);
     void processNewArg(Expr* n);
     virtual Expr* clone() const override;
     virtual void deleteChildren() override;

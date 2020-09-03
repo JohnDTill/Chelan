@@ -8,7 +8,16 @@ Negation::Negation(Expr* n)
     : Expr(NEGATION),
       n(n) {}
 
-Expr* Negation::Not(Expr* n){
+Expr* Negation::clone() const{
+    return new Negation(n);
+}
+
+void Negation::deleteChildren(){
+    n->deleteChildren();
+    delete n;
+}
+
+Expr* Negation::evaluate(){
     switch(n->type){
         case UNDEFINED: return n;
         case BOOLEAN_VALUE:{
@@ -25,34 +34,23 @@ Expr* Negation::Not(Expr* n){
         case CONJUNCTION:{ //¬(A ∧ B) ⇒ ¬A ∨ ¬B  (disjunctive normal form, De Morgan)
             std::vector<Expr*> negations;
             for(Expr* a : static_cast<Conjunction*>(n)->args)
-                negations.push_back(Not(a));
+                negations.push_back(new Negation(a));
             delete n;
 
-            return Disjunction::Or(negations);
+            return new Disjunction(negations);
         }
         case DISJUNCTION:{ //¬(A ∨ B) ⇔ ¬A ∧ ¬B  (disjunctive normal form, De Morgan))
             std::vector<Expr*> negations;
             for(Expr* a : static_cast<Disjunction*>(n)->args)
-                negations.push_back(Not(a));
+                negations.push_back(new Negation(a));
             delete n;
 
-            return Conjunction::And(negations);
+            return new Conjunction(negations);
         }
         default:
-            return Expr::evaluateAndFree(new Negation(n));
+            return nullptr;
     }
-}
 
-Expr* Negation::clone() const{
-    return new Negation(n);
-}
-
-void Negation::deleteChildren(){
-    n->deleteChildren();
-    delete n;
-}
-
-Expr* Negation::evaluate(){
     return nullptr;
 }
 

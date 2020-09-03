@@ -115,7 +115,7 @@ Expr* Interpreter::evaluate(Expr* expr){
             //Fold constants
             for(std::vector<Expr*>::size_type i = a->args.size()-1; i < a->args.size(); i--){
                 if(a->args[i]->valueType() == SCALAR){
-                    a->scaling = ScalarMultiplication::Multiply(a->scaling, a->args[i]);
+                    a->scaling = new ScalarMultiplication({a->scaling, a->args[i]});
                     a->args.erase(a->args.begin() + i);
                 }
 
@@ -166,30 +166,21 @@ Expr* Interpreter::evaluate(Expr* expr){
             return evaluate(stack[static_cast<Read*>(expr)->slot]->clone());
         case UNTYPED_ADDITION:{
             expr->visitChildren(this);
-            if(Expr* e = static_cast<UntypedAddition*>(expr)->evaluate(err_msg)){
-                delete expr;
-                return e;
-            }else{
-                return expr;
-            }
+            if(Expr* e = static_cast<UntypedAddition*>(expr)->evaluate(err_msg))
+                expr = evaluate(e);
+            return expr;
         }
         case UNTYPED_MULTIPLICATION:{
             expr->visitChildren(this);
-            if(Expr* e = static_cast<UntypedMultiplication*>(expr)->evaluate(err_msg)){
-                delete expr;
-                return e;
-            }else{
-                return expr;
-            }
+            if(Expr* e = static_cast<UntypedMultiplication*>(expr)->evaluate(err_msg))
+                expr = evaluate(e);
+            return expr;
         }
         case UNTYPED_POWER:{
             expr->visitChildren(this);
-            if(Expr* e = static_cast<UntypedPower*>(expr)->evaluate(err_msg)){
-                delete expr;
-                return e;
-            }else{
-                return expr;
-            }
+            if(Expr* e = static_cast<UntypedPower*>(expr)->evaluate(err_msg))
+                expr = evaluate(e);
+            return expr;
         }
         default:
             expr->visitChildren(this);

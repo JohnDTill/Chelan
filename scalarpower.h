@@ -13,8 +13,6 @@ public:
 
 public:
     ScalarPower(Expr* lhs, Expr* rhs);
-    static Expr* Raise(Expr* lhs, Expr* rhs);
-    static Expr* Raise(Expr* lhs, mpq_class rhs);
     virtual Expr* clone() const override;
     virtual void deleteChildren() override;
     virtual Expr* evaluate() override;

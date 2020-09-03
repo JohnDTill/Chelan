@@ -12,7 +12,6 @@ private:
 public:
     Less(Expr* n);
     static Expr* IsLess(Expr* lhs, Expr* rhs);
-    static Expr* IsLessThanZero(Expr* n);
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence prec = PREC_NONE) const override;

@@ -11,7 +11,6 @@ public:
 
 public:
     Negation(Expr* n);
-    static Expr* Not(Expr* n);
     virtual Expr* clone() const override;
     virtual void deleteChildren() override;
     virtual Expr* evaluate() override;

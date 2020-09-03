@@ -5,26 +5,16 @@
 namespace Chelan{
 
 ScalarMultiplication::ScalarMultiplication(const std::vector<Expr*>& args)
-    : Expr(SCALAR_MULTIPLICATION),
-      args(args) {}
+    : Expr(SCALAR_MULTIPLICATION), args(args), constant(1) {}
 
-Expr* ScalarMultiplication::Multiply(Expr* lhs, Expr* rhs){
-    return Expr::evaluateAndFree(new ScalarMultiplication({lhs, rhs}));
-}
+ScalarMultiplication::ScalarMultiplication(Expr* lhs, mpq_class rhs)
+    : Expr(SCALAR_MULTIPLICATION), args({lhs}), constant(rhs){}
 
-Expr* ScalarMultiplication::Multiply(mpq_class lhs, Expr* rhs){
-    ScalarMultiplication* m = new ScalarMultiplication({rhs});
-    m->constant = lhs;
-
-    return Expr::evaluateAndFree(m);
-}
-
-Expr* ScalarMultiplication::Multiply(const std::vector<Expr*>& args){
-    return Expr::evaluateAndFree(new ScalarMultiplication(args));
-}
+ScalarMultiplication::ScalarMultiplication(mpq_class lhs, Expr* rhs)
+    : Expr(SCALAR_MULTIPLICATION), args({rhs}), constant(lhs){}
 
 Expr* ScalarMultiplication::Divide(Expr* lhs, Expr* rhs){
-    return Multiply(lhs, ScalarPower::Raise(rhs, -1));
+    return new ScalarMultiplication({lhs, new ScalarPower(rhs, new Rational(-1))});
 }
 
 Expr* ScalarMultiplication::clone() const{
@@ -160,38 +150,38 @@ void ScalarMultiplication::collect(int start, int end){
             ScalarPower* p = static_cast<ScalarPower*>(args[i]);
             factors.push_back(p->rhs);
             if(p->lhs->type == SCALAR_MULTIPLICATION){
-                n = Multiply(static_cast<ScalarMultiplication*>(p->lhs)->constant, n);
+                n = new ScalarMultiplication(static_cast<ScalarMultiplication*>(p->lhs)->constant, n);
             }
             deleteRecursive(p->lhs);
             delete p;
         }else{
             factors.push_back(new Rational(1));
             if(args[i]->type == SCALAR_MULTIPLICATION){
-                n = Multiply(static_cast<ScalarMultiplication*>(args[i])->constant, n);
+                n = new ScalarMultiplication(static_cast<ScalarMultiplication*>(args[i])->constant, n);
             }
             deleteRecursive(args[i]);
         }
     }
     args.erase(args.begin()+start+1, args.begin()+end+1);
 
-    Expr* zero_base = Equality::EqualsZero(n->clone());
+    Expr* zero_base = new Equality(n->clone());
 
     for(Expr* n : factors){
         Expr* exponent_is_positive =
-            Negation::Not(
-                Disjunction::Or(
-                    Less::IsLessThanZero(n->clone()),
-                    Equality::EqualsZero(n->clone())
+            new Negation(
+                new Disjunction(
+                    {new Less(n->clone()),
+                    new Equality(n->clone())}
                 )
             );
         factors_positive.push_back( exponent_is_positive );
     }
 
-    Expr* factored_exponent = ScalarPower::Raise(n, ScalarAddition::Add(factors));
-    Expr* positive_exponents = Conjunction::And(factors_positive);
-    Expr* is_defined = Disjunction::Or(Negation::Not(zero_base), positive_exponents);
+    Expr* factored_exponent = new ScalarPower(n, new ScalarAddition(factors));
+    Expr* positive_exponents = new Conjunction(factors_positive);
+    Expr* is_defined = new Disjunction({new Negation(zero_base), positive_exponents});
 
-    Expr* cv = ConditionalValue::Ternary(
+    Expr* cv = new ConditionalValue(
                    is_defined,
                    factored_exponent,
                    new Undefined("Divide by 0")

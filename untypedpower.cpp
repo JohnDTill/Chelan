@@ -32,8 +32,17 @@ void UntypedPower::visitChildren(Interpreter* interpreter){
 }
 
 Expr* UntypedPower::evaluate(QString& err_msg){
-    if(lhs->valueType() == SCALAR && rhs->valueType() == SCALAR){
-        return ScalarPower::Raise(lhs, rhs);
+    if(lhs->valueType() == SCALAR){
+        if(rhs->valueType() == SCALAR){
+            return new ScalarPower(lhs, rhs);
+        }else if(rhs->valueType() == MATRIX){
+            return nullptr; //DO THIS
+        }else if(rhs->valueType() != UNTYPED){
+            err_msg += "TYPE ERROR: Cannot raise scalar by type " + value_names[rhs->valueType()] + '\n';
+            return nullptr;
+        }else{
+            return nullptr;
+        }
     }else{
         return nullptr;
     }

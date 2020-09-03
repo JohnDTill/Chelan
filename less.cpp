@@ -9,25 +9,7 @@ Less::Less(Expr* n)
       n(n) {}
 
 Expr* Less::IsLess(Expr* lhs, Expr* rhs){
-    if(lhs->getKey() == rhs->getKey()) return new Boolean(false);
-
-    switch(lhs->type + rhs->type * num_types){
-        case RATIONAL + RATIONAL*num_types:
-            return new Boolean(
-                        static_cast<class Rational*>(lhs)->value < static_cast<class Rational*>(rhs)->value
-                        );
-        default:
-            return Expr::evaluateAndFree(new class Less( ScalarAddition::Subtract(lhs,rhs) ));
-    }
-}
-
-Expr* Less::IsLessThanZero(Expr* n){
-    switch(n->type){
-        case PI: return new Boolean(false);
-        case RATIONAL: return new Boolean(static_cast<class Rational*>(n)->value < 0);
-        default:
-            return Expr::evaluateAndFree(new class Less(n));
-    }
+    return new Less(ScalarAddition::Subtract(lhs, rhs));
 }
 
 Expr* Less::clone() const{
@@ -35,7 +17,11 @@ Expr* Less::clone() const{
 }
 
 Expr* Less::evaluate(){
-    return nullptr;
+    switch(n->type){
+        case PI: return new Boolean(false);
+        case RATIONAL: return new Boolean(static_cast<class Rational*>(n)->value < 0);
+        default: return nullptr;
+    }
 }
 
 QString Less::toMathBran(Expr::Precedence prec) const{

@@ -21,7 +21,7 @@ Expr* UntypedImplicitMult::evaluate(){
 QString UntypedImplicitMult::toMathBran(Expr::Precedence) const{
     QString str = args.front()->toMathBran(PREC_ADDITION);
     for(std::vector<Expr*>::size_type i = 1; i < args.size(); i++)
-        str += " + " + args[i]->toMathBran(PREC_ADDITION);
+        str += ' ' + args[i]->toMathBran(PREC_ADDITION);
 
     return str;
 }

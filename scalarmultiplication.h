@@ -10,14 +10,13 @@ namespace Chelan{
 class ScalarMultiplication : public Expr{
 public:
     std::vector<Expr*> args;
+    mpq_class constant;
     QString key;
-    mpq_class constant = 1;
 
 public:
     ScalarMultiplication(const std::vector<Expr*>& args);
-    static Expr* Multiply(Expr* lhs, Expr* rhs);
-    static Expr* Multiply(mpq_class lhs, Expr* rhs);
-    static Expr* Multiply(const std::vector<Expr*>& args);
+    ScalarMultiplication(Expr* lhs, mpq_class rhs);
+    ScalarMultiplication(mpq_class lhs, Expr* rhs);
     static Expr* Divide(Expr* lhs, Expr* rhs);
     virtual Expr* clone() const override;
     virtual void deleteChildren() override;

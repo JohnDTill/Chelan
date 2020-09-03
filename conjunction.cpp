@@ -4,49 +4,21 @@
 
 namespace Chelan{
 
-Conjunction::Conjunction()
-    : Expr(CONJUNCTION) {}
+Conjunction::Conjunction(const std::vector<Expr*>& args)
+    : Expr(CONJUNCTION), args(args) {}
 
-Expr* Conjunction::And(Expr* lhs, Expr* rhs){
-    if(lhs->type == UNDEFINED){
-        rhs->deleteChildren();
-        delete rhs;
+Expr* Conjunction::clone() const{
+    return new Conjunction(cloneArgs(args));
+}
 
-        return lhs;
-    }else if(rhs->type == UNDEFINED){
-        lhs->deleteChildren();
-        delete lhs;
-
-        return rhs;
-    }else if(lhs->type == BOOLEAN_VALUE){
-        if(static_cast<Boolean*>(lhs)->value == false){
-            rhs->deleteChildren();
-            delete rhs;
-
-            return lhs;
-        }else{
-            delete lhs;
-            return rhs;
-        }
-    }else if(rhs->type == BOOLEAN_VALUE){
-        if(static_cast<Boolean*>(rhs)->value == false){
-            lhs->deleteChildren();
-            delete lhs;
-
-            return rhs;
-        }else{
-            return lhs;
-        }
-    }else{
-        Conjunction* n = new Conjunction();
-        n->processNewArg(lhs);
-        n->processNewArg(rhs);
-
-        return Expr::evaluateAndFree(n);
+void Conjunction::deleteChildren(){
+    for(Expr* n : args){
+        n->deleteChildren();
+        delete n;
     }
 }
 
-Expr* Conjunction::And(const std::vector<Expr*>& args){
+Expr* Conjunction::evaluate(){
     for(Expr* n : args){
         if(n->type == UNDEFINED){
             for(Expr* m : args){
@@ -73,40 +45,16 @@ Expr* Conjunction::And(const std::vector<Expr*>& args){
         }
     }
 
-    Conjunction* a = new Conjunction();
-    for(Expr* n : args) a->processNewArg(n);
-
-    return Expr::evaluateAndFree(a);
-}
-
-void Conjunction::processNewArg(Expr* n){
-    if(n->type == BOOLEAN_VALUE){
-        Q_ASSERT(static_cast<Boolean*>(n)->value);
-        delete n;
-    }else if(n->type == CONJUNCTION){
-        flatten(static_cast<Conjunction*>(n));
-    }else{
-        insertOrDiscard(n);
+    for(std::vector<Expr*>::size_type i = args.size()-1; i < args.size(); i--){
+        if(args[i]->type == BOOLEAN_VALUE){
+            Q_ASSERT(static_cast<Boolean*>(args[i])->value);
+            delete args[i];
+            args.erase(args.begin() + i);
+        }else if(args[i]->type == CONJUNCTION){
+            flatten(static_cast<Conjunction*>(args[i]));
+        }
     }
-}
 
-Expr* Conjunction::clone() const{
-    Conjunction* n = new Conjunction();
-    n->args.resize(args.size());
-    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
-        n->args[i] = args[i]->clone();
-
-    return n;
-}
-
-void Conjunction::deleteChildren(){
-    for(Expr* n : args){
-        n->deleteChildren();
-        delete n;
-    }
-}
-
-Expr* Conjunction::evaluate(){
     if(args.size() == 0) return new Boolean(true); //Only true values were present
     if(args.size() == 1) return *args.begin();
 
@@ -128,11 +76,11 @@ Expr* Conjunction::evaluate(){
                 std::vector<Expr*> new_conjunction_args = args;
                 args.push_back(old_disjunction_arg);
 
-                new_disjunction_args.push_back( And(new_conjunction_args) );
+                new_disjunction_args.push_back( new Conjunction(new_conjunction_args) );
                 //This will work recursively for multiple disjunctions
             }
 
-            return Disjunction::Or(new_disjunction_args);
+            return new Disjunction(new_disjunction_args);
         }
     }
 

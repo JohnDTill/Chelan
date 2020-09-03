@@ -5,30 +5,7 @@
 namespace Chelan{
 
 ScalarPower::ScalarPower(Expr* lhs, Expr* rhs)
-    : Expr(SCALAR_POWER){
-    this->lhs = lhs;
-    this->rhs = rhs;
-}
-
-Expr* ScalarPower::Raise(Expr* lhs, Expr* rhs){
-    if(lhs->type == UNDEFINED){
-        deleteRecursive(rhs);
-        return lhs;
-    }else if(rhs->type == UNDEFINED){
-        deleteRecursive(lhs);
-        return rhs;
-    }else{
-        return Expr::evaluateAndFree(new ScalarPower(lhs, rhs));
-    }
-}
-
-Expr* ScalarPower::Raise(Expr* lhs, mpq_class rhs){
-    if(lhs->type == UNDEFINED){
-        return lhs;
-    }else{
-        return Expr::evaluateAndFree(ScalarPower::Raise(lhs, new Rational(rhs)));
-    }
-}
+    : Expr(SCALAR_POWER), lhs(lhs), rhs(rhs){}
 
 Expr* ScalarPower::clone() const{
     return new ScalarPower(lhs->clone(), rhs->clone());
@@ -40,9 +17,17 @@ void ScalarPower::deleteChildren(){
 }
 
 Expr* ScalarPower::evaluate(){
+    if(lhs->type == UNDEFINED){
+        deleteRecursive(rhs);
+        return lhs;
+    }else if(rhs->type == UNDEFINED){
+        deleteRecursive(lhs);
+        return rhs;
+    }
+
     const QString lhs_key = lhs->getKey();
     if(lhs_key == "0"){
-        Expr* undef = Disjunction::Or(Less::IsLessThanZero(rhs->clone()), Equality::EqualsZero(rhs));
+        Expr* undef = new Disjunction({new Less(rhs->clone()), new Equality(rhs)});
 
         if(undef->type == BOOLEAN_VALUE){
             if(static_cast<Boolean*>(undef)->value){

@@ -16,10 +16,6 @@ ConditionalValue::ConditionalValue(Expr* condition, Expr* value_true, Expr* valu
     values.push_back(value_false);
 }
 
-Expr* ConditionalValue::Ternary(Expr* condition, Expr* value_true, Expr* value_false){
-    return Expr::evaluateAndFree( new ConditionalValue(condition, value_true, value_false) );
-}
-
 Expr* ConditionalValue::clone() const{
     ConditionalValue* c = new ConditionalValue();
     for(Expr* n : values) c->values.push_back(n->clone());

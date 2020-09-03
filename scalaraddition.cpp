@@ -5,33 +5,16 @@
 namespace Chelan{
 
 ScalarAddition::ScalarAddition(const std::vector<Expr*>& args)
-    : Expr(SCALAR_ADDITION),
-      args(args) {}
+    : Expr(SCALAR_ADDITION), args(args), constant(0){}
 
-Expr* ScalarAddition::Add(Expr* lhs, Expr* rhs){
-    return Expr::evaluateAndFree(new ScalarAddition({lhs, rhs}));
-}
+ScalarAddition::ScalarAddition(Expr* lhs, mpq_class rhs)
+    : Expr(SCALAR_ADDITION), args({lhs}), constant(rhs){}
 
-Expr* ScalarAddition::Add(Expr* lhs, mpq_class rhs){
-    ScalarAddition* a = new ScalarAddition({lhs});
-    a->constant = rhs;
-
-    return Expr::evaluateAndFree(a);
-}
-
-Expr* ScalarAddition::Add(mpq_class lhs, Expr* rhs){
-    ScalarAddition* a = new ScalarAddition({rhs});
-    a->constant = lhs;
-
-    return Expr::evaluateAndFree(a);
-}
-
-Expr* ScalarAddition::Add(const std::vector<Expr*>& args){
-    return Expr::evaluateAndFree(new ScalarAddition(args));
-}
+ScalarAddition::ScalarAddition(mpq_class lhs, Expr* rhs)
+    : Expr(SCALAR_ADDITION), args({rhs}), constant(lhs){}
 
 Expr* ScalarAddition::Subtract(Expr* lhs, Expr* rhs){
-    return Add(lhs, ScalarMultiplication::Multiply(-1, rhs));
+    return new ScalarAddition({lhs, new ScalarMultiplication(-1, rhs)});
 }
 
 Expr* ScalarAddition::clone() const{
@@ -148,7 +131,7 @@ void ScalarAddition::collect(int start, int end){
         deleteRecursive(args[i]);
     }
 
-    Expr* factored = ScalarMultiplication::Multiply(factor, n);
+    Expr* factored = new ScalarMultiplication(factor, n);
     if(factored->type != RATIONAL){
         args[start] = factored;
         args.erase(args.begin()+start+1, args.begin()+end+1);

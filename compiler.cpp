@@ -39,53 +39,26 @@ Stmt* Compiler::compileStmt(Neb::Node* parse_tree){
 
 Expr* Compiler::compileExpr(Neb::Node* parse_tree){    
     switch(parse_tree->type){
-        case Neb::ADDITION:{
-            UntypedAddition* a = new UntypedAddition(compileExprs(parse_tree->children));
-            if(Expr* e = a->evaluate(err_msg)){
-                delete a;
-                return e;
-            }else{
-                return a;
-            }
-        }
-        case Neb::DIVIDE: return ScalarMultiplication::Divide(compileExpr(parse_tree->children[0]), compileExpr(parse_tree->children[1]));
+        case Neb::ADDITION: return new UntypedAddition(compileExprs(parse_tree->children));
+        case Neb::DIVIDE: return ScalarMultiplication::Divide(compileExpr(parse_tree->children[0]),
+                                                              compileExpr(parse_tree->children[1]));
         case Neb::FALSE: return new Boolean(false);
-        case Neb::FRACTION: return ScalarMultiplication::Divide(compileExpr(parse_tree->children[0]), compileExpr(parse_tree->children[1]));
+        case Neb::FRACTION: return ScalarMultiplication::Divide(compileExpr(parse_tree->children[0]),
+                                                                compileExpr(parse_tree->children[1]));
         case Neb::GROUP_PAREN: return compileExpr(parse_tree->children[0]);
         case Neb::GROUP_BRACKET: return compileExpr(parse_tree->children[0]);
         case Neb::IDENTIFIER: return read(parse_tree);
-        case Neb::IMPLICIT_MULTIPLY:{
-            UntypedImplicitMult* a = new UntypedImplicitMult(compileExprs(parse_tree->children));
-            if(Expr* e = a->evaluate(err_msg)){
-                delete a;
-                return e;
-            }else{
-                return a;
-            }
-        }
-        case Neb::LOGICAL_NOT: return Negation::Not(compileExpr(parse_tree->children[0]));
-        case Neb::LOGICAL_OR: return Disjunction::Or(compileExpr(parse_tree->children[0]), compileExpr(parse_tree->children[1]));
-        case Neb::LOGICAL_AND: return Conjunction::And(compileExpr(parse_tree->children[0]), compileExpr(parse_tree->children[1]));
-        case Neb::MULTIPLICATION:{
-            UntypedMultiplication* a = new UntypedMultiplication(compileExprs(parse_tree->children));
-            if(Expr* e = a->evaluate(err_msg)){
-                delete a;
-                return e;
-            }else{
-                return a;
-            }
-        }
+        case Neb::IMPLICIT_MULTIPLY: return new UntypedImplicitMult(compileExprs(parse_tree->children));
+        case Neb::LESS: return Less::IsLess(compileExpr(parse_tree->children[0]),
+                                            compileExpr(parse_tree->children[1]));
+        case Neb::LOGICAL_NOT: return new Negation(compileExpr(parse_tree->children[0]));
+        case Neb::LOGICAL_OR: return new Disjunction(compileExprs(parse_tree->children));
+        case Neb::LOGICAL_AND: return new Conjunction(compileExprs(parse_tree->children));
+        case Neb::MULTIPLICATION: return new UntypedMultiplication(compileExprs(parse_tree->children));
         case Neb::NUMBER: return number(parse_tree);
         case Neb::MATRIX: return matrix(parse_tree);
-        case Neb::POWER:{
-            UntypedPower* a = new UntypedPower(compileExpr(parse_tree->children[0]), compileExpr(parse_tree->children[1]));
-            if(Expr* e = a->evaluate(err_msg)){
-                delete a;
-                return e;
-            }else{
-                return a;
-            }
-        }
+        case Neb::POWER: return new UntypedPower(compileExpr(parse_tree->children[0]),
+                                                 compileExpr(parse_tree->children[1]));
         case Neb::TRUE: return new Boolean(true);
 
         //FIX THESE
@@ -110,8 +83,6 @@ Expr* Compiler::compileExpr(Neb::Node* parse_tree){
             }else{
                 return new Chelan::Undefined("ERROR: only ternary \"" + n->data + "\" cases are supported");
             }
-        case Neb::LESS:
-            return Chelan::IsLess(convertToAst(n->children[0]), convertToAst(n->children[1]));
         case Neb::EQUAL:
             return Chelan::IsEqual(convertToAst(n->children[0]), convertToAst(n->children[1]));
         //FIX THESE

@@ -4,49 +4,21 @@
 
 namespace Chelan{
 
-Disjunction::Disjunction()
-    : Expr(DISJUNCTION) {}
+Disjunction::Disjunction(const std::vector<Expr*>& args)
+    : Expr(DISJUNCTION), args(args) {}
 
-Expr* Disjunction::Or(Expr* lhs, Expr* rhs){
-    if(lhs->type == UNDEFINED){
-        rhs->deleteChildren();
-        delete rhs;
+Expr* Disjunction::clone() const{
+    return new Disjunction(cloneArgs(args));
+}
 
-        return lhs;
-    }else if(rhs->type == UNDEFINED){
-        lhs->deleteChildren();
-        delete lhs;
-
-        return rhs;
-    }else if(lhs->type == BOOLEAN_VALUE){
-        if(static_cast<Boolean*>(lhs)->value == true){
-            rhs->deleteChildren();
-            delete rhs;
-
-            return lhs;
-        }else{
-            delete lhs;
-            return rhs;
-        }
-    }else if(rhs->type == BOOLEAN_VALUE){
-        if(static_cast<Boolean*>(rhs)->value == true){
-            lhs->deleteChildren();
-            delete lhs;
-
-            return rhs;
-        }else{
-            return lhs;
-        }
-    }else{
-        Disjunction* n = new Disjunction();
-        n->processNewArg(lhs);
-        n->processNewArg(rhs);
-
-        return Expr::evaluateAndFree(n);
+void Disjunction::deleteChildren(){
+    for(Expr* n : args){
+        n->deleteChildren();
+        delete n;
     }
 }
 
-Expr* Disjunction::Or(const std::vector<Expr*>& args){
+Expr* Disjunction::evaluate(){
     for(Expr* n : args){
         if(n->type == UNDEFINED){
             for(Expr* m : args){
@@ -73,40 +45,16 @@ Expr* Disjunction::Or(const std::vector<Expr*>& args){
         }
     }
 
-    Disjunction* a = new Disjunction();
-    for(Expr* n : args) a->processNewArg(n);
-
-    return Expr::evaluateAndFree(a);
-}
-
-void Disjunction::processNewArg(Expr* n){
-    if(n->type == BOOLEAN_VALUE){
-        //Q_ASSERT(static_cast<Boolean*>(n)->value == false);
-        delete n;
-    }else if(n->type == DISJUNCTION){
-        flatten(static_cast<Disjunction*>(n));
-    }else{
-        insertOrDiscard(n);
+    for(std::vector<Expr*>::size_type i = args.size()-1; i < args.size(); i--){
+        if(args[i]->type == BOOLEAN_VALUE){
+            Q_ASSERT(static_cast<Boolean*>(args[i])->value == false);
+            delete args[i];
+            args.erase(args.begin() + i);
+        }else if(args[i]->type == DISJUNCTION){
+            flatten(static_cast<Disjunction*>(args[i]));
+        }
     }
-}
 
-Expr* Disjunction::clone() const{
-    Disjunction* n = new Disjunction();
-    n->args.resize(args.size());
-    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
-        n->args[i] = args[i]->clone();
-
-    return n;
-}
-
-void Disjunction::deleteChildren(){
-    for(Expr* n : args){
-        n->deleteChildren();
-        delete n;
-    }
-}
-
-Expr* Disjunction::evaluate(){
     if(args.size() == 0) return new Boolean(false); //Only false values were inserted
     if(args.size() == 1) return *args.begin();
 
