@@ -151,7 +151,7 @@ Expr* Interpreter::matrixMultiplication(Expr* expr){
     //Fast path//
     //Fold constants
     for(std::vector<Expr*>::size_type i = a->args.size()-1; i < a->args.size(); i--){
-        if(a->args[i]->valueType() == SCALAR){
+        if(a->args[i]->vt == SCALAR){
             a->scaling = new ScalarMultiplication({a->scaling, a->args[i]});
             a->args.erase(a->args.begin() + i);
         }

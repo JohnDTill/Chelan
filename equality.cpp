@@ -5,7 +5,7 @@
 namespace Chelan{
 
 Equality::Equality(Expr* n)
-    : Expr(EQUALITY),
+    : Expr(EQUALITY, BOOLEAN),
       n(n) {}
 
 Expr* Equality::Equals(Expr* lhs, Expr* rhs){

@@ -5,7 +5,7 @@
 namespace Chelan{
 
 Disjunction::Disjunction(const std::vector<Expr*>& args)
-    : Expr(DISJUNCTION), args(args) {}
+    : Expr(DISJUNCTION, BOOLEAN), args(args) {}
 
 Expr* Disjunction::clone() const{
     return new Disjunction(cloneArgs(args));

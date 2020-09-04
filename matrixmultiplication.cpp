@@ -5,7 +5,7 @@
 namespace Chelan {
 
 MatrixMultiplication::MatrixMultiplication(const std::vector<Expr*>& args, Expr* scaling)
-    : Expr(MATRIX_MULTIPLICATION), args(args), scaling(scaling){
+    : Expr(MATRIX_MULTIPLICATION, UNTYPED), args(args), scaling(scaling){
 
 }
 

@@ -5,13 +5,13 @@
 namespace Chelan{
 
 ScalarAddition::ScalarAddition(const std::vector<Expr*>& args)
-    : Expr(SCALAR_ADDITION), args(args), constant(0){}
+    : Expr(SCALAR_ADDITION, SCALAR), args(args), constant(0){}
 
 ScalarAddition::ScalarAddition(Expr* lhs, mpq_class rhs)
-    : Expr(SCALAR_ADDITION), args({lhs}), constant(rhs){}
+    : Expr(SCALAR_ADDITION, SCALAR), args({lhs}), constant(rhs){}
 
 ScalarAddition::ScalarAddition(mpq_class lhs, Expr* rhs)
-    : Expr(SCALAR_ADDITION), args({rhs}), constant(lhs){}
+    : Expr(SCALAR_ADDITION, SCALAR), args({rhs}), constant(lhs){}
 
 Expr* ScalarAddition::Subtract(Expr* lhs, Expr* rhs){
     return new ScalarAddition({lhs, new ScalarMultiplication(-1, rhs)});

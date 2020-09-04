@@ -4,10 +4,8 @@
 
 namespace Chelan{
 
-Expr::Expr(const ExprType& type)
-    : type(type) {
-
-}
+Expr::Expr(const ExprType& type, const ValueType& vt)
+    : type(type), vt(vt) {}
 
 Expr::~Expr(){
     //DO NOTHING
@@ -56,15 +54,6 @@ Expr* Expr::remove(std::vector<Expr*>& search, const Expr* pattern, const std::v
 
 QString Expr::getKey(Precedence) const{
     return toMathBran();
-}
-
-ValueType Expr::valueType() const{
-    if(type <= UNDEFINED) return SCALAR;
-    else if(type <= NEGATION) return BOOLEAN;
-    else if(type <= MATRIX_NUMERIC) return MATRIX;
-    else if(type <= SET_ENUMERATION) return SET;
-    else if(type <= UNTYPED_POWER) return UNTYPED;
-    else return static_cast<const Read*>(this)->value_type;
 }
 
 Expr* Expr::searchForUndefined(const std::vector<Expr*>& args){

@@ -5,13 +5,13 @@
 namespace Chelan{
 
 ScalarMultiplication::ScalarMultiplication(const std::vector<Expr*>& args)
-    : Expr(SCALAR_MULTIPLICATION), args(args), constant(1) {}
+    : Expr(SCALAR_MULTIPLICATION, SCALAR), args(args), constant(1) {}
 
 ScalarMultiplication::ScalarMultiplication(Expr* lhs, mpq_class rhs)
-    : Expr(SCALAR_MULTIPLICATION), args({lhs}), constant(rhs){}
+    : Expr(SCALAR_MULTIPLICATION, SCALAR), args({lhs}), constant(rhs){}
 
 ScalarMultiplication::ScalarMultiplication(mpq_class lhs, Expr* rhs)
-    : Expr(SCALAR_MULTIPLICATION), args({rhs}), constant(lhs){}
+    : Expr(SCALAR_MULTIPLICATION, SCALAR), args({rhs}), constant(lhs){}
 
 Expr* ScalarMultiplication::Divide(Expr* lhs, Expr* rhs){
     return new ScalarMultiplication({lhs, new ScalarPower(rhs, new Rational(-1))});

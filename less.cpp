@@ -5,7 +5,7 @@
 namespace Chelan{
 
 Less::Less(Expr* n)
-    : Expr(LESS),
+    : Expr(LESS, BOOLEAN),
       n(n) {}
 
 Expr* Less::IsLess(Expr* lhs, Expr* rhs){

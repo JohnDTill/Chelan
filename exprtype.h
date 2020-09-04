@@ -35,6 +35,7 @@ enum ExprType{
 
     //Untyped types
     UNTYPED_ADDITION,
+    UNTYPED_IMPLICIT_MULT,
     UNTYPED_MULTIPLICATION,
     UNTYPED_POWER,
 

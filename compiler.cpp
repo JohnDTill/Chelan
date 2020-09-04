@@ -17,12 +17,38 @@ Compiler::Compiler(std::vector<Neb::Node*>& parse_forest)
 }
 
 bool Compiler::compileAll(){
+    //Compile to AST
     for(Neb::Node* parse_tree : parse_forest){
-        stmts.push_back(compileStmt(parse_tree));
+        stmts.push_back(pushStmt(parse_tree));
         Neb::Node::deletePostorder(parse_tree);
+    }
+    if(!err_msg.isEmpty()) return false;
+
+    //Check types
+    std::vector<bool> s_update(all_stmts.size());
+    for(vInt i = s_update.size()-1; i < vInt_MAX; i--) s_update[i] = true;
+    std::vector<bool> e_update(all_exprs.size());
+    for(vInt i = e_update.size()-1; i < vInt_MAX; i--) e_update[i] = true;
+
+    for(bool updated = true; updated;){
+        updated = false;
+        for(vInt i = all_exprs.size()-1; i < vInt_MAX; i--){
+            if(!e_update[i]) continue;
+            //DO THIS
+        }
+        for(vInt i = all_stmts.size()-1; i < vInt_MAX; i--){
+            if(!s_update[i]) continue;
+            //DO THIS
+        }
     }
 
     return err_msg.isEmpty();
+}
+
+Stmt* Compiler::pushStmt(Neb::Node* parse_tree){
+    Stmt* stmt = compileStmt(parse_tree);
+    all_stmts.push_back(stmt);
+    return stmt;
 }
 
 Stmt* Compiler::compileStmt(Neb::Node* parse_tree){
@@ -30,35 +56,48 @@ Stmt* Compiler::compileStmt(Neb::Node* parse_tree){
         case Neb::BLOCK: return block(parse_tree);
         case Neb::EQUAL: return assign(parse_tree);
         case Neb::IF: return ifStmt(parse_tree);
-        case Neb::PRINT: return new Print(compileExpr(parse_tree->children[0]));
+        case Neb::PRINT: return new Print(pushExpr(parse_tree->children[0]));
         default:
             err_msg += "COMPILE ERROR: unrecognized Neb::Node stmt";
             return nullptr;
     }
 }
 
+Expr* Compiler::pushExpr(Neb::Node* parse_tree){
+    Expr* expr = compileExpr(parse_tree);
+    all_exprs.push_back(expr);
+    return expr;
+}
+
+std::vector<Expr*> Compiler::pushExpr(std::vector<Neb::Node*>& parse_forest){
+    std::vector<Expr*> exprs;
+    for(Neb::Node* parse_tree : parse_forest) exprs.push_back(pushExpr(parse_tree));
+
+    return exprs;
+}
+
 Expr* Compiler::compileExpr(Neb::Node* parse_tree){    
     switch(parse_tree->type){
-        case Neb::ADDITION: return new UntypedAddition(compileExprs(parse_tree->children));
-        case Neb::DIVIDE: return ScalarMultiplication::Divide(compileExpr(parse_tree->children[0]),
-                                                              compileExpr(parse_tree->children[1]));
+        case Neb::ADDITION: return new UntypedAddition(pushExpr(parse_tree->children));
+        case Neb::DIVIDE: return ScalarMultiplication::Divide(pushExpr(parse_tree->children[0]),
+                                                              pushExpr(parse_tree->children[1]));
         case Neb::FALSE: return new Boolean(false);
-        case Neb::FRACTION: return ScalarMultiplication::Divide(compileExpr(parse_tree->children[0]),
-                                                                compileExpr(parse_tree->children[1]));
-        case Neb::GROUP_PAREN: return compileExpr(parse_tree->children[0]);
-        case Neb::GROUP_BRACKET: return compileExpr(parse_tree->children[0]);
+        case Neb::FRACTION: return ScalarMultiplication::Divide(pushExpr(parse_tree->children[0]),
+                                                                pushExpr(parse_tree->children[1]));
+        case Neb::GROUP_PAREN: return pushExpr(parse_tree->children[0]);
+        case Neb::GROUP_BRACKET: return pushExpr(parse_tree->children[0]);
         case Neb::IDENTIFIER: return read(parse_tree);
-        case Neb::IMPLICIT_MULTIPLY: return new UntypedImplicitMult(compileExprs(parse_tree->children));
-        case Neb::LESS: return Less::IsLess(compileExpr(parse_tree->children[0]),
-                                            compileExpr(parse_tree->children[1]));
-        case Neb::LOGICAL_NOT: return new Negation(compileExpr(parse_tree->children[0]));
-        case Neb::LOGICAL_OR: return new Disjunction(compileExprs(parse_tree->children));
-        case Neb::LOGICAL_AND: return new Conjunction(compileExprs(parse_tree->children));
-        case Neb::MULTIPLICATION: return new UntypedMultiplication(compileExprs(parse_tree->children));
+        case Neb::IMPLICIT_MULTIPLY: return new UntypedImplicitMult(pushExpr(parse_tree->children));
+        case Neb::LESS: return Less::IsLess(pushExpr(parse_tree->children[0]),
+                                            pushExpr(parse_tree->children[1]));
+        case Neb::LOGICAL_NOT: return new Negation(pushExpr(parse_tree->children[0]));
+        case Neb::LOGICAL_OR: return new Disjunction(pushExpr(parse_tree->children));
+        case Neb::LOGICAL_AND: return new Conjunction(pushExpr(parse_tree->children));
+        case Neb::MULTIPLICATION: return new UntypedMultiplication(pushExpr(parse_tree->children));
         case Neb::NUMBER: return number(parse_tree);
         case Neb::MATRIX: return matrix(parse_tree);
-        case Neb::POWER: return new UntypedPower(compileExpr(parse_tree->children[0]),
-                                                 compileExpr(parse_tree->children[1]));
+        case Neb::POWER: return new UntypedPower(pushExpr(parse_tree->children[0]),
+                                                 pushExpr(parse_tree->children[1]));
         case Neb::TRUE: return new Boolean(true);
 
         //FIX THESE
@@ -94,13 +133,6 @@ Expr* Compiler::compileExpr(Neb::Node* parse_tree){
     }
 }
 
-std::vector<Expr*> Compiler::compileExprs(std::vector<Neb::Node*>& parse_forest){
-    std::vector<Expr*> exprs;
-    for(Neb::Node* parse_tree : parse_forest) exprs.push_back(compileExpr(parse_tree));
-
-    return exprs;
-}
-
 Stmt* Compiler::assign(Neb::Node* stmt){
     Q_ASSERT(stmt->type == Neb::EQUAL);
 
@@ -117,7 +149,7 @@ Stmt* Compiler::assign(Neb::Node* stmt){
         return nullptr;
     }
 
-    scopes.back()[id] = std::make_tuple(stack_slot++, true, rhs->valueType());
+    scopes.back()[id] = std::make_tuple(stack_slot++, true, rhs->vt);
 
     return new ImmutableAssign(rhs);
 }
@@ -126,11 +158,11 @@ Stmt* Compiler::ifStmt(Neb::Node* stmt){
     Q_ASSERT(stmt->type == Neb::IF);
     Q_ASSERT(stmt->children.size() >= 2);
 
-    Expr* condition = compileExpr(stmt->children[0]);
-    Stmt* body = compileStmt(stmt->children[1]);
+    Expr* condition = pushExpr(stmt->children[0]);
+    Stmt* body = pushStmt(stmt->children[1]);
 
     if(stmt->children.size() == 2) return new IfStmt(condition, body, nullptr);
-    Stmt* body_false = compileStmt(stmt->children[2]);
+    Stmt* body_false = pushStmt(stmt->children[2]);
 
     return new IfStmt(condition, body, body_false);
 }
@@ -140,7 +172,7 @@ Stmt* Compiler::block(Neb::Node* stmt){
     scopes.push_back(SymTable());
 
     std::vector<Stmt*> stmts;
-    for(Neb::Node* c : stmt->children) stmts.push_back(compileStmt(c));
+    for(Neb::Node* c : stmt->children) stmts.push_back(pushStmt(c));
 
     scopes.pop_back();
     std::vector<Expr*>::size_type scope_size = stack_slot - old_slot;
@@ -156,7 +188,7 @@ Expr* Compiler::matrix(Neb::Node* expr){
     Q_ASSERT(expr->children.size() == 2+rows*cols);
     std::vector<Chelan::Expr*> children(rows*cols);
     for(uint i = 0; i < rows*cols; i++)
-        children[i] = (compileExpr(expr->children[2+i]));
+        children[i] = (pushExpr(expr->children[2+i]));
     return new Chelan::MatrixEnumeration(rows,cols,children);
 }
 

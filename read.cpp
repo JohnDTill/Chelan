@@ -3,7 +3,7 @@
 namespace Chelan {
 
 Read::Read(std::vector<Expr*>::size_type slot, ValueType value_type)
-    : Expr(READ), slot(slot), value_type(value_type) {
+    : Expr(READ, UNTYPED), slot(slot), value_type(value_type) {
 
 }
 

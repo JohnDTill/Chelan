@@ -13,6 +13,7 @@ class Interpreter;
 class Expr{
 public:
     const ExprType type;
+    ValueType vt;
 
 protected:
     enum Precedence{
@@ -28,7 +29,7 @@ protected:
     };
 
 public:
-    Expr(const ExprType& type);
+    Expr(const ExprType& type, const ValueType& vt);
     virtual ~Expr();
     virtual Expr* clone() const = 0;
     virtual void deleteChildren(){}
@@ -40,7 +41,6 @@ public:
     virtual QString toMathBran(Precedence prec = PREC_NONE) const = 0;
     //virtual void writeMathBran(QTextStream& out) const = 0;
     virtual QString getKey(Precedence = PREC_NONE) const;
-    ValueType valueType() const;
     virtual void visitChildren(Interpreter* interpreter) = 0;
     static bool isFalse(Expr* n);
     static bool isTrue(Expr* n);

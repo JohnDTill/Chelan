@@ -5,7 +5,7 @@
 namespace Chelan{
 
 ScalarPower::ScalarPower(Expr* lhs, Expr* rhs)
-    : Expr(SCALAR_POWER), lhs(lhs), rhs(rhs){}
+    : Expr(SCALAR_POWER, SCALAR), lhs(lhs), rhs(rhs){}
 
 Expr* ScalarPower::clone() const{
     return new ScalarPower(lhs->clone(), rhs->clone());

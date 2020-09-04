@@ -5,8 +5,7 @@
 namespace Chelan{
 
 Negation::Negation(Expr* n)
-    : Expr(NEGATION),
-      n(n) {}
+    : Expr(NEGATION, BOOLEAN), n(n) {}
 
 Expr* Negation::clone() const{
     return new Negation(n);

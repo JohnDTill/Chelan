@@ -5,7 +5,7 @@
 namespace Chelan{
 
 Conjunction::Conjunction(const std::vector<Expr*>& args)
-    : Expr(CONJUNCTION), args(args) {}
+    : Expr(CONJUNCTION, BOOLEAN), args(args) {}
 
 Expr* Conjunction::clone() const{
     return new Conjunction(cloneArgs(args));

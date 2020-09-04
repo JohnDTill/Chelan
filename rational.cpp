@@ -3,16 +3,13 @@
 namespace Chelan{
 
 Rational::Rational(const mpq_class& value)
-    : Expr(RATIONAL),
+    : Expr(RATIONAL, SCALAR),
       value(value) {
 
 }
 
 Rational::Rational(const QString& value)
-    : Expr(RATIONAL),
-      value(value.toStdString()) {
-
-}
+    : Expr(RATIONAL, SCALAR), value(value.toStdString()) {}
 
 Expr* Rational::clone() const{
     return new Rational(value);

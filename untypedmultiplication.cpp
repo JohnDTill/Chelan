@@ -5,7 +5,7 @@
 namespace Chelan{
 
 UntypedMultiplication::UntypedMultiplication(const std::vector<Expr*>& args)
-    : Expr(UNTYPED_MULTIPLICATION), args(args) {}
+    : Expr(UNTYPED_MULTIPLICATION, UNTYPED), args(args) {}
 
 Expr* UntypedMultiplication::clone() const{
     return new UntypedMultiplication(cloneArgs(args));
@@ -34,12 +34,12 @@ Expr* UntypedMultiplication::evaluate(QString& err_msg){
     std::vector<Expr*> scalars;
 
     for(Expr* expr : args){
-        switch (expr->valueType()) {
+        switch (expr->vt) {
             case MATRIX: matrices.push_back(expr); break;
             case SCALAR: scalars.push_back(expr); break;
             case UNTYPED: break;
             default:
-                err_msg += "TYPE ERROR: Cannot multiply type " + value_names[expr->valueType()] + '\n';
+                err_msg += "TYPE ERROR: Cannot multiply type " + value_names[expr->vt] + '\n';
                 return new Undefined("", true);
         }
     }

@@ -5,12 +5,10 @@
 namespace Chelan{
 
 ConditionalValue::ConditionalValue()
-    : Expr(CONDITIONALVALUE) {
-
-}
+    : Expr(CONDITIONALVALUE, UNTYPED) {}
 
 ConditionalValue::ConditionalValue(Expr* condition, Expr* value_true, Expr* value_false)
-    : Expr(CONDITIONALVALUE) {
+    : Expr(CONDITIONALVALUE, UNTYPED) {
     conditions.push_back(condition);
     values.push_back(value_true);
     values.push_back(value_false);

@@ -5,9 +5,7 @@
 namespace Chelan {
 
 MatrixAddition::MatrixAddition(const std::vector<Expr*>& args)
-    : Expr(MATRIX_ADDITION), args(args){
-
-}
+    : Expr(MATRIX_ADDITION, MATRIX), args(args){}
 
 Expr* MatrixAddition::clone() const{
     return new MatrixAddition(cloneArgs(args));

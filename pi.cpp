@@ -3,7 +3,7 @@
 namespace Chelan{
 
 Pi::Pi()
-    : Expr(PI) {}
+    : Expr(PI, SCALAR) {}
 
 Expr* Pi::clone() const{
     return new Pi();

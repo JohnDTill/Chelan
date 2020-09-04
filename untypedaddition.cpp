@@ -5,7 +5,7 @@
 namespace Chelan{
 
 UntypedAddition::UntypedAddition(const std::vector<Expr*>& args)
-    : Expr(UNTYPED_ADDITION), args(args) {
+    : Expr(UNTYPED_ADDITION, UNTYPED), args(args) {
     //DO THIS
 }
 
@@ -32,11 +32,11 @@ void UntypedAddition::visitChildren(Interpreter* interpreter){
 }
 
 Expr* UntypedAddition::evaluate(QString& err_msg){
-    ValueType candidate = args.front()->valueType();
+    ValueType candidate = args.front()->vt;
     bool deduction_failed = (candidate == UNTYPED);
 
     for(std::vector<Expr*>::size_type i = 1; i < args.size(); i++){
-        ValueType vt = args[i]->valueType();
+        ValueType vt = args[i]->vt;
         if(vt == UNTYPED) deduction_failed = true;
         else if(vt != candidate && candidate != UNTYPED){
             err_msg += "TYPE ERROR: Cannot add type " + value_names[vt]

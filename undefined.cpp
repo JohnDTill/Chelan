@@ -3,7 +3,7 @@
 namespace Chelan{
 
 Undefined::Undefined(const QString& msg, bool type_error)
-    : Expr(UNDEFINED),
+    : Expr(UNDEFINED, UNTYPED),
       msg(msg),
       type_error(type_error) {}
 

@@ -5,9 +5,7 @@
 namespace Chelan {
 
 UntypedPower::UntypedPower(Expr* lhs, Expr* rhs)
-    : Expr(UNTYPED_POWER), lhs(lhs), rhs(rhs) {
-
-}
+    : Expr(UNTYPED_POWER, UNTYPED), lhs(lhs), rhs(rhs) {}
 
 Expr* UntypedPower::clone() const{
     return new UntypedPower(lhs->clone(), rhs->clone());
@@ -32,13 +30,13 @@ void UntypedPower::visitChildren(Interpreter* interpreter){
 }
 
 Expr* UntypedPower::evaluate(QString& err_msg){
-    if(lhs->valueType() == SCALAR){
-        if(rhs->valueType() == SCALAR){
+    if(lhs->vt == SCALAR){
+        if(rhs->vt == SCALAR){
             return new ScalarPower(lhs, rhs);
-        }else if(rhs->valueType() == MATRIX){
+        }else if(rhs->vt == MATRIX){
             return nullptr; //DO THIS
-        }else if(rhs->valueType() != UNTYPED){
-            err_msg += "TYPE ERROR: Cannot raise scalar by type " + value_names[rhs->valueType()] + '\n';
+        }else if(rhs->vt != UNTYPED){
+            err_msg += "TYPE ERROR: Cannot raise scalar by type " + value_names[rhs->vt] + '\n';
             return nullptr;
         }else{
             return nullptr;

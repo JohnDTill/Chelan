@@ -3,7 +3,7 @@
 namespace Chelan{
 
 RealVariable::RealVariable(const ID& name)
-    : Expr(REALVARIABLE),
+    : Expr(REALVARIABLE, SCALAR),
       name(name) {
 
 }

@@ -5,7 +5,7 @@
 namespace Chelan{
 
 MatrixNumeric::MatrixNumeric(vInt rows, vInt cols, const std::vector<mpq_class>& args)
-    : Expr(MATRIX_NUMERIC),
+    : Expr(MATRIX_NUMERIC, MATRIX),
       rows(rows),
       cols(cols),
       args(args){}
