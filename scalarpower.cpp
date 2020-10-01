@@ -5,7 +5,7 @@
 namespace Chelan{
 
 ScalarPower::ScalarPower(Expr* lhs, Expr* rhs)
-    : Expr(SCALAR_POWER, SCALAR), lhs(lhs), rhs(rhs){}
+    : Expr(SCALAR_POWER), lhs(lhs), rhs(rhs){}
 
 Expr* ScalarPower::clone() const{
     return new ScalarPower(lhs->clone(), rhs->clone());
@@ -69,16 +69,11 @@ Expr* ScalarPower::evaluate(){
     return nullptr;
 }
 
-QString ScalarPower::toMathBran(Expr::Precedence) const{
+QString ScalarPower::toMathBran(Precedence) const{
     return lhs->toMathBran(PREC_POWER) + "⁜^⏴" + rhs->toMathBran(PREC_NONE) + "⏵";
 }
 
-void ScalarPower::visitChildren(Interpreter* interpreter){
-    lhs = interpreter->evaluate(lhs);
-    rhs = interpreter->evaluate(rhs);
-}
-
-QString ScalarPower::getKey(Expr::Precedence prec) const{
+QString ScalarPower::getKey(Precedence prec) const{
     if(prec == PREC_MULTIPLICATION) return lhs->getKey(PREC_MULTIPLICATION);
     else return toMathBran();
 }

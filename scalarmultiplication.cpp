@@ -5,13 +5,13 @@
 namespace Chelan{
 
 ScalarMultiplication::ScalarMultiplication(const std::vector<Expr*>& args)
-    : Expr(SCALAR_MULTIPLICATION, SCALAR), args(args), constant(1) {}
+    : Expr(SCALAR_MULTIPLICATION), args(args), constant(1) {}
 
 ScalarMultiplication::ScalarMultiplication(Expr* lhs, mpq_class rhs)
-    : Expr(SCALAR_MULTIPLICATION, SCALAR), args({lhs}), constant(rhs){}
+    : Expr(SCALAR_MULTIPLICATION), args({lhs}), constant(rhs){}
 
 ScalarMultiplication::ScalarMultiplication(mpq_class lhs, Expr* rhs)
-    : Expr(SCALAR_MULTIPLICATION, SCALAR), args({rhs}), constant(lhs){}
+    : Expr(SCALAR_MULTIPLICATION), args({rhs}), constant(lhs){}
 
 Expr* ScalarMultiplication::Divide(Expr* lhs, Expr* rhs){
     return new ScalarMultiplication({lhs, new ScalarPower(rhs, new Rational(-1))});
@@ -73,11 +73,6 @@ QString ScalarMultiplication::toMathBran(Precedence prec) const{
     if(prec > PREC_MULTIPLICATION) str.prepend('(').append(')');
 
     return str;
-}
-
-void ScalarMultiplication::visitChildren(Interpreter* interpreter){
-    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
-        args[i] = interpreter->evaluate(args[i]);
 }
 
 void ScalarMultiplication::foldConstants(){
@@ -196,7 +191,7 @@ void ScalarMultiplication::setKey(){
         key += ' ' + args[i]->toMathBran(PREC_ADDITION);
 }
 
-QString ScalarMultiplication::getKey(Expr::Precedence prec) const{
+QString ScalarMultiplication::getKey(Precedence prec) const{
     return (prec == PREC_ADDITION || prec == PREC_MULTIPLICATION) ? key : toMathBran();
 }
 

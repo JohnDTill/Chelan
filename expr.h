@@ -8,28 +8,24 @@ class QTextStream;
 
 namespace Chelan{
 
-class Interpreter;
+enum Precedence{
+    PREC_NONE,
+    PREC_DISJUNCTION,
+    PREC_CONJUNCTION,
+    PREC_EQUALITY,
+    PREC_LESS,
+    PREC_NEGATION,
+    PREC_ADDITION,
+    PREC_MULTIPLICATION,
+    PREC_POWER,
+};
 
 class Expr{
 public:
     const ExprType type;
-    ValueType vt;
-
-protected:
-    enum Precedence{
-        PREC_NONE,
-        PREC_DISJUNCTION, //DO THIS: logic nodes don't actually need precedence if
-        PREC_CONJUNCTION, //         they are restricted to disjunctive normal form
-        PREC_EQUALITY,
-        PREC_LESS,
-        PREC_NEGATION,
-        PREC_ADDITION,
-        PREC_MULTIPLICATION,
-        PREC_POWER,
-    };
 
 public:
-    Expr(const ExprType& type, const ValueType& vt);
+    Expr(const ExprType& type);
     virtual ~Expr();
     virtual Expr* clone() const = 0;
     virtual void deleteChildren(){}
@@ -41,7 +37,6 @@ public:
     virtual QString toMathBran(Precedence prec = PREC_NONE) const = 0;
     //virtual void writeMathBran(QTextStream& out) const = 0;
     virtual QString getKey(Precedence = PREC_NONE) const;
-    virtual void visitChildren(Interpreter* interpreter) = 0;
     static bool isFalse(Expr* n);
     static bool isTrue(Expr* n);
 
@@ -53,16 +48,7 @@ protected:
     static std::vector<Expr*> cloneArgs(const std::vector<Expr*> args);
 };
 
-const QString value_names[5] = {
-    "SCALAR",
-    "BOOLEAN",
-    "MATRIX",
-    "SET",
-    "UNTYPED"
-};
-
 typedef std::vector<Expr*>::size_type vInt;
-constexpr vInt vInt_MAX = std::numeric_limits<vInt>::max();
 
 }
 

@@ -5,7 +5,7 @@
 namespace Chelan{
 
 Disjunction::Disjunction(const std::vector<Expr*>& args)
-    : Expr(DISJUNCTION, BOOLEAN), args(args) {}
+    : Expr(DISJUNCTION), args(args) {}
 
 Expr* Disjunction::clone() const{
     return new Disjunction(cloneArgs(args));
@@ -64,16 +64,11 @@ Expr* Disjunction::evaluate(){
     return nullptr;
 }
 
-QString Disjunction::toMathBran(Expr::Precedence prec) const{
+QString Disjunction::toMathBran(Precedence prec) const{
     QString str = key;
     if(prec > PREC_DISJUNCTION) str.prepend('(').append(')');
 
     return str;
-}
-
-void Disjunction::visitChildren(Interpreter* interpreter){
-    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
-        args[i] = interpreter->evaluate(args[i]);
 }
 
 void Disjunction::flatten(Disjunction* d){

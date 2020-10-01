@@ -5,8 +5,7 @@
 namespace Chelan{
 
 Less::Less(Expr* n)
-    : Expr(LESS, BOOLEAN),
-      n(n) {}
+    : Expr(LESS), n(n) {}
 
 Expr* Less::IsLess(Expr* lhs, Expr* rhs){
     return new Less(ScalarAddition::Subtract(lhs, rhs));
@@ -24,15 +23,11 @@ Expr* Less::evaluate(){
     }
 }
 
-QString Less::toMathBran(Expr::Precedence prec) const{
+QString Less::toMathBran(Precedence prec) const{
     QString str = n->toMathBran(PREC_LESS) + " < 0";
     if(prec > PREC_LESS) str.prepend('(').append(')');
 
     return str;
-}
-
-void Less::visitChildren(Interpreter* interpreter){
-    n = interpreter->evaluate(n);
 }
 
 }

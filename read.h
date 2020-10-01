@@ -7,15 +7,13 @@ namespace Chelan {
 
 class Read : public Expr{
 public:
-    const std::vector<Expr*>::size_type slot;
-    const ValueType value_type;
+    Expr*& var;
 
 public:
-    Read(std::vector<Expr*>::size_type slot, ValueType value_type);
+    Read(Expr*& var);
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;
-    virtual void visitChildren(Interpreter* interpreter) override;
 };
 
 }

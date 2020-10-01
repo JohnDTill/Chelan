@@ -5,7 +5,7 @@
 namespace Chelan{
 
 MatrixEnumeration::MatrixEnumeration(vInt rows, vInt cols, const std::vector<Expr*>& args)
-    : Expr(MATRIX_ENUMERATION, UNTYPED),
+    : Expr(MATRIX_ENUMERATION),
       num_v(rows),
       num_h(cols),
       args(args){}
@@ -39,15 +39,10 @@ Expr* MatrixEnumeration::evaluate(){
     return nullptr;
 }
 
-QString MatrixEnumeration::toMathBran(Expr::Precedence) const{
+QString MatrixEnumeration::toMathBran(Precedence) const{
     QString str = "⁜⊞⏴" + QString::number(num_v) + "⏵⏴" + QString::number(num_h) + "⏵";
     for(Expr* n : args) str += "⏴" + n->toMathBran() + "⏵";
     return str;
-}
-
-void MatrixEnumeration::visitChildren(Interpreter* interpreter){
-    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
-        args[i] = interpreter->evaluate(args[i]);
 }
 
 void MatrixEnumeration::flatten(){

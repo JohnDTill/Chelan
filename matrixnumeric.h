@@ -18,7 +18,6 @@ public:
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;
-    virtual void visitChildren(Interpreter*) override;
     const mpq_class& at(std::vector<mpq_class>::size_type row,
                         std::vector<mpq_class>::size_type col) const;
 };

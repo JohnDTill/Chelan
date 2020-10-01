@@ -3,7 +3,7 @@
 namespace Chelan{
 
 Pi::Pi()
-    : Expr(PI, SCALAR) {}
+    : Expr(PI) {}
 
 Expr* Pi::clone() const{
     return new Pi();
@@ -15,10 +15,6 @@ Expr* Pi::evaluate(){
 
 QString Pi::toMathBran(Precedence) const{
     return "π";
-}
-
-void Pi::visitChildren(Interpreter*){
-    //DO NOTHING
 }
 
 }

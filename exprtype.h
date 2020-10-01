@@ -33,25 +33,9 @@ enum ExprType{
     //Set types
     SET_ENUMERATION,
 
-    //Untyped types
-    UNTYPED_ADDITION,
-    UNTYPED_IMPLICIT_MULT,
-    UNTYPED_MULTIPLICATION,
-    UNTYPED_POWER,
-
     //Misc
     READ,
 };
-
-enum ValueType{
-    SCALAR,
-    BOOLEAN,
-    MATRIX,
-    SET,
-    UNTYPED,
-};
-
-constexpr uint8_t num_types = UNDEFINED + 1;
 
 }
 

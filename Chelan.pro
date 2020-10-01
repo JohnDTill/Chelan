@@ -1,115 +1,85 @@
 #TODO
-# Erase static methods
-#   Don't evaluate on construction
-# Get rid of interpreter visitor:
-#   Nodes don't have enough control, e.g. throw error for badly sized matrix operation
-#   So the interpreter needs to be monolithic?
-#   No it's not monolithic. You attempt type deductions in the compiler,
-#   then have to redo them in the interpreter if they fail, so that code has to be shared.
-#   Probably implement interpreter methods in various files.
-# Figure out typing rules
-#   Need type checking
-# Add control flow
-#   With S-expressions... this is madness.
-#   While loops depend on mutability
-# Better debugging - print to DOT
-# Make library instead of including source files
-# Figure out matrix support
-# Support sets
+# I think with static analysis added, Chelan becomes much more like earlier prototypes,
+# where not everything inherited from the same base. You have numeric expressions,
+# boolean expressions, matrix expressions, etc...
+#
+# You also have your pick of procedural or OO style. Well, there is an output log for
+# print statements, and also the ability to report runtime errors.
+#
+# What if the compiler emitted all possible checks for errors, and the AST eliminated many of those
+# checks by partial evaluation? Is that preferable to the AST doing the checks?
+# That could make translation from the AST hard.
+#
+# I kind of like the idea of expressions having an inheritance hierarchy, and statements being procedural.
+# If you want S-expressions, you might as well have a hierarchy. Then using procedural for the statements
+# will be a nice delineation
+#
+# You can put the statements in a separate module!
+#
+# Got to use code gen in the CAS
+#
+# With at least coarsely typed expressions, you can have much more meaningful methods
 
 QT += core
 
 TARGET = Chelan
 TEMPLATE = app
 
-INCLUDEPATH += ../Neb/include \
-
 DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
 SOURCES += \
-        block.cpp \
-        compiler.cpp \
+        boolean.cpp \
+        conditionalvalue.cpp \
+        conjunction.cpp \
+        disjunction.cpp \
+        equality.cpp \
         expr.cpp \
-        ifstmt.cpp \
-        immutableassign.cpp \
-        interpreter.cpp \
+        less.cpp \
         main.cpp \
         matrixaddition.cpp \
         matrixenumeration.cpp \
         matrixmultiplication.cpp \
         matrixnumeric.cpp \
-        print.cpp \
+        negation.cpp \
+        pi.cpp \
         rational.cpp \
         read.cpp \
         realvariable.cpp \
-        pi.cpp \
-        disjunction.cpp \
-        conjunction.cpp \
-        negation.cpp \
-        boolean.cpp \
         scalaraddition.cpp \
         scalarmultiplication.cpp \
         scalarpower.cpp \
-        stmt.cpp \
-        undefined.cpp \
-        equality.cpp \
-        less.cpp \
-        conditionalvalue.cpp \
-        untypedaddition.cpp \
-        untypedimplicitmult.cpp \
-        untypedmultiplication.cpp \
-        untypedpower.cpp
+        undefined.cpp
 
 HEADERS += \
-        block.h \
-        compiler.h \
+        boolean.h \
+        chelan.h \
+        conditionalvalue.h \
+        conjunction.h \
+        disjunction.h \
+        equality.h \
         expr.h \
         exprtype.h \
-        ifstmt.h \
-        immutableassign.h \
-        interpreter.h \
+        less.h \
         matrixaddition.h \
         matrixenumeration.h \
         matrixmultiplication.h \
         matrixnumeric.h \
-        print.h \
+        negation.h \
+        pi.h \
         rational.h \
         read.h \
         realvariable.h \
-        pi.h \
-        chelan.h \
-        disjunction.h \
-        conjunction.h \
-        negation.h \
-        boolean.h \
         scalaraddition.h \
         scalarmultiplication.h \
         scalarpower.h \
-        stmt.h \
-        stmttype.h \
-        undefined.h \
-        equality.h \
-        less.h \
-        conditionalvalue.h \
-        untypedaddition.h \
-        untypedimplicitmult.h \
-        untypedmultiplication.h \
-        untypedpower.h
+        undefined.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-LIBS += -L$$PWD/../Neb/lib/ -lNeb
-
-INCLUDEPATH += $$PWD/../Neb
-DEPENDPATH += $$PWD/../Neb
-
-win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../Neb/lib/Neb.lib
-else:win32-g++: PRE_TARGETDEPS += $$PWD/../Neb/lib/libNeb.a
 
 # copies the given files to the destination directory
 defineTest(copyToDestDir) {

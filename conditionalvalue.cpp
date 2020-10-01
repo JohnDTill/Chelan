@@ -5,14 +5,10 @@
 namespace Chelan{
 
 ConditionalValue::ConditionalValue()
-    : Expr(CONDITIONALVALUE, UNTYPED) {}
+    : Expr(CONDITIONALVALUE) {}
 
 ConditionalValue::ConditionalValue(Expr* condition, Expr* value_true, Expr* value_false)
-    : Expr(CONDITIONALVALUE, UNTYPED) {
-    conditions.push_back(condition);
-    values.push_back(value_true);
-    values.push_back(value_false);
-}
+    : Expr(CONDITIONALVALUE), values({value_true, value_false}), conditions({condition}) {}
 
 Expr* ConditionalValue::clone() const{
     ConditionalValue* c = new ConditionalValue();
@@ -46,7 +42,7 @@ Expr* ConditionalValue::evaluate(){
     return nullptr;
 }
 
-QString ConditionalValue::toMathBran(Expr::Precedence) const{
+QString ConditionalValue::toMathBran(Precedence) const{
     QString str = "⁜c⏴" + values.front()->toMathBran();
     for(std::vector<Expr*>::size_type i = 0; i < conditions.size(); i++){
         str += "⏵⏴" + conditions[i]->toMathBran() + "⏵⏴" + values[i+1]->toMathBran();
@@ -54,11 +50,6 @@ QString ConditionalValue::toMathBran(Expr::Precedence) const{
     str += "⏵⏴else⏵";
 
     return str;
-}
-
-void ConditionalValue::visitChildren(Interpreter* interpreter){
-    for(Expr* expr : values) expr = interpreter->evaluate(expr);
-    for(Expr* expr : conditions) expr = interpreter->evaluate(expr);
 }
 
 }

@@ -5,8 +5,7 @@
 namespace Chelan{
 
 Equality::Equality(Expr* n)
-    : Expr(EQUALITY, BOOLEAN),
-      n(n) {}
+    : Expr(EQUALITY), n(n) {}
 
 Expr* Equality::Equals(Expr* lhs, Expr* rhs){
     Expr* diff = lhs->toMathBran() < rhs->toMathBran() ?
@@ -28,15 +27,11 @@ Expr* Equality::evaluate(){
     }
 }
 
-QString Equality::toMathBran(Expr::Precedence prec) const{
+QString Equality::toMathBran(Precedence prec) const{
     QString str = n->toMathBran(PREC_EQUALITY) + " = 0";
     if(prec > PREC_EQUALITY) str.prepend('(').append(')');
 
     return str;
-}
-
-void Equality::visitChildren(Interpreter* interpreter){
-    n = interpreter->evaluate(n);
 }
 
 }

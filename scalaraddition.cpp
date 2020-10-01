@@ -5,13 +5,13 @@
 namespace Chelan{
 
 ScalarAddition::ScalarAddition(const std::vector<Expr*>& args)
-    : Expr(SCALAR_ADDITION, SCALAR), args(args), constant(0){}
+    : Expr(SCALAR_ADDITION), args(args), constant(0){}
 
 ScalarAddition::ScalarAddition(Expr* lhs, mpq_class rhs)
-    : Expr(SCALAR_ADDITION, SCALAR), args({lhs}), constant(rhs){}
+    : Expr(SCALAR_ADDITION), args({lhs}), constant(rhs){}
 
 ScalarAddition::ScalarAddition(mpq_class lhs, Expr* rhs)
-    : Expr(SCALAR_ADDITION, SCALAR), args({rhs}), constant(lhs){}
+    : Expr(SCALAR_ADDITION), args({rhs}), constant(lhs){}
 
 Expr* ScalarAddition::Subtract(Expr* lhs, Expr* rhs){
     return new ScalarAddition({lhs, new ScalarMultiplication(-1, rhs)});
@@ -59,13 +59,9 @@ QString ScalarAddition::toMathBran(Precedence prec) const{
     return str;
 }
 
-void ScalarAddition::visitChildren(Interpreter* interpreter){
-    for(vInt i = 0; i < args.size(); i++)
-        args[i] = interpreter->evaluate(args[i]);
-}
-
 void ScalarAddition::foldConstants(){
-    for(vInt i = args.size()-1; i < vInt_MAX; i--){
+    vInt i = args.size();
+    while(i --> 0){
         if(args[i]->type == RATIONAL){
             constant += static_cast<class Rational*>(args[i])->value;
             delete args[i];
@@ -78,7 +74,8 @@ void ScalarAddition::flatten(){
     if(args.empty()) return;
 
     std::vector<Expr*> new_args;
-    for(vInt i = args.size()-1; i < vInt_MAX; i--){
+    vInt i = args.size();
+    while(i --> 0){
         if(args[i]->type == SCALAR_ADDITION){
             flatten(static_cast<ScalarAddition*>(args[i]), new_args);
             delete args[i];
@@ -101,8 +98,8 @@ void ScalarAddition::collect(){
 
     vInt pattern_end = args.size() - 1;
     QString search_key = args.back()->getKey(PREC_ADDITION);
-    vInt i;
-    for(i = pattern_end; i < vInt_MAX; i--){
+    vInt i = args.size();
+    while(i --> 0){
         QString target_key = args[i]->getKey(PREC_ADDITION);
 
         if(target_key != search_key){
@@ -121,8 +118,8 @@ void ScalarAddition::collect(vInt start, vInt end){
     if(n->type == SCALAR_MULTIPLICATION)
         static_cast<ScalarMultiplication*>(n)->constant = 1;
 
-
-    for(vInt i = end; i >= start && i < vInt_MAX; i--){
+    vInt i = end + 1;
+    while(i --> start){
         if(args[i]->type == SCALAR_MULTIPLICATION){
             factor += static_cast<ScalarMultiplication*>(args[i])->constant;
         }else{

@@ -3,7 +3,7 @@
 namespace Chelan{
 
 Undefined::Undefined(const QString& msg, bool type_error)
-    : Expr(UNDEFINED, UNTYPED),
+    : Expr(UNDEFINED),
       msg(msg),
       type_error(type_error) {}
 
@@ -15,12 +15,8 @@ Expr* Undefined::evaluate(){
     return nullptr;
 }
 
-QString Undefined::toMathBran(Expr::Precedence) const{
+QString Undefined::toMathBran(Precedence) const{
     return "undefined";
-}
-
-void Undefined::visitChildren(Interpreter*){
-    //DO NOTHING
 }
 
 }

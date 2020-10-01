@@ -5,17 +5,17 @@
 
 namespace Chelan {
 
-class MatrixMultiplication : public Expr{
+template<typename ReturnType>
+class MatrixMultiplication : public ReturnType{
 public:
     std::vector<Expr*> args;
     Expr* scaling;
 
 public:
     MatrixMultiplication(const std::vector<Expr*>& args, Expr* scaling);
-    virtual Expr* clone() const override;
-    virtual Expr* evaluate() override;
+    virtual ReturnType* clone() const override;
+    virtual ReturnType* evaluate() override;
     virtual QString toMathBran(Precedence = PREC_NONE) const override;
-    virtual void visitChildren(Interpreter*interpreter) override;
 };
 
 }

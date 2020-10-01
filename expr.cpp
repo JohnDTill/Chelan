@@ -4,8 +4,8 @@
 
 namespace Chelan{
 
-Expr::Expr(const ExprType& type, const ValueType& vt)
-    : type(type), vt(vt) {}
+Expr::Expr(const ExprType& type)
+    : type(type) {}
 
 Expr::~Expr(){
     //DO NOTHING

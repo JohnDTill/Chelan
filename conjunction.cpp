@@ -5,7 +5,7 @@
 namespace Chelan{
 
 Conjunction::Conjunction(const std::vector<Expr*>& args)
-    : Expr(CONJUNCTION, BOOLEAN), args(args) {}
+    : Expr(CONJUNCTION), args(args) {}
 
 Expr* Conjunction::clone() const{
     return new Conjunction(cloneArgs(args));
@@ -87,16 +87,11 @@ Expr* Conjunction::evaluate(){
     return nullptr;
 }
 
-QString Conjunction::toMathBran(Expr::Precedence prec) const{
+QString Conjunction::toMathBran(Precedence prec) const{
     QString str = key;
     if(prec > PREC_CONJUNCTION) str.prepend('(').append(')');
 
     return str;
-}
-
-void Conjunction::visitChildren(Interpreter* interpreter){
-    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
-        args[i] = interpreter->evaluate(args[i]);
 }
 
 void Conjunction::flatten(Conjunction* c){
