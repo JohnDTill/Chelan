@@ -13,8 +13,8 @@ Expr* Pi::evaluate(){
     return nullptr;
 }
 
-QString Pi::toMathBran(Precedence) const{
-    return "π";
+void Pi::writeMathBran(QTextStream& out, Precedence) const{
+    out << QString("π");
 }
 
 }

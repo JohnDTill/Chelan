@@ -17,10 +17,11 @@ Expr* Rational::evaluate(){
     return nullptr;
 }
 
-QString Rational::toMathBran(Precedence prec) const{
-    QString str = QString::fromStdString(value.get_str());
-    if(prec >= PREC_MULTIPLICATION && value.get_den() != 1) str.prepend('(').append(')');
-    return str;
+void Rational::writeMathBran(QTextStream& out, Precedence prec) const{
+    if(prec >= PREC_MULTIPLICATION && value.get_den() != 1)
+        out << '(' << QString::fromStdString(value.get_str()) << ')';
+    else
+        out << QString::fromStdString(value.get_str());
 }
 
 }

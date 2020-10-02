@@ -39,10 +39,13 @@ Expr* MatrixEnumeration::evaluate(){
     return nullptr;
 }
 
-QString MatrixEnumeration::toMathBran(Precedence) const{
-    QString str = "⁜⊞⏴" + QString::number(num_v) + "⏵⏴" + QString::number(num_h) + "⏵";
-    for(Expr* n : args) str += "⏴" + n->toMathBran() + "⏵";
-    return str;
+void MatrixEnumeration::writeMathBran(QTextStream& out, Precedence) const{
+    out << "⁜⊞⏴" << num_v << "⏵⏴" << num_h;
+    for(Expr* n : args){
+        out << "⏵⏴";
+        n->writeMathBran(out);
+    }
+    out << "⏵";
 }
 
 void MatrixEnumeration::flatten(){

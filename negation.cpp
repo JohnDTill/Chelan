@@ -53,11 +53,12 @@ Expr* Negation::evaluate(){
     return nullptr;
 }
 
-QString Negation::toMathBran(Precedence prec) const{
+void Negation::writeMathBran(QTextStream& out, Precedence prec) const{
+    if(prec > PREC_NEGATION) out << '(';
+    out << "¬";
+    n->writeMathBran(out, PREC_NEGATION);
     QString str = "¬" + n->toMathBran(PREC_NEGATION);
-    if(prec > PREC_NEGATION) str.prepend('(').append(')');
-
-    return str;
+    if(prec > PREC_NEGATION) out << ')';
 }
 
 }

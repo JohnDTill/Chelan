@@ -27,11 +27,11 @@ Expr* Equality::evaluate(){
     }
 }
 
-QString Equality::toMathBran(Precedence prec) const{
-    QString str = n->toMathBran(PREC_EQUALITY) + " = 0";
-    if(prec > PREC_EQUALITY) str.prepend('(').append(')');
-
-    return str;
+void Equality::writeMathBran(QTextStream& out, Precedence prec) const{
+    if(prec > PREC_EQUALITY) out << '(';
+    n->writeMathBran(out, PREC_EQUALITY);
+    out << " = 0";
+    if(prec > PREC_EQUALITY) out << ')';
 }
 
 }

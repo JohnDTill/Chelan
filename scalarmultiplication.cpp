@@ -62,17 +62,17 @@ Expr* ScalarMultiplication::evaluate(){
     return nullptr;
 }
 
-QString ScalarMultiplication::toMathBran(Precedence prec) const{
-    QString str = key;
+void ScalarMultiplication::writeMathBran(QTextStream& out, Precedence prec) const{
+    if(prec > PREC_MULTIPLICATION) out << '(';
     if(constant!=1){
-        if(constant==-1) str.prepend('-');
-        else if(constant.get_den()==1) str.prepend(QString::fromStdString(constant.get_str()));
-        else str.prepend("⁜f⏴" + QString::fromStdString(constant.get_num().get_str()) + "⏵⏴"
-                         + QString::fromStdString(constant.get_den().get_str()) + "⏵");
+        if(constant==-1) out << '-' << key;
+        else if(constant.get_den()==1) out << QString::fromStdString(constant.get_str()) << key;
+        else out << "⁜f⏴" << QString::fromStdString(constant.get_num().get_str()) << "⏵⏴"
+                         << QString::fromStdString(constant.get_den().get_str()) << "⏵";
+    }else{
+        out << key;
     }
-    if(prec > PREC_MULTIPLICATION) str.prepend('(').append(')');
-
-    return str;
+    if(prec > PREC_MULTIPLICATION) out << ')';
 }
 
 void ScalarMultiplication::foldConstants(){
@@ -140,7 +140,8 @@ void ScalarMultiplication::collect(vInt start, vInt end){
         static_cast<ScalarMultiplication*>(n)->constant = 1;
     }
 
-    for(int i = end; i >= start; i--){
+    vInt i = end+1;
+    while(i --> start){
         if(args[i]->type == SCALAR_POWER){
             ScalarPower* p = static_cast<ScalarPower*>(args[i]);
             factors.push_back(p->rhs);

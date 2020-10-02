@@ -65,14 +65,13 @@ ReturnType* MatrixMultiplication<ReturnType>::evaluate(){
 }
 
 template<typename ReturnType>
-QString MatrixMultiplication<ReturnType>::toMathBran(Precedence) const{
-    QString str = scaling->type == RATIONAL && static_cast<Rational*>(scaling)->value == 1 ?
-                  "" :
-                  args.front()->toMathBran(PREC_MULTIPLICATION);
+void MatrixMultiplication<ReturnType>::writeMathBran(QTextStream& out, Precedence prec) const{
+    if(prec > PREC_MULTIPLICATION) out << '(';
+    if(scaling->type != RATIONAL || static_cast<Rational*>(scaling)->value != 1)
+        scaling->writeMathBran(out, PREC_MULTIPLICATION);
     for(Expr* e : args)
-        str += e->toMathBran(PREC_MULTIPLICATION);
-
-    return str;
+        e->writeMathBran(out, PREC_MULTIPLICATION);
+    if(prec > PREC_MULTIPLICATION) out << ')';
 }
 
 }

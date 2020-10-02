@@ -64,11 +64,9 @@ Expr* Disjunction::evaluate(){
     return nullptr;
 }
 
-QString Disjunction::toMathBran(Precedence prec) const{
-    QString str = key;
-    if(prec > PREC_DISJUNCTION) str.prepend('(').append(')');
-
-    return str;
+void Disjunction::writeMathBran(QTextStream& out, Precedence prec) const{
+    if(prec > PREC_DISJUNCTION) out << '(' << key << ')';
+    else out << key;
 }
 
 void Disjunction::flatten(Disjunction* d){

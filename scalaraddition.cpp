@@ -52,11 +52,9 @@ Expr* ScalarAddition::evaluate(){
     return nullptr;
 }
 
-QString ScalarAddition::toMathBran(Precedence prec) const{
-    QString str = key;
-    if(prec > PREC_ADDITION) str.prepend('(').append(')');
-
-    return str;
+void ScalarAddition::writeMathBran(QTextStream& out, Precedence prec) const{
+    if(prec > PREC_ADDITION) out << '(' << key << ')';
+    else out << key;
 }
 
 void ScalarAddition::foldConstants(){

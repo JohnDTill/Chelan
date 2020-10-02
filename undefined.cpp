@@ -15,8 +15,8 @@ Expr* Undefined::evaluate(){
     return nullptr;
 }
 
-QString Undefined::toMathBran(Precedence) const{
-    return "undefined";
+void Undefined::writeMathBran(QTextStream& out, Precedence) const{
+    out << "undefined";
 }
 
 }

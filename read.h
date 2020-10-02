@@ -13,7 +13,7 @@ public:
     Read(Expr*& var);
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;
-    virtual QString toMathBran(Precedence = PREC_NONE) const override;
+    virtual void writeMathBran(QTextStream& out, Precedence = PREC_NONE) const override;
 };
 
 }

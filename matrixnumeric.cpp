@@ -17,10 +17,11 @@ Expr* MatrixNumeric::evaluate(){
     return nullptr;
 }
 
-QString MatrixNumeric::toMathBran(Precedence) const{
-    QString str = "⁜⊞⏴" + QString::number(rows) + "⏵⏴" + QString::number(cols) + "⏵";
-    for(mpq_class n : args) str += "⏴" + QString::fromStdString(n.get_str()) + "⏵";
-    return str;
+void MatrixNumeric::writeMathBran(QTextStream& out, Precedence) const{
+    out << "⁜⊞⏴" << rows << "⏵⏴" << cols;
+    for(mpq_class n : args)
+        out << "⏵⏴" << QString::fromStdString(n.get_str());
+    out << "⏵";
 }
 
 const mpq_class& MatrixNumeric::at(std::vector<mpq_class>::size_type row,

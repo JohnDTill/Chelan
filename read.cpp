@@ -13,8 +13,10 @@ Expr* Read::evaluate(){
     return Expr::evaluateAndFree(var->clone());
 }
 
-QString Read::toMathBran(Precedence) const{
-    return "⚠r(" + var->toMathBran() + ")";
+void Read::writeMathBran(QTextStream& out, Precedence) const{
+    out << QString("⚠r(");
+    var->writeMathBran(out);
+    out << ')';
 }
 
 }

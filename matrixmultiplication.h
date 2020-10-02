@@ -15,7 +15,7 @@ public:
     MatrixMultiplication(const std::vector<Expr*>& args, Expr* scaling);
     virtual ReturnType* clone() const override;
     virtual ReturnType* evaluate() override;
-    virtual QString toMathBran(Precedence = PREC_NONE) const override;
+    virtual void writeMathBran(QTextStream& out, Precedence prec = PREC_NONE) const override;
 };
 
 }

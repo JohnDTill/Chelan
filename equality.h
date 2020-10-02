@@ -14,7 +14,7 @@ public:
     static Expr* Equals(Expr* lhs, Expr* rhs);
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;
-    virtual QString toMathBran(Precedence prec = PREC_NONE) const override;
+    virtual void writeMathBran(QTextStream& out, Precedence prec = PREC_NONE) const override;
 };
 
 }

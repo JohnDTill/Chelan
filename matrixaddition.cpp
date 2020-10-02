@@ -44,12 +44,14 @@ Expr* MatrixAddition::evaluate(){
     return nullptr;
 }
 
-QString MatrixAddition::toMathBran(Precedence) const{
-    QString str = args.front()->toMathBran(PREC_ADDITION);
-    for(std::vector<Expr*>::size_type i = 1; i < args.size(); i++)
-        str += " + " + args[i]->toMathBran(PREC_ADDITION);
-
-    return str;
+void MatrixAddition::writeMathBran(QTextStream& out, Precedence prec) const{
+    if(prec > PREC_ADDITION) out << '(';
+    args.front()->writeMathBran(out, PREC_ADDITION);
+    for(std::vector<Expr*>::size_type i = 1; i < args.size(); i++){
+        out << " + ";
+        args[i]->writeMathBran(out, PREC_ADDITION);
+    }
+    if(prec > PREC_ADDITION) out << ')';
 }
 
 }

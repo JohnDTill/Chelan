@@ -16,7 +16,7 @@ public:
     MatrixEnumeration(vInt num_v, vInt num_h, const std::vector<Expr*>& args);
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;
-    virtual QString toMathBran(Precedence = PREC_NONE) const override;
+    virtual void writeMathBran(QTextStream& out, Precedence = PREC_NONE) const override;
 
 private:
     void flatten();

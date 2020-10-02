@@ -13,8 +13,9 @@ Expr* Boolean::evaluate(){
     return nullptr;
 }
 
-QString Boolean::toMathBran(Precedence) const{
-    return value ? "true" : "false";
+static QString labels[2] = {"false", "true"};
+void Boolean::writeMathBran(QTextStream& out, Precedence) const{
+    out << labels[value];
 }
 
 }

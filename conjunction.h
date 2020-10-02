@@ -16,7 +16,7 @@ public:
     virtual Expr* clone() const override;
     virtual void deleteChildren() override;
     virtual Expr* evaluate() override;
-    virtual QString toMathBran(Precedence prec = PREC_NONE) const override;
+    virtual void writeMathBran(QTextStream& out, Precedence prec = PREC_NONE) const override;
 
 private:
     void flatten(Conjunction* c);

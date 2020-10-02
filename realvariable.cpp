@@ -13,8 +13,8 @@ Expr* RealVariable::evaluate(){
     return nullptr;
 }
 
-QString RealVariable::toMathBran(Precedence) const{
-    return name;
+void RealVariable::writeMathBran(QTextStream& out, Precedence) const{
+    out << name;
 }
 
 }

@@ -69,8 +69,11 @@ Expr* ScalarPower::evaluate(){
     return nullptr;
 }
 
-QString ScalarPower::toMathBran(Precedence) const{
-    return lhs->toMathBran(PREC_POWER) + "⁜^⏴" + rhs->toMathBran(PREC_NONE) + "⏵";
+void ScalarPower::writeMathBran(QTextStream& out, Precedence) const{
+    lhs->writeMathBran(out, PREC_POWER);
+    out << "⁜^⏴";
+    rhs->writeMathBran(out);
+    out << "⏵";
 }
 
 QString ScalarPower::getKey(Precedence prec) const{

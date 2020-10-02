@@ -52,6 +52,14 @@ Expr* Expr::remove(std::vector<Expr*>& search, const Expr* pattern, const std::v
     return nullptr;
 }
 
+QString Expr::toMathBran(Precedence prec) const{
+    QString str;
+    QTextStream out(&str);
+    writeMathBran(out, prec);
+
+    return str;
+}
+
 QString Expr::getKey(Precedence) const{
     return toMathBran();
 }

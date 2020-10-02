@@ -23,11 +23,11 @@ Expr* Less::evaluate(){
     }
 }
 
-QString Less::toMathBran(Precedence prec) const{
-    QString str = n->toMathBran(PREC_LESS) + " < 0";
-    if(prec > PREC_LESS) str.prepend('(').append(')');
-
-    return str;
+void Less::writeMathBran(QTextStream& out, Precedence prec) const{
+    if(prec > PREC_LESS) out << '(';
+    n->writeMathBran(out, PREC_LESS);
+    out << " < 0";
+    if(prec > PREC_LESS) out << ')';
 }
 
 }

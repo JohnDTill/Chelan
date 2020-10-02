@@ -42,14 +42,16 @@ Expr* ConditionalValue::evaluate(){
     return nullptr;
 }
 
-QString ConditionalValue::toMathBran(Precedence) const{
-    QString str = "⁜c⏴" + values.front()->toMathBran();
+void ConditionalValue::writeMathBran(QTextStream& out, Precedence) const{
+    out << "⁜c⏴";
+    values.front()->writeMathBran(out);
     for(std::vector<Expr*>::size_type i = 0; i < conditions.size(); i++){
-        str += "⏵⏴" + conditions[i]->toMathBran() + "⏵⏴" + values[i+1]->toMathBran();
+        out << "⏵⏴";
+        conditions[i]->writeMathBran(out);
+        out << "⏵⏴";
+        values[i+1]->writeMathBran(out);
     }
-    str += "⏵⏴else⏵";
-
-    return str;
+    out << "⏵⏴else⏵";
 }
 
 }

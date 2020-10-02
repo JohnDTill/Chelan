@@ -3,6 +3,7 @@
 
 #include "exprtype.h"
 #include <QString>
+#include <QTextStream>
 #include <vector>
 class QTextStream;
 
@@ -34,8 +35,8 @@ public:
     static void deleteRecursive(Expr* n);
     static Expr* remove(std::vector<Expr*>& search, const Expr* pattern, Precedence prec = PREC_NONE);
     static Expr* remove(std::vector<Expr*>& search, const Expr* pattern, const std::vector<Expr*>::iterator& end, Precedence prec = PREC_NONE);
-    virtual QString toMathBran(Precedence prec = PREC_NONE) const = 0;
-    //virtual void writeMathBran(QTextStream& out) const = 0;
+    virtual void writeMathBran(QTextStream& out, Precedence prec = PREC_NONE) const = 0;
+    QString toMathBran(Precedence prec = PREC_NONE) const;
     virtual QString getKey(Precedence = PREC_NONE) const;
     static bool isFalse(Expr* n);
     static bool isTrue(Expr* n);

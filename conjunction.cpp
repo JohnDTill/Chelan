@@ -87,11 +87,9 @@ Expr* Conjunction::evaluate(){
     return nullptr;
 }
 
-QString Conjunction::toMathBran(Precedence prec) const{
-    QString str = key;
-    if(prec > PREC_CONJUNCTION) str.prepend('(').append(')');
-
-    return str;
+void Conjunction::writeMathBran(QTextStream& out, Precedence prec) const{
+    if(prec > PREC_CONJUNCTION) out << '(' << key << ')';
+    else out << key;
 }
 
 void Conjunction::flatten(Conjunction* c){
