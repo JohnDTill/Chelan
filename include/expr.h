@@ -38,15 +38,16 @@ public:
     virtual void writeMathBran(QTextStream& out, Precedence prec = PREC_NONE) const = 0;
     QString toMathBran(Precedence prec = PREC_NONE) const;
     virtual QString getKey(Precedence = PREC_NONE) const;
-    static bool isFalse(Expr* n);
-    static bool isTrue(Expr* n);
+    virtual bool isDefinitivelyFalse() const {return false;}
+    virtual bool isDefinitivelyTrue() const {return false;}
 
 protected:
     static Expr* searchForUndefined(const std::vector<Expr*>& args);
     template <Precedence prec = PREC_NONE> static bool compare(const Expr* a, const Expr* b){
         return a->getKey(prec) < b->getKey(prec);
     }
-    static std::vector<Expr*> cloneArgs(const std::vector<Expr*> args);
+    static std::vector<Expr*> cloneArgs(const std::vector<Expr*>& args);
+    static void evaluateAndFreeArgs(std::vector<Expr*>& args);
 };
 
 typedef std::vector<Expr*>::size_type vInt;

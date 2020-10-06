@@ -31,6 +31,8 @@ void ScalarMultiplication::deleteChildren(){
 }
 
 Expr* ScalarMultiplication::evaluate(){
+    evaluateAndFreeArgs(args);
+
     //Fast path//
     foldConstants();
     if(args.size()==0){

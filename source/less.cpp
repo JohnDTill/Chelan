@@ -16,6 +16,8 @@ Expr* Less::clone() const{
 }
 
 Expr* Less::evaluate(){
+    n = Expr::evaluateAndFree(n);
+
     switch(n->type){
         case PI: return new Boolean(false);
         case RATIONAL: return new Boolean(static_cast<class Rational*>(n)->value < 0);

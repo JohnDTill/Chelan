@@ -1,6 +1,7 @@
 #include "matrixnumeric.h"
 
 #include "chelan.h"
+#include <gmpxx.h>
 
 namespace Chelan{
 

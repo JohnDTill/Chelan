@@ -30,14 +30,18 @@ void ConditionalValue::deleteChildren(){
 }
 
 Expr* ConditionalValue::evaluate(){
+    evaluateAndFreeArgs(conditions);
+
     for(std::vector<Expr*>::size_type i = 0; i < conditions.size(); i++){
-        if(isTrue(conditions[i])){
+        if(conditions[i]->isDefinitivelyTrue()){
             Expr* n = values[i]->clone();
             deleteChildren();
 
             return n;
         }
     }
+
+    evaluateAndFreeArgs(values);
 
     return nullptr;
 }

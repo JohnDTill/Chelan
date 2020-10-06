@@ -17,6 +17,8 @@ void Negation::deleteChildren(){
 }
 
 Expr* Negation::evaluate(){
+    n = evaluateAndFree(n);
+
     switch(n->type){
         case UNDEFINED: return n;
         case BOOLEAN_VALUE:{

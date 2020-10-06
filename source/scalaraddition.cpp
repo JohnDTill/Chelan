@@ -31,6 +31,8 @@ void ScalarAddition::deleteChildren(){
 }
 
 Expr* ScalarAddition::evaluate(){
+    evaluateAndFreeArgs(args);
+
     //Fast path//
     foldConstants();
     if(args.size()==0){

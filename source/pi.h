@@ -1,16 +1,13 @@
-#ifndef BOOLEAN_H
-#define BOOLEAN_H
+#ifndef PI_H
+#define PI_H
 
 #include "expr.h"
 
 namespace Chelan{
 
-class Boolean : public Expr{
+class Pi : public Expr{
 public:
-    const bool value;
-
-public:
-    Boolean(const bool& value);
+    Pi();
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;
     virtual void writeMathBran(QTextStream& out, Precedence = PREC_NONE) const override;
@@ -18,4 +15,4 @@ public:
 
 }
 
-#endif // BOOLEAN_H
+#endif // PI_H

@@ -19,6 +19,8 @@ void Disjunction::deleteChildren(){
 }
 
 Expr* Disjunction::evaluate(){
+    evaluateAndFreeArgs(args);
+
     for(Expr* n : args){
         if(n->type == UNDEFINED){
             for(Expr* m : args){

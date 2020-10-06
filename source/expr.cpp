@@ -12,12 +12,12 @@ Expr::~Expr(){
 }
 
 Expr* Expr::evaluateAndFree(Expr* n){
-    if(Expr* m = n->evaluate()){
-        delete n; //The evaluate call should delete n's children as necessary to prevent leaks
-        return m;
-    }else{
-        return n;
+    while(Expr* m = n->evaluate()){
+        delete n;
+        n = m;
     }
+
+    return n;
 }
 
 void Expr::deleteRecursive(Expr* n){
@@ -77,7 +77,7 @@ Expr* Expr::searchForUndefined(const std::vector<Expr*>& args){
     return nullptr;
 }
 
-std::vector<Expr*> Expr::cloneArgs(const std::vector<Expr*> args){
+std::vector<Expr*> Expr::cloneArgs(const std::vector<Expr*>& args){
     std::vector<Expr*> args_clone;
     args_clone.resize(args.size());
     for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
@@ -86,12 +86,8 @@ std::vector<Expr*> Expr::cloneArgs(const std::vector<Expr*> args){
     return args_clone;
 }
 
-bool Expr::isFalse(Expr* n){
-    return n->type == BOOLEAN_VALUE && static_cast<Boolean*>(n)->value == false;
-}
-
-bool Expr::isTrue(Expr* n){
-    return n->type == BOOLEAN_VALUE && static_cast<Boolean*>(n)->value == true;
+void Expr::evaluateAndFreeArgs(std::vector<Expr*>& args){
+    for(Expr* e : args) e = evaluateAndFree(e);
 }
 
 }

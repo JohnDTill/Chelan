@@ -12,6 +12,8 @@ Expr* MatrixAddition::clone() const{
 }
 
 Expr* MatrixAddition::evaluate(){
+    evaluateAndFreeArgs(args);
+
     for(std::vector<Expr*>::size_type i = args.size()-1; i < args.size(); i--){
         if(args[i]->type == MATRIX_NUMERIC){
             std::vector<mpq_class> vals = static_cast<MatrixNumeric*>(args[i])->args;
