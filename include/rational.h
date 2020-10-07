@@ -12,6 +12,7 @@ public:
 
 public:
     Rational(const mpq_class& value);
+    Rational(int value);
     Rational(const QString& value);
     virtual Expr* clone() const override;
     virtual Expr* evaluate() override;

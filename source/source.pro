@@ -161,5 +161,3 @@ copyToDestDir($$PWD/"scalaraddition.h", $$PWD/../include)
 copyToDestDir($$PWD/"scalarmultiplication.h", $$PWD/../include)
 copyToDestDir($$PWD/"scalarpower.h", $$PWD/../include)
 copyToDestDir($$PWD/"undefined.h", $$PWD/../include)
-
-copyToDestDir($$PWD/"undefined.h", $$PWD/../include)

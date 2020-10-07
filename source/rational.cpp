@@ -3,8 +3,10 @@
 namespace Chelan{
 
 Rational::Rational(const mpq_class& value)
-    : Expr(RATIONAL),
-      value(value) {}
+    : Expr(RATIONAL), value(value) {}
+
+Rational::Rational(int value)
+    : Expr(RATIONAL), value(value) {}
 
 Rational::Rational(const QString& value)
     : Expr(RATIONAL), value(value.toStdString()) {}
