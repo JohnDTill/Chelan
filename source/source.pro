@@ -22,7 +22,6 @@
 
 TEMPLATE = lib
 DEFINES += QT_DEPRECATED_WARNINGS
-#DEFINES += YAWYSIWYGEE_TEST
 CONFIG += c++11
 CONFIG += staticlib
 TARGET = Chelan
@@ -34,50 +33,54 @@ CONFIG(debug, debug|release) {
 }
 
 SOURCES += \
-        boolean.cpp \
-        conditionalvalue.cpp \
-        conjunction.cpp \
-        disjunction.cpp \
-        equality.cpp \
         expr.cpp \
-        less.cpp \
-        matrixaddition.cpp \
-        matrixenumeration.cpp \
-        matrixmultiplication.cpp \
-        matrixnumeric.cpp \
-        negation.cpp \
-        pi.cpp \
-        rational.cpp \
-        read.cpp \
-        realvariable.cpp \
-        scalaraddition.cpp \
-        scalarmultiplication.cpp \
-        scalarpower.cpp \
-        undefined.cpp
+        expr/boolean.cpp \
+        expr/conditionalvalue.cpp \
+        expr/conjunction.cpp \
+        expr/disjunction.cpp \
+        expr/equality.cpp \
+        expr/less.cpp \
+        expr/matrixaddition.cpp \
+        expr/matrixenumeration.cpp \
+        expr/matrixmultiplication.cpp \
+        expr/matrixnumeric.cpp \
+        expr/negation.cpp \
+        expr/pi.cpp \
+        expr/rational.cpp \
+        expr/read.cpp \
+        expr/realvariable.cpp \
+        expr/scalaraddition.cpp \
+        expr/scalarmultiplication.cpp \
+        expr/scalarpower.cpp \
+        expr/undefined.cpp \
+        stmt.cpp \
+        stmt/print.cpp
 
 HEADERS += \
-        boolean.h \
         chelan.h \
-        conditionalvalue.h \
-        conjunction.h \
-        disjunction.h \
-        equality.h \
         expr.h \
         exprtype.h \
-        less.h \
-        matrixaddition.h \
-        matrixenumeration.h \
-        matrixmultiplication.h \
-        matrixnumeric.h \
-        negation.h \
-        pi.h \
-        rational.h \
-        read.h \
-        realvariable.h \
-        scalaraddition.h \
-        scalarmultiplication.h \
-        scalarpower.h \
-        undefined.h
+        expr/boolean.h \
+        expr/conditionalvalue.h \
+        expr/conjunction.h \
+        expr/disjunction.h \
+        expr/equality.h \
+        expr/less.h \
+        expr/matrixaddition.h \
+        expr/matrixenumeration.h \
+        expr/matrixmultiplication.h \
+        expr/matrixnumeric.h \
+        expr/negation.h \
+        expr/pi.h \
+        expr/rational.h \
+        expr/read.h \
+        expr/realvariable.h \
+        expr/scalaraddition.h \
+        expr/scalarmultiplication.h \
+        expr/scalarpower.h \
+        expr/undefined.h \
+        stmt.h \
+        stmt/print.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -139,25 +142,27 @@ unix:!macx:{
     }
 }
 
-copyToDestDir($$PWD/"boolean.h", $$PWD/../include)
+copyToDestDir($$PWD/"expr/boolean.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/conditionalvalue.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/conjunction.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/disjunction.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/equality.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/less.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/matrixaddition.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/matrixenumeration.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/matrixmultiplication.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/matrixnumeric.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/negation.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/pi.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/rational.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/read.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/realvariable.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/scalaraddition.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/scalarmultiplication.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/scalarpower.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/undefined.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"stmt/print.h", $$PWD/../include/stmt)
 copyToDestDir($$PWD/"chelan.h", $$PWD/../include)
-copyToDestDir($$PWD/"conditionalvalue.h", $$PWD/../include)
-copyToDestDir($$PWD/"conjunction.h", $$PWD/../include)
-copyToDestDir($$PWD/"disjunction.h", $$PWD/../include)
-copyToDestDir($$PWD/"equality.h", $$PWD/../include)
 copyToDestDir($$PWD/"expr.h", $$PWD/../include)
 copyToDestDir($$PWD/"exprtype.h", $$PWD/../include)
-copyToDestDir($$PWD/"less.h", $$PWD/../include)
-copyToDestDir($$PWD/"matrixaddition.h", $$PWD/../include)
-copyToDestDir($$PWD/"matrixenumeration.h", $$PWD/../include)
-copyToDestDir($$PWD/"matrixmultiplication.h", $$PWD/../include)
-copyToDestDir($$PWD/"matrixnumeric.h", $$PWD/../include)
-copyToDestDir($$PWD/"negation.h", $$PWD/../include)
-copyToDestDir($$PWD/"pi.h", $$PWD/../include)
-copyToDestDir($$PWD/"rational.h", $$PWD/../include)
-copyToDestDir($$PWD/"read.h", $$PWD/../include)
-copyToDestDir($$PWD/"realvariable.h", $$PWD/../include)
-copyToDestDir($$PWD/"scalaraddition.h", $$PWD/../include)
-copyToDestDir($$PWD/"scalarmultiplication.h", $$PWD/../include)
-copyToDestDir($$PWD/"scalarpower.h", $$PWD/../include)
-copyToDestDir($$PWD/"undefined.h", $$PWD/../include)
+copyToDestDir($$PWD/"stmt.h", $$PWD/../include)
