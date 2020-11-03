@@ -9,7 +9,7 @@ Expr* Boolean::clone() const{
     return new Boolean(value);
 }
 
-Expr* Boolean::evaluate(){
+Expr* Boolean::evaluate(Runtime&){
     return nullptr;
 }
 

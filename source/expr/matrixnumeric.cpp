@@ -12,7 +12,7 @@ Expr* MatrixNumeric::clone() const{
     return new MatrixNumeric(rows, cols, args);
 }
 
-Expr* MatrixNumeric::evaluate(){
+Expr* MatrixNumeric::evaluate(Runtime&){
     if(rows == 1 && cols == 1) return new Rational(args[0]);
 
     return nullptr;

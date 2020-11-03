@@ -4,23 +4,21 @@
 
 namespace Chelan {
 
-template<typename ReturnType>
-MatrixMultiplication<ReturnType>::MatrixMultiplication(const std::vector<Expr*>& args, Expr* scaling)
+MatrixMultiplication::MatrixMultiplication(const std::vector<Expr*>& args, Expr* scaling)
     : Expr(MATRIX_MULTIPLICATION), args(args), scaling(scaling){
 
 }
 
-template<typename ReturnType>
-ReturnType* MatrixMultiplication<ReturnType>::clone() const{
-    return new MatrixMultiplication<ReturnType>(cloneArgs(args), scaling->clone());
+Expr* MatrixMultiplication::clone() const{
+    return new MatrixMultiplication(cloneArgs(args), scaling->clone());
 }
 
-template<typename ReturnType>
-ReturnType* MatrixMultiplication<ReturnType>::evaluate(){
-    evaluateAndFreeArgs(args);
+Expr* MatrixMultiplication::evaluate(Runtime& runtime){
+    evaluateAndFreeArgs(args, runtime);
 
     //Fast path//
     //Fold constants
+    /*
     for(std::vector<Expr*>::size_type i = args.size()-1; i < args.size(); i--){
         if(i > 0 && args[i]->type == MATRIX_NUMERIC && args[i-1]->type == MATRIX_NUMERIC){
             MatrixNumeric* A = static_cast<MatrixNumeric*>(args[i-1]);
@@ -51,12 +49,12 @@ ReturnType* MatrixMultiplication<ReturnType>::evaluate(){
         delete scaling;
         return evaluate(args[0]);
     }
+    */
 
     return nullptr;
 }
 
-template<typename ReturnType>
-void MatrixMultiplication<ReturnType>::writeMathBran(QTextStream& out, Precedence prec) const{
+void MatrixMultiplication::writeMathBran(QTextStream& out, Precedence prec) const{
     if(prec > PREC_MULTIPLICATION) out << '(';
     if(scaling->type != RATIONAL || static_cast<Rational*>(scaling)->value != 1)
         scaling->writeMathBran(out, PREC_MULTIPLICATION);

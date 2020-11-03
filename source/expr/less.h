@@ -13,7 +13,7 @@ public:
     Less(Expr* n);
     static Expr* IsLess(Expr* lhs, Expr* rhs);
     virtual Expr* clone() const override;
-    virtual Expr* evaluate() override;
+    virtual Expr* evaluate(Runtime&) override;
     virtual void writeMathBran(QTextStream& out, Precedence prec = PREC_NONE) const override;
 };
 

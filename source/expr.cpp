@@ -11,8 +11,8 @@ Expr::~Expr(){
     //DO NOTHING
 }
 
-Expr* Expr::evaluateAndFree(Expr* n){
-    while(Expr* m = n->evaluate()){
+Expr* Expr::evaluateAndFree(Expr* n, Runtime& runtime){
+    while(Expr* m = n->evaluate(runtime)){
         delete n;
         n = m;
     }
@@ -86,8 +86,8 @@ std::vector<Expr*> Expr::cloneArgs(const std::vector<Expr*>& args){
     return args_clone;
 }
 
-void Expr::evaluateAndFreeArgs(std::vector<Expr*>& args){
-    for(Expr* e : args) e = evaluateAndFree(e);
+void Expr::evaluateAndFreeArgs(std::vector<Expr*>& args, Runtime& runtime){
+    for(Expr* e : args) e = evaluateAndFree(e, runtime);
 }
 
 }

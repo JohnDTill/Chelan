@@ -7,12 +7,12 @@ namespace Chelan {
 
 class Read : public Expr{
 public:
-    Expr*& var;
+    std::vector<Expr*>::size_type offset;
 
 public:
-    Read(Expr*& var);
+    Read(std::vector<Expr*>::size_type offset);
     virtual Expr* clone() const override;
-    virtual Expr* evaluate() override;
+    virtual Expr* evaluate(Runtime&) override;
     virtual void writeMathBran(QTextStream& out, Precedence = PREC_NONE) const override;
 };
 

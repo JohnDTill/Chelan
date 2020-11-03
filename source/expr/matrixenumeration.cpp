@@ -16,8 +16,8 @@ Expr* MatrixEnumeration::clone() const{
     return new MatrixEnumeration(num_v, num_h, cloned_args);
 }
 
-Expr* MatrixEnumeration::evaluate(){
-    evaluateAndFreeArgs(args);
+Expr* MatrixEnumeration::evaluate(Runtime& runtime){
+    evaluateAndFreeArgs(args, runtime);
 
     bool is_numeric = true;
     std::vector<mpq_class> numeric_args(args.size());

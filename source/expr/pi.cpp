@@ -9,7 +9,7 @@ Expr* Pi::clone() const{
     return new Pi();
 }
 
-Expr* Pi::evaluate(){
+Expr* Pi::evaluate(Runtime&){
     return nullptr;
 }
 

@@ -1,3 +1,6 @@
+#ifndef PRINT_H
+#define PRINT_H
+
 #include "../stmt.h"
 
 #include "../expr.h"
@@ -10,7 +13,9 @@ private:
 
 public:
     Print(Expr* e);
-    virtual bool execute(Runtime& runtime) override;
+    virtual bool execute(Runtime& runtime) override final;
 };
 
 }
+
+#endif

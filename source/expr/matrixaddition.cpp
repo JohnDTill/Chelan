@@ -11,8 +11,8 @@ Expr* MatrixAddition::clone() const{
     return new MatrixAddition(cloneArgs(args));
 }
 
-Expr* MatrixAddition::evaluate(){
-    evaluateAndFreeArgs(args);
+Expr* MatrixAddition::evaluate(Runtime& runtime){
+    evaluateAndFreeArgs(args, runtime);
 
     for(std::vector<Expr*>::size_type i = args.size()-1; i < args.size(); i--){
         if(args[i]->type == MATRIX_NUMERIC){

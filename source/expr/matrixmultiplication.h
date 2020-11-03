@@ -5,16 +5,15 @@
 
 namespace Chelan {
 
-template<typename ReturnType>
-class MatrixMultiplication : public ReturnType{
+class MatrixMultiplication : public Expr{
 public:
     std::vector<Expr*> args;
     Expr* scaling;
 
 public:
     MatrixMultiplication(const std::vector<Expr*>& args, Expr* scaling);
-    virtual ReturnType* clone() const override;
-    virtual ReturnType* evaluate() override;
+    virtual Expr* clone() const override;
+    virtual Expr* evaluate(Runtime&) override;
     virtual void writeMathBran(QTextStream& out, Precedence prec = PREC_NONE) const override;
 };
 

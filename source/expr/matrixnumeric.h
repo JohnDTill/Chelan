@@ -16,7 +16,7 @@ public:
 public:
     MatrixNumeric(vInt rows, vInt cols, const std::vector<mpq_class>& args);
     virtual Expr* clone() const override;
-    virtual Expr* evaluate() override;
+    virtual Expr* evaluate(Runtime&) override;
     virtual void writeMathBran(QTextStream& out, Precedence prec = PREC_NONE) const override;
     const mpq_class& at(std::vector<mpq_class>::size_type row,
                         std::vector<mpq_class>::size_type col) const;

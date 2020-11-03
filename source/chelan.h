@@ -8,6 +8,7 @@
 #include "expr/conjunction.h"
 #include "expr/disjunction.h"
 #include "expr/equality.h"
+#include "expr/function.h"
 #include "expr/less.h"
 #include "expr/matrixaddition.h"
 #include "expr/matrixenumeration.h"
@@ -23,5 +24,6 @@
 #include "expr/scalarpower.h"
 #include "expr/undefined.h"
 #include "stmt/print.h"
+#include "stmt/return.h"
 
 #endif // CHELAN_H

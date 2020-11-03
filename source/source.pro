@@ -35,10 +35,13 @@ CONFIG(debug, debug|release) {
 SOURCES += \
         expr.cpp \
         expr/boolean.cpp \
+        expr/call.cpp \
         expr/conditionalvalue.cpp \
         expr/conjunction.cpp \
         expr/disjunction.cpp \
         expr/equality.cpp \
+        expr/function.cpp \
+        expr/inverse.cpp \
         expr/less.cpp \
         expr/matrixaddition.cpp \
         expr/matrixenumeration.cpp \
@@ -52,13 +55,23 @@ SOURCES += \
         expr/scalaraddition.cpp \
         expr/scalarmultiplication.cpp \
         expr/scalarpower.cpp \
+        expr/transpose.cpp \
         expr/undefined.cpp \
         stmt.cpp \
-        stmt/print.cpp
+        stmt/assign.cpp \
+        stmt/block.cpp \
+        stmt/if.cpp \
+        stmt/print.cpp \
+        stmt/return.cpp \
+        stmt/while.cpp
 
 HEADERS += \
         chelan.h \
         expr.h \
+        expr/call.h \
+        expr/function.h \
+        expr/inverse.h \
+        expr/transpose.h \
         exprtype.h \
         expr/boolean.h \
         expr/conditionalvalue.h \
@@ -79,8 +92,14 @@ HEADERS += \
         expr/scalarmultiplication.h \
         expr/scalarpower.h \
         expr/undefined.h \
+        runtime.h \
         stmt.h \
-        stmt/print.h
+        stmt/assign.h \
+        stmt/block.h \
+        stmt/if.h \
+        stmt/print.h \
+        stmt/return.h \
+        stmt/while.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -147,6 +166,7 @@ copyToDestDir($$PWD/"expr/conditionalvalue.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/conjunction.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/disjunction.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/equality.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/function.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/less.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/matrixaddition.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/matrixenumeration.h", $$PWD/../include/expr)
@@ -162,7 +182,9 @@ copyToDestDir($$PWD/"expr/scalarmultiplication.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/scalarpower.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/undefined.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"stmt/print.h", $$PWD/../include/stmt)
+copyToDestDir($$PWD/"stmt/return.h", $$PWD/../include/stmt)
 copyToDestDir($$PWD/"chelan.h", $$PWD/../include)
 copyToDestDir($$PWD/"expr.h", $$PWD/../include)
 copyToDestDir($$PWD/"exprtype.h", $$PWD/../include)
+copyToDestDir($$PWD/"runtime.h", $$PWD/../include)
 copyToDestDir($$PWD/"stmt.h", $$PWD/../include)

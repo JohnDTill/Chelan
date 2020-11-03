@@ -9,6 +9,8 @@ class QTextStream;
 
 namespace Chelan{
 
+class Runtime;
+
 enum Precedence{
     PREC_NONE,
     PREC_DISJUNCTION,
@@ -30,8 +32,8 @@ public:
     virtual ~Expr();
     virtual Expr* clone() const = 0;
     virtual void deleteChildren(){}
-    virtual Expr* evaluate() = 0;
-    static Expr* evaluateAndFree(Expr* n);
+    virtual Expr* evaluate(Runtime& runtime) = 0;
+    static Expr* evaluateAndFree(Expr* n, Runtime& runtime);
     static void deleteRecursive(Expr* n);
     static Expr* remove(std::vector<Expr*>& search, const Expr* pattern, Precedence prec = PREC_NONE);
     static Expr* remove(std::vector<Expr*>& search, const Expr* pattern, const std::vector<Expr*>::iterator& end, Precedence prec = PREC_NONE);
@@ -47,7 +49,7 @@ protected:
         return a->getKey(prec) < b->getKey(prec);
     }
     static std::vector<Expr*> cloneArgs(const std::vector<Expr*>& args);
-    static void evaluateAndFreeArgs(std::vector<Expr*>& args);
+    static void evaluateAndFreeArgs(std::vector<Expr*>& args, Runtime& runtime);
 };
 
 typedef std::vector<Expr*>::size_type vInt;

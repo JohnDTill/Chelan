@@ -29,8 +29,8 @@ void ConditionalValue::deleteChildren(){
     }
 }
 
-Expr* ConditionalValue::evaluate(){
-    evaluateAndFreeArgs(conditions);
+Expr* ConditionalValue::evaluate(Runtime& runtime){
+    evaluateAndFreeArgs(conditions, runtime);
 
     for(std::vector<Expr*>::size_type i = 0; i < conditions.size(); i++){
         if(conditions[i]->isDefinitivelyTrue()){
@@ -41,7 +41,7 @@ Expr* ConditionalValue::evaluate(){
         }
     }
 
-    evaluateAndFreeArgs(values);
+    evaluateAndFreeArgs(values, runtime);
 
     return nullptr;
 }

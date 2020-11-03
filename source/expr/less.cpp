@@ -15,8 +15,8 @@ Expr* Less::clone() const{
     return new Less(n->clone());
 }
 
-Expr* Less::evaluate(){
-    n = Expr::evaluateAndFree(n);
+Expr* Less::evaluate(Runtime& runtime){
+    n = Expr::evaluateAndFree(n, runtime);
 
     switch(n->type){
         case PI: return new Boolean(false);

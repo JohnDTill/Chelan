@@ -19,8 +19,8 @@ Expr* Equality::clone() const{
     return new Equality(n->clone());
 }
 
-Expr* Equality::evaluate(){
-    n = Expr::evaluateAndFree(n);
+Expr* Equality::evaluate(Runtime& runtime){
+    n = Expr::evaluateAndFree(n, runtime);
 
     switch(n->type){
         case PI: return new Boolean(false);

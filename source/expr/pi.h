@@ -9,7 +9,7 @@ class Pi : public Expr{
 public:
     Pi();
     virtual Expr* clone() const override;
-    virtual Expr* evaluate() override;
+    virtual Expr* evaluate(Runtime&) override;
     virtual void writeMathBran(QTextStream& out, Precedence = PREC_NONE) const override;
 };
 

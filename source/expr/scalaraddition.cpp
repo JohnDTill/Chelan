@@ -30,8 +30,8 @@ void ScalarAddition::deleteChildren(){
     }
 }
 
-Expr* ScalarAddition::evaluate(){
-    evaluateAndFreeArgs(args);
+Expr* ScalarAddition::evaluate(Runtime& runtime){
+    evaluateAndFreeArgs(args, runtime);
 
     //Fast path//
     foldConstants();

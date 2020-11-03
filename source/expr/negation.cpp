@@ -16,8 +16,8 @@ void Negation::deleteChildren(){
     delete n;
 }
 
-Expr* Negation::evaluate(){
-    n = evaluateAndFree(n);
+Expr* Negation::evaluate(Runtime& runtime){
+    n = evaluateAndFree(n, runtime);
 
     switch(n->type){
         case UNDEFINED: return n;

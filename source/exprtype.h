@@ -29,11 +29,17 @@ enum ExprType{
     MATRIX_ENUMERATION,
     MATRIX_MULTIPLICATION,
     MATRIX_NUMERIC,
+    INVERSE,
+    TRANSPOSE,
 
     //Set types
     SET_ENUMERATION,
 
+    //Function types
+    FUNCTION,
+
     //Misc
+    CALL,
     READ,
 };
 

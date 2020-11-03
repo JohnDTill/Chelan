@@ -18,8 +18,8 @@ void Disjunction::deleteChildren(){
     }
 }
 
-Expr* Disjunction::evaluate(){
-    evaluateAndFreeArgs(args);
+Expr* Disjunction::evaluate(Runtime& runtime){
+    evaluateAndFreeArgs(args, runtime);
 
     for(Expr* n : args){
         if(n->type == UNDEFINED){

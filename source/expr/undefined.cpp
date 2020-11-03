@@ -11,7 +11,7 @@ Expr* Undefined::clone() const{
     return new Undefined(msg);
 }
 
-Expr* Undefined::evaluate(){
+Expr* Undefined::evaluate(Runtime&){
     return nullptr;
 }
 

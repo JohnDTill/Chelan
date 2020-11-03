@@ -1,15 +1,9 @@
 #ifndef STMT_H
 #define STMT_H
 
-#include <QTextStream>
+#include "runtime.h"
 
 namespace Chelan {
-
-struct Runtime{
-    QTextStream out;
-
-    Runtime(QString& out_str) : out(&out_str){}
-};
 
 class Stmt{
 public:

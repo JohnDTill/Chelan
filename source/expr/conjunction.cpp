@@ -18,8 +18,8 @@ void Conjunction::deleteChildren(){
     }
 }
 
-Expr* Conjunction::evaluate(){
-    evaluateAndFreeArgs(args);
+Expr* Conjunction::evaluate(Runtime& runtime){
+    evaluateAndFreeArgs(args, runtime);
 
     for(Expr* n : args){
         if(n->type == UNDEFINED){

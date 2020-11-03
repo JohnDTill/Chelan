@@ -16,9 +16,9 @@ void ScalarPower::deleteChildren(){
     deleteRecursive(rhs);
 }
 
-Expr* ScalarPower::evaluate(){
-    lhs = evaluateAndFree(lhs);
-    rhs = evaluateAndFree(rhs);
+Expr* ScalarPower::evaluate(Runtime& runtime){
+    lhs = evaluateAndFree(lhs, runtime);
+    rhs = evaluateAndFree(rhs, runtime);
 
     if(lhs->type == UNDEFINED){
         deleteRecursive(rhs);

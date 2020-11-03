@@ -15,7 +15,7 @@ public:
     ScalarPower(Expr* lhs, Expr* rhs);
     virtual Expr* clone() const override;
     virtual void deleteChildren() override;
-    virtual Expr* evaluate() override;
+    virtual Expr* evaluate(Runtime&) override;
     virtual void writeMathBran(QTextStream& out, Precedence prec = PREC_NONE) const override;
 
 private:

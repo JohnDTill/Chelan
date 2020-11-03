@@ -15,7 +15,7 @@ Expr* Rational::clone() const{
     return new Rational(value);
 }
 
-Expr* Rational::evaluate(){
+Expr* Rational::evaluate(Runtime&){
     return nullptr;
 }
 

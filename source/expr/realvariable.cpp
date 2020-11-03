@@ -9,7 +9,7 @@ Expr* RealVariable::clone() const{
     return new RealVariable(name);
 }
 
-Expr* RealVariable::evaluate(){
+Expr* RealVariable::evaluate(Runtime&){
     return nullptr;
 }
 
