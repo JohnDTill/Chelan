@@ -13,7 +13,7 @@ private:
 
 public:
     Print(Expr* e);
-    virtual bool execute(Runtime& runtime) override final;
+    virtual void execute(Runtime& runtime) override final;
 };
 
 }

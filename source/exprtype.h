@@ -14,6 +14,7 @@ enum ExprType{
     SCALAR_POWER,
     RATIONAL,
     REALVARIABLE,
+    ABSOLUTE_VALUE,
     UNDEFINED,
 
     //Boolean types

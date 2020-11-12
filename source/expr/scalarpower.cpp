@@ -20,6 +20,49 @@ Expr* ScalarPower::evaluate(Runtime& runtime){
     lhs = evaluateAndFree(lhs, runtime);
     rhs = evaluateAndFree(rhs, runtime);
 
+    if(lhs->type == RATIONAL && rhs->type == RATIONAL){
+        Rational* lhs_rat = static_cast<Rational*>(lhs);
+        Rational* rhs_rat = static_cast<Rational*>(rhs);
+
+        if( rhs_rat->value.get_den() != 1 ||
+            rhs_rat->value.get_num() > std::numeric_limits<unsigned long>::max() ) return nullptr;
+
+        if( rhs_rat->value == 0){
+            delete rhs;
+            delete lhs;
+            return new Rational(1);
+        }else if( rhs_rat->value == 1 ){
+            delete rhs;
+            return lhs;
+        }else if( rhs_rat->value == -1 ){
+            Rational* recip = new Rational(1 / lhs_rat->value);
+            delete rhs;
+            delete lhs;
+            return recip;
+        }else if(lhs_rat->value.get_num() > std::numeric_limits<unsigned long>::max() ||
+                 lhs_rat->value.get_den() > std::numeric_limits<unsigned long>::max() ){
+            return nullptr;
+        }
+
+        auto num = lhs_rat->value.get_num().get_ui();
+        auto den = lhs_rat->value.get_den().get_ui();
+        auto rv = rhs_rat->value.get_num().get_ui();
+        mpz_t num_exp, den_exp;
+        mpz_init(num_exp);
+        mpz_init(den_exp);
+        mpz_ui_pow_ui(num_exp, num, rv);
+        mpz_ui_pow_ui(den_exp, den, rv);
+
+        mpq_class result = rhs_rat->value >= 0 ?
+                           mpq_class(mpz_class(num_exp), mpz_class(den_exp)) :
+                           mpq_class(mpz_class(den_exp), mpz_class(num_exp));
+        if(lhs_rat->value < 0 && rv%2) result *= -1;
+
+        delete lhs;
+        delete rhs;
+        return new Rational(result);
+    }
+
     if(lhs->type == UNDEFINED){
         deleteRecursive(rhs);
         return lhs;
@@ -53,20 +96,6 @@ Expr* ScalarPower::evaluate(Runtime& runtime){
     }else if(rhs_key == "1"){
         delete rhs;
         return lhs;
-    }
-
-    if(lhs->type == RATIONAL && rhs->type == RATIONAL){
-        //const mpq_class& vL = static_cast<class Rational*>(lhs)->value;
-        //const mpq_class& vR = static_cast<class Rational*>(rhs)->value;
-
-        //DO THIS:
-        // complete the calculation
-        // need some metric for when the result is too large
-
-        mpq_class lv = static_cast<class Rational*>(lhs)->value;
-        mpq_class rv = static_cast<class Rational*>(rhs)->value;
-
-        if(rv == -1) return new class Rational(1/lv);
     }
 
     return nullptr;

@@ -19,6 +19,7 @@ Expr* ScalarAddition::Subtract(Expr* lhs, Expr* rhs){
 
 Expr* ScalarAddition::clone() const{
     ScalarAddition* cl = new ScalarAddition(cloneArgs(args));
+    cl->constant = constant;
     cl->key = key;
     return cl;
 }

@@ -1,17 +1,17 @@
-#ifndef READVARIABLE_H
-#define READVARIABLE_H
+#ifndef READGLOBAL_H
+#define READGLOBAL_H
 
 #include "expr.h"
 
 namespace Chelan {
 
-class ReadLocal : public Expr{
+class ReadGlobal : public Expr{
 public:
     std::vector<Expr*>::size_type offset;
     QString id;
 
 public:
-    ReadLocal(std::vector<Expr*>::size_type offset, const QString& id);
+    ReadGlobal(std::vector<Expr*>::size_type offset, const QString& id);
     virtual Expr* clone() const override;
     virtual Expr* evaluate(Runtime&) override;
     virtual void writeMathBran(QTextStream& out, Precedence = PREC_NONE) const override;
@@ -19,4 +19,4 @@ public:
 
 }
 
-#endif // READVARIABLE_H
+#endif // READGLOBAL_H

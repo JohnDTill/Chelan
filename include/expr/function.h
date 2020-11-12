@@ -10,9 +10,10 @@ class Stmt;
 class Function : public Expr{
 public:
     Stmt* body;
+    QString id;
 
 public:
-    Function(Stmt* body);
+    Function(Stmt* body, QString id);
     virtual Expr* clone() const override;
     virtual Expr* evaluate(Runtime&) override;
     virtual void writeMathBran(QTextStream& out, Precedence prec = PREC_NONE) const override;

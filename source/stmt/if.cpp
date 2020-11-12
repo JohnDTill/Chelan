@@ -4,22 +4,24 @@
 
 namespace Chelan {
 
-If::If(Expr* condition, Stmt* then, Stmt* el)
-    : condition(condition), then(then), el(el) {}
+If::If(Expr* condition, Stmt* then, Stmt* el, std::vector<Expr*>::difference_type stack_size)
+    : condition(condition), then(then), el(el), stack_size(stack_size) {}
 
-bool If::execute(Runtime& runtime){
+void If::execute(Runtime& runtime){
     Expr* eval_condition = Expr::evaluateAndFree( condition->clone(), runtime );
     if(eval_condition->isDefinitivelyTrue()){
         delete eval_condition;
-        return then->execute(runtime);
+        then->execute(runtime);
     }else if(eval_condition->isDefinitivelyFalse()){
         delete eval_condition;
-        return el ? el->execute(runtime) : false;
+        el->execute(runtime);
+    }else{
+        Expr::deleteRecursive(eval_condition);
+        runtime.out << "Runtime error: IF condition not evaluated to value";
+        throw 1;
     }
 
-    Expr::deleteRecursive(eval_condition);
-    runtime.out << "Runtime error: IF condition not evaluated to value";
-    return true;
+    runtime.stack.erase(runtime.stack.end()-stack_size, runtime.stack.end());
 }
 
 }

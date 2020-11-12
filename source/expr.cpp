@@ -87,7 +87,8 @@ std::vector<Expr*> Expr::cloneArgs(const std::vector<Expr*>& args){
 }
 
 void Expr::evaluateAndFreeArgs(std::vector<Expr*>& args, Runtime& runtime){
-    for(Expr* e : args) e = evaluateAndFree(e, runtime);
+    for(std::vector<Expr*>::size_type i = 0; i < args.size(); i++)
+        args[i] = evaluateAndFree(args[i], runtime);
 }
 
 }

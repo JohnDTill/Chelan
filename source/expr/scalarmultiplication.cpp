@@ -19,6 +19,7 @@ Expr* ScalarMultiplication::Divide(Expr* lhs, Expr* rhs){
 
 Expr* ScalarMultiplication::clone() const{
     ScalarMultiplication* cl = new ScalarMultiplication(cloneArgs(args));
+    cl->constant = constant;
     cl->key = key;
     return cl;
 }

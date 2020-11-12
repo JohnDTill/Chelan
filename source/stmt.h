@@ -7,7 +7,7 @@ namespace Chelan {
 
 class Stmt{
 public:
-    virtual bool execute(Runtime& runtime) = 0;
+    virtual void execute(Runtime& runtime) = 0;
 };
 
 }

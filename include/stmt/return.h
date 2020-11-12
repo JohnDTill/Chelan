@@ -8,11 +8,13 @@
 namespace Chelan {
 
 class Return : public Stmt{
-private:
-    Expr* e;
 public:
-    Return(Expr* e);
-    virtual bool execute(Runtime& runtime) override final;
+    Expr* e;
+    std::vector<Expr*>::size_type stack_size;
+
+public:
+    Return(Expr* e, std::vector<Expr*>::size_type stack_size);
+    virtual void execute(Runtime& runtime) override final;
 };
 
 }

@@ -4,19 +4,19 @@
 
 namespace Chelan {
 
-Function::Function(Stmt* body)
-    : Expr(FUNCTION), body(body) {}
+Function::Function(Stmt* body, QString id)
+    : Expr(FUNCTION), body(body), id(id) {}
 
 Expr* Function::clone() const{
-    return new Function(body);
+    return new Function(body, id);
 }
 
 Expr* Function::evaluate(Runtime&){
-    return this;
+    return nullptr;
 }
 
 void Function::writeMathBran(QTextStream& out, Precedence) const{
-    out << "FUNCTION";
+    out << id;
 }
 
 }

@@ -1,24 +1,6 @@
 #TODO
-# I think with static analysis added, Chelan becomes much more like earlier prototypes,
-# where not everything inherited from the same base. You have numeric expressions,
-# boolean expressions, matrix expressions, etc...
-#
-# You also have your pick of procedural or OO style. Well, there is an output log for
-# print statements, and also the ability to report runtime errors.
-#
-# What if the compiler emitted all possible checks for errors, and the AST eliminated many of those
-# checks by partial evaluation? Is that preferable to the AST doing the checks?
-# That could make translation from the AST hard.
-#
-# I kind of like the idea of expressions having an inheritance hierarchy, and statements being procedural.
-# If you want S-expressions, you might as well have a hierarchy. Then using procedural for the statements
-# will be a nice delineation
-#
-# You can put the statements in a separate module!
-#
-# Got to use code gen in the CAS
-#
-# With at least coarsely typed expressions, you can have much more meaningful methods
+# How are errors handled?
+# How are functions called?
 
 TEMPLATE = lib
 DEFINES += QT_DEPRECATED_WARNINGS
@@ -34,6 +16,7 @@ CONFIG(debug, debug|release) {
 
 SOURCES += \
         expr.cpp \
+        expr/absolutevalue.cpp \
         expr/boolean.cpp \
         expr/call.cpp \
         expr/conditionalvalue.cpp \
@@ -50,16 +33,19 @@ SOURCES += \
         expr/negation.cpp \
         expr/pi.cpp \
         expr/rational.cpp \
-        expr/read.cpp \
+        expr/readglobal.cpp \
+        expr/readlocal.cpp \
         expr/realvariable.cpp \
         expr/scalaraddition.cpp \
         expr/scalarmultiplication.cpp \
         expr/scalarpower.cpp \
         expr/transpose.cpp \
         expr/undefined.cpp \
+        runtime.cpp \
         stmt.cpp \
         stmt/assign.cpp \
         stmt/block.cpp \
+        stmt/declareassign.cpp \
         stmt/if.cpp \
         stmt/print.cpp \
         stmt/return.cpp \
@@ -68,9 +54,12 @@ SOURCES += \
 HEADERS += \
         chelan.h \
         expr.h \
+        expr/absolutevalue.h \
         expr/call.h \
         expr/function.h \
         expr/inverse.h \
+        expr/readglobal.h \
+        expr/readlocal.h \
         expr/transpose.h \
         exprtype.h \
         expr/boolean.h \
@@ -86,7 +75,6 @@ HEADERS += \
         expr/negation.h \
         expr/pi.h \
         expr/rational.h \
-        expr/read.h \
         expr/realvariable.h \
         expr/scalaraddition.h \
         expr/scalarmultiplication.h \
@@ -96,6 +84,7 @@ HEADERS += \
         stmt.h \
         stmt/assign.h \
         stmt/block.h \
+        stmt/declareassign.h \
         stmt/if.h \
         stmt/print.h \
         stmt/return.h \
@@ -161,7 +150,9 @@ unix:!macx:{
     }
 }
 
+copyToDestDir($$PWD/"expr/absolutevalue.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/boolean.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/call.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/conditionalvalue.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/conjunction.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/disjunction.h", $$PWD/../include/expr)
@@ -175,14 +166,20 @@ copyToDestDir($$PWD/"expr/matrixnumeric.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/negation.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/pi.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/rational.h", $$PWD/../include/expr)
-copyToDestDir($$PWD/"expr/read.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/readglobal.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/readlocal.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/realvariable.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/scalaraddition.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/scalarmultiplication.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/scalarpower.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/undefined.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"stmt/assign.h", $$PWD/../include/stmt)
+copyToDestDir($$PWD/"stmt/block.h", $$PWD/../include/stmt)
+copyToDestDir($$PWD/"stmt/declareassign.h", $$PWD/../include/stmt)
+copyToDestDir($$PWD/"stmt/if.h", $$PWD/../include/stmt)
 copyToDestDir($$PWD/"stmt/print.h", $$PWD/../include/stmt)
 copyToDestDir($$PWD/"stmt/return.h", $$PWD/../include/stmt)
+copyToDestDir($$PWD/"stmt/while.h", $$PWD/../include/stmt)
 copyToDestDir($$PWD/"chelan.h", $$PWD/../include)
 copyToDestDir($$PWD/"expr.h", $$PWD/../include)
 copyToDestDir($$PWD/"exprtype.h", $$PWD/../include)

@@ -4,25 +4,25 @@
 
 namespace Chelan {
 
-While::While(Expr* condition, Stmt* body)
-    : condition(condition), body(body) {}
+While::While(Expr* condition, Stmt* body, std::vector<Expr*>::difference_type stack_size)
+    : condition(condition), body(body), stack_size(stack_size) {}
 
-bool While::execute(Runtime& runtime){
+void While::execute(Runtime& runtime){
     Expr* eval_condition = Expr::evaluateAndFree( condition->clone(), runtime );
 
     while(eval_condition->isDefinitivelyTrue()){
         delete eval_condition;
-        if(body->execute(runtime)) return true;
+        body->execute(runtime);
+        runtime.stack.erase(runtime.stack.end()-stack_size, runtime.stack.end());
         eval_condition = Expr::evaluateAndFree( condition->clone(), runtime );
     }
 
     if(eval_condition->isDefinitivelyFalse()){
         delete eval_condition;
-        return false;
     }else{
+        runtime.out << "Runtime error: WHILE condition not evaluated to value: " << eval_condition->toMathBran();
         Expr::deleteRecursive(eval_condition);
-        runtime.out << "Runtime error: WHILE condition not evaluated to value";
-        return true;
+        throw 1;
     }
 }
 
