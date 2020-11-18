@@ -1,10 +1,6 @@
 #include "call.h"
 
-#include "function.h"
-#include "runtime.h"
-#include "stmt.h"
-
-#include <QDebug>
+#include <chelan.h>
 
 namespace Chelan {
 
@@ -26,6 +22,8 @@ Expr* Call::evaluate(Runtime& runtime){
 
     Expr* return_value = runtime.stack.back();
     runtime.stack.pop_back();
+
+    Expr::deleteRecursive(f_eval);
 
     return return_value;
 }

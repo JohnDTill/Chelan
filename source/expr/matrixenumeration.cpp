@@ -11,9 +11,7 @@ MatrixEnumeration::MatrixEnumeration(vInt rows, vInt cols, const std::vector<Exp
       args(args){}
 
 Expr* MatrixEnumeration::clone() const{
-    std::vector<Expr*> cloned_args;
-    for(Expr* n : args) cloned_args.push_back(n->clone());
-    return new MatrixEnumeration(num_v, num_h, cloned_args);
+    return new MatrixEnumeration(num_v, num_h, cloneArgs(args));
 }
 
 Expr* MatrixEnumeration::evaluate(Runtime& runtime){

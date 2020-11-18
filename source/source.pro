@@ -1,6 +1,8 @@
 #TODO
 # How are errors handled?
 # How are functions called?
+#
+# Real issues with combining S-exprs, matrices, and state
 
 TEMPLATE = lib
 DEFINES += QT_DEPRECATED_WARNINGS
@@ -35,6 +37,7 @@ SOURCES += \
         expr/rational.cpp \
         expr/readglobal.cpp \
         expr/readlocal.cpp \
+        expr/readlocalelement.cpp \
         expr/realvariable.cpp \
         expr/scalaraddition.cpp \
         expr/scalarmultiplication.cpp \
@@ -44,6 +47,8 @@ SOURCES += \
         runtime.cpp \
         stmt.cpp \
         stmt/assign.cpp \
+        stmt/assigncolumn.cpp \
+        stmt/assignelement.cpp \
         stmt/block.cpp \
         stmt/declareassign.cpp \
         stmt/if.cpp \
@@ -60,6 +65,7 @@ HEADERS += \
         expr/inverse.h \
         expr/readglobal.h \
         expr/readlocal.h \
+        expr/readlocalelement.h \
         expr/transpose.h \
         exprtype.h \
         expr/boolean.h \
@@ -83,6 +89,8 @@ HEADERS += \
         runtime.h \
         stmt.h \
         stmt/assign.h \
+        stmt/assigncolumn.h \
+        stmt/assignelement.h \
         stmt/block.h \
         stmt/declareassign.h \
         stmt/if.h \
@@ -158,6 +166,7 @@ copyToDestDir($$PWD/"expr/conjunction.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/disjunction.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/equality.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/function.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/inverse.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/less.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/matrixaddition.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/matrixenumeration.h", $$PWD/../include/expr)
@@ -168,12 +177,16 @@ copyToDestDir($$PWD/"expr/pi.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/rational.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/readglobal.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/readlocal.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/readlocalelement.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/realvariable.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/scalaraddition.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/scalarmultiplication.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/scalarpower.h", $$PWD/../include/expr)
+copyToDestDir($$PWD/"expr/transpose.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"expr/undefined.h", $$PWD/../include/expr)
 copyToDestDir($$PWD/"stmt/assign.h", $$PWD/../include/stmt)
+copyToDestDir($$PWD/"stmt/assigncolumn.h", $$PWD/../include/stmt)
+copyToDestDir($$PWD/"stmt/assignelement.h", $$PWD/../include/stmt)
 copyToDestDir($$PWD/"stmt/block.h", $$PWD/../include/stmt)
 copyToDestDir($$PWD/"stmt/declareassign.h", $$PWD/../include/stmt)
 copyToDestDir($$PWD/"stmt/if.h", $$PWD/../include/stmt)

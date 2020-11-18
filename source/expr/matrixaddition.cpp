@@ -42,7 +42,6 @@ Expr* MatrixAddition::evaluate(Runtime& runtime){
     }
     if(args.size()==1) return args[0];
 
-
     return nullptr;
 }
 
